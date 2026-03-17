@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, BedDouble, Bath, Maximize } from 'lucide-react';
 
@@ -19,7 +18,7 @@ interface PropertyCardProps {
 export const PropertyCard = ({ property }: PropertyCardProps) => {
   return (
     <div className="group bg-white/5 border border-white/10 rounded-sm overflow-hidden hover:border-[#c4a661] transition-all duration-300">
-      <Link href={`/properties/${property.slug}`} className="block relative h-64 overflow-hidden">
+      <Link to={`/properties/${property.slug}`} className="block relative h-64 overflow-hidden">
         <img 
           src={property.featured_image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop'} 
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -32,7 +31,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       
       <div className="p-6 space-y-4">
         <div className="flex justify-between items-start">
-          <Link href={`/properties/${property.slug}`}>
+          <Link to={`/properties/${property.slug}`}>
             <h3 className="text-xl font-bold text-white hover:text-[#c4a661] transition-colors line-clamp-1">{property.title}</h3>
           </Link>
           <div className="text-xl font-black text-[#c4a661]">

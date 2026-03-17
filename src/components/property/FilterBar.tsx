@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Filter, Home, MapPin, IndianRupee } from 'lucide-react';
+import { Search, MapPin } from 'lucide-react';
 
 export const FilterBar = ({ initialFilters }: { initialFilters: any }) => {
   const navigate = useNavigate();
