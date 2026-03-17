@@ -4,6 +4,8 @@ import { Footer } from './components/layout/Footer';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { PropertiesPage } from './pages/PropertiesPage';
+import { BlogPage } from './pages/BlogPage';
+import { ContactPage } from './pages/ContactPage';
 import { PropertyDetailPage } from './pages/PropertyDetailPage';
 import { AdminPage } from './pages/AdminPage';
 
@@ -17,6 +19,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/properties" element={<PropertiesPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/properties/:slug" element={<PropertyDetailPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Routes>
