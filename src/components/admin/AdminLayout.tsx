@@ -112,7 +112,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           collapsed ? 'ml-24' : 'ml-72'
         }`}
       >
-        <div className="max-w-[1600px] mx-auto p-12 lg:p-16">
+        <div className="max-w-[1600px] mx-auto p-6 lg:p-10">
           {children}
         </div>
       </main>
