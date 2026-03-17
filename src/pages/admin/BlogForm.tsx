@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import { 
   Form, 
   Input, 
@@ -30,6 +32,7 @@ const { TextArea } = Input;
 export const BlogForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const quillRef = useRef<any>(null);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -89,6 +92,58 @@ export const BlogForm = () => {
     }
   };
 
+  const imageHandler = () => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      const loadingMsg = message.loading('Uploading image...', 0);
+      try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `content/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('blog-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('blog-images')
+          .getPublicUrl(filePath);
+
+        const quill = quillRef.current.getEditor();
+        const range = quill.getSelection();
+        quill.insertEmbed(range.index, 'image', publicUrl);
+      } catch (error: any) {
+        message.error('Image upload failed: ' + error.message);
+      } finally {
+        loadingMsg();
+      }
+    };
+  };
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['link', 'image'],
+        ['clean']
+      ],
+      handlers: {
+        image: imageHandler
+      }
+    }
+  }), []);
+
   const onFinish = async (values: any) => {
     setLoading(true);
     const slug = values.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
@@ -129,6 +184,25 @@ export const BlogForm = () => {
 
   return (
     <div className="space-y-12">
+      <style>{`
+        .ql-container {
+          min-height: 400px;
+          font-size: 16px;
+        }
+        .ql-editor img {
+          max-width: 100%;
+          height: auto;
+          margin: 10px 0;
+          border-radius: 8px;
+        }
+        .blog-editor .ant-form-item-label label {
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-size: 12px;
+        }
+      `}</style>
+
       <div className="flex items-center gap-6">
         <Button 
           icon={<ArrowLeftOutlined />} 
@@ -146,7 +220,7 @@ export const BlogForm = () => {
         layout="vertical"
         onFinish={onFinish}
         initialValues={{ status: 'draft', category: 'Real Estate' }}
-        className="property-form"
+        className="blog-editor"
       >
         <Row gutter={24}>
           <Col span={24} lg={16}>
@@ -161,8 +235,18 @@ export const BlogForm = () => {
                   <TextArea rows={3} placeholder="A short summary of the article..." className="rounded-lg" />
                 </Form.Item>
 
-                <Form.Item name="content" label="Full Content (Markdown supported)" rules={[{ required: true }]}>
-                  <TextArea rows={20} placeholder="Write your article here..." className="rounded-lg font-mono text-sm" />
+                <Form.Item 
+                  name="content" 
+                  label="Article Body" 
+                  rules={[{ required: true }]}
+                  className="富文本"
+                >
+                  <ReactQuill
+                    ref={quillRef}
+                    theme="snow"
+                    modules={modules}
+                    placeholder="Write your article here..."
+                  />
                 </Form.Item>
               </Space>
             </Card>
@@ -231,7 +315,7 @@ export const BlogForm = () => {
                     <BookOutlined style={{fontSize: 14}} /> Writing Tip
                 </h4>
                 <p className="text-slate-400 text-xs leading-relaxed italic">
-                    Focus on keywords like "Infrastructure", "Noida", and "Luxury" to improve SEO. Use simple language that resonates with property buyers.
+                  Use the **Bold** and **Header** options to structure your story. Add images directly into the text to illustrate your points and engage readers.
                 </p>
             </div>
           </Col>

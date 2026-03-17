@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { PropertiesPage } from './pages/PropertiesPage';
 import { BlogPage } from './pages/BlogPage';
+import { BlogPostPage } from './pages/BlogPostPage';
 import { ContactPage } from './pages/ContactPage';
 import { PropertyDetailPage } from './pages/PropertyDetailPage';
 import { AuthPage } from './pages/AuthPage';
@@ -32,6 +33,7 @@ function AppContent() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/properties" element={<PropertiesPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/properties/:slug" element={<PropertyDetailPage />} />
