@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin, Facebook, Twitter, Youtube, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Footer = () => {
   return (
@@ -41,11 +42,17 @@ export const Footer = () => {
           <div>
             <h3 className="text-white text-2xl font-bold mb-8 border-b-2 border-[#c4a661] inline-block pb-2">Quick Links</h3>
             <ul className="space-y-4">
-              {['Home', 'About Us', 'Properties', 'Contact', 'Blog', 'Privacy Policy'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-slate-400 hover:text-[#c4a661] flex items-center gap-2 transition-colors">
-                    <ChevronRight className="w-4 h-4 text-[#c4a661]" /> {item}
-                  </a>
+              {[
+                { name: 'Home', path: '/' },
+                { name: 'About Us', path: '/about' },
+                { name: 'Properties', path: '/properties' },
+                { name: 'Contact', path: '/contact' },
+                { name: 'Blog', path: '/blog' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link to={item.path} className="text-slate-400 hover:text-[#c4a661] flex items-center gap-2 transition-colors">
+                    <ChevronRight className="w-4 h-4 text-[#c4a661]" /> {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>
