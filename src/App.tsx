@@ -7,6 +7,8 @@ import { PropertiesPage } from './pages/PropertiesPage';
 import { BlogPage } from './pages/BlogPage';
 import { ContactPage } from './pages/ContactPage';
 import { PropertyDetailPage } from './pages/PropertyDetailPage';
+import { AuthPage } from './pages/AuthPage';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AdminPage } from './pages/AdminPage';
 
 function App() {
@@ -21,8 +23,13 @@ function App() {
             <Route path="/properties" element={<PropertiesPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/auth" element={<AuthPage />} />
             <Route path="/properties/:slug" element={<PropertyDetailPage />} />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            } />
           </Routes>
         </main>
         <Footer />

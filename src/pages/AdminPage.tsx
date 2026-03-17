@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table, Button, Space, Tag, Typography, message, Modal } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, PlusOutlined, LogoutOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,6 +24,11 @@ export const AdminPage = () => {
       setProperties(data || []);
     }
     setLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/auth');
   };
 
   useEffect(() => {
@@ -77,9 +82,14 @@ export const AdminPage = () => {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex justify-between items-center">
           <Title level={2}>Admin Dashboard</Title>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/admin/properties/new')}>
-            Add New Property
-          </Button>
+          <Space>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/admin/properties/new')}>
+              Add New Property
+            </Button>
+            <Button icon={<LogoutOutlined />} onClick={handleLogout}>
+              Logout
+            </Button>
+          </Space>
         </div>
         <Table 
           columns={columns} 
