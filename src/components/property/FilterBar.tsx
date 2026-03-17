@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Filter, Home, MapPin, IndianRupee } from 'lucide-react';
 
 export const FilterBar = ({ initialFilters }: { initialFilters: any }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState({
     location: initialFilters.location || '',
     type: initialFilters.type || '',
@@ -21,7 +21,7 @@ export const FilterBar = ({ initialFilters }: { initialFilters: any }) => {
     Object.entries(filters).forEach(([key, value]) => {
       if (value) params.set(key, value as string);
     });
-    router.push(`/properties?${params.toString()}`);
+    navigate(`/properties?${params.toString()}`);
   };
 
   return (
