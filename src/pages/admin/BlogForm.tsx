@@ -86,7 +86,11 @@ export const BlogForm = () => {
       message.success('Image uploaded successfully');
     } catch (error: any) {
       onError(error);
-      message.error('Upload failed: ' + error.message);
+      const isBucketError = error.message?.includes('Bucket not found');
+      message.error(isBucketError 
+        ? 'Error: "blog-images" bucket not found in Supabase. Please create it in your Storage dashboard.' 
+        : 'Upload failed: ' + error.message
+      );
     } finally {
       setUploadLoading(false);
     }
@@ -122,7 +126,11 @@ export const BlogForm = () => {
         const range = quill.getSelection();
         quill.insertEmbed(range.index, 'image', publicUrl);
       } catch (error: any) {
-        message.error('Image upload failed: ' + error.message);
+        const isBucketError = error.message?.includes('Bucket not found');
+        message.error(isBucketError 
+          ? 'Error: "blog-images" bucket not found in Supabase. Please create it in your Storage dashboard.' 
+          : 'Image upload failed: ' + error.message
+        );
       } finally {
         loadingMsg();
       }

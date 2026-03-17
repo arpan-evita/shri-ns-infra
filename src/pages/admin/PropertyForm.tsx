@@ -13,11 +13,14 @@ import {
   Col, 
   Typography,
   Space,
-  Divider
+  Divider,
+  Upload
 } from 'antd';
 import { 
   ArrowLeftOutlined, 
   SaveOutlined,
+  PlusOutlined,
+  LoadingOutlined
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 
@@ -30,6 +33,8 @@ export const PropertyForm = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [agents, setAgents] = useState<any[]>([]);
 
   useEffect(() => {
@@ -50,6 +55,9 @@ export const PropertyForm = () => {
           message.error('Failed to load property');
         } else {
           form.setFieldsValue(property);
+          // Set featured image if exists
+          const featured = property.property_images?.find((img: any) => img.is_featured);
+          if (featured) setImageUrl(featured.image_url);
         }
         setLoading(false);
       }
@@ -58,38 +66,94 @@ export const PropertyForm = () => {
     fetchData();
   }, [id, form]);
 
+  const handleUpload = async (options: any) => {
+    const { file, onSuccess, onError } = options;
+    setUploadLoading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `listings/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('properties')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('properties')
+        .getPublicUrl(filePath);
+
+      setImageUrl(publicUrl);
+      onSuccess(publicUrl);
+      message.success('Main image uploaded successfully');
+    } catch (error: any) {
+      onError(error);
+      const isBucketError = error.message?.includes('Bucket not found');
+      message.error(isBucketError 
+        ? 'Error: "properties" bucket not found in Supabase. Please create it in your Storage dashboard.' 
+        : 'Upload failed: ' + error.message
+      );
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   const onFinish = async (values: any) => {
     setLoading(true);
     const slug = values.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     
-    const propertyData = {
-      ...values,
+    const { property_images, ...propertyData } = values;
+    const finalPropertyData = {
+      ...propertyData,
       slug,
     };
 
+    let propertyId = id;
+
     if (id) {
-      const { error } = await supabase.from('properties').update(propertyData).eq('id', id);
+      const { error } = await supabase.from('properties').update(finalPropertyData).eq('id', id);
       if (error) {
         message.error('Update failed: ' + error.message);
         setLoading(false);
         return;
       }
     } else {
-      const { error } = await supabase.from('properties').insert([propertyData]);
+      const { data, error } = await supabase.from('properties').insert([finalPropertyData]).select().single();
       if (error) {
         message.error('Creation failed: ' + error.message);
         setLoading(false);
         return;
       }
+      propertyId = data.id;
     }
 
-    // Handle Images (Note: Direct image upload to Supabase Storage would go here)
-    // For now, we assume URLs are provided or handled via placeholders
+    // Handle Main Image in property_images table
+    if (imageUrl) {
+      // First, remove old featured flag if editing
+      if (id) {
+        await supabase.from('property_images').update({ is_featured: false }).eq('property_id', id);
+      }
+
+      await supabase.from('property_images').upsert({
+        property_id: propertyId,
+        image_url: imageUrl,
+        is_featured: true
+      });
+    }
     
     message.success(`Property ${id ? 'updated' : 'created'} successfully`);
     navigate('/admin/properties');
     setLoading(false);
   };
+
+  const uploadButton = (
+    <div>
+      {uploadLoading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>Upload Photo</div>
+    </div>
+  );
 
   return (
     <div className="space-y-12">
@@ -148,7 +212,23 @@ export const PropertyForm = () => {
               </Space>
             </Card>
 
-            <Divider className="border-white/5" />
+            <Card className="bg-white border-none shadow-2xl rounded-xl p-4 mt-8">
+              <Title level={4}>Featured Image</Title>
+              <Upload
+                name="image"
+                listType="picture-card"
+                className="image-uploader"
+                showUploadList={false}
+                customRequest={handleUpload}
+              >
+                {imageUrl ? (
+                  <img src={imageUrl} alt="property" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                ) : (
+                  uploadButton
+                )}
+              </Upload>
+              <p className="text-slate-400 text-xs mt-4">Upload the main thumbnail for this property listing.</p>
+            </Card>
 
             <Card className="bg-white border-none shadow-2xl rounded-xl p-4 mt-8">
               <Title level={4}>Location Details</Title>
