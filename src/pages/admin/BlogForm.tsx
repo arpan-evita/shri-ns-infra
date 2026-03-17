@@ -11,12 +11,15 @@ import {
   Col, 
   Typography,
   Space,
-  Divider
+  Divider,
+  Upload
 } from 'antd';
 import { 
   ArrowLeftOutlined, 
   SaveOutlined,
-  BookOutlined
+  BookOutlined,
+  PlusOutlined,
+  LoadingOutlined
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 
@@ -29,6 +32,8 @@ export const BlogForm = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +49,7 @@ export const BlogForm = () => {
           message.error('Failed to load blog post');
         } else {
           form.setFieldsValue(blog);
+          setImageUrl(blog.image_url);
         }
         setLoading(false);
       }
@@ -51,6 +57,37 @@ export const BlogForm = () => {
 
     fetchData();
   }, [id, form]);
+
+  const handleUpload = async (options: any) => {
+    const { file, onSuccess, onError } = options;
+    setUploadLoading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `featured/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('blog-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(filePath);
+
+      setImageUrl(publicUrl);
+      form.setFieldsValue({ image_url: publicUrl });
+      onSuccess(publicUrl);
+      message.success('Image uploaded successfully');
+    } catch (error: any) {
+      onError(error);
+      message.error('Upload failed: ' + error.message);
+    } finally {
+      setUploadLoading(false);
+    }
+  };
 
   const onFinish = async (values: any) => {
     setLoading(true);
@@ -82,6 +119,13 @@ export const BlogForm = () => {
     navigate('/admin/blogs');
     setLoading(false);
   };
+
+  const uploadButton = (
+    <div>
+      {uploadLoading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>Upload Photo</div>
+    </div>
+  );
 
   return (
     <div className="space-y-12">
@@ -127,6 +171,26 @@ export const BlogForm = () => {
           <Col span={24} lg={8}>
             <Card className="bg-white border-none shadow-2xl rounded-xl p-4 mb-8">
               <Title level={4}>Settings</Title>
+
+              <Form.Item label="Featured Image">
+                <Upload
+                  name="image"
+                  listType="picture-card"
+                  className="image-uploader"
+                  showUploadList={false}
+                  customRequest={handleUpload}
+                >
+                  {imageUrl ? (
+                    <img src={imageUrl} alt="featured" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                  ) : (
+                    uploadButton
+                  )}
+                </Upload>
+                <Form.Item name="image_url" noStyle>
+                  <Input type="hidden" />
+                </Form.Item>
+              </Form.Item>
+
               <Form.Item name="category" label="Category">
                 <Select size="large" className="rounded-lg">
                   <Option value="Real Estate">Real Estate</Option>
@@ -141,10 +205,6 @@ export const BlogForm = () => {
                   <Option value="draft">Draft</Option>
                   <Option value="published">Published</Option>
                 </Select>
-              </Form.Item>
-
-              <Form.Item name="image_url" label="Featured Image URL">
-                <Input size="large" placeholder="https://..." />
               </Form.Item>
 
               <Form.Item name="author" label="Author Name">
