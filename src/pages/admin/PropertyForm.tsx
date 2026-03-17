@@ -59,10 +59,7 @@ export const PropertyForm = () => {
   const [loading, setLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
-  const [floorPlans, setFloorPlans] = useState<
-    { id?: string; title: string; image_url: string }[]
-  >([]);
+  const [activeTab, setActiveTab] = useState('1');
   const [agents, setAgents] = useState<
     { id: string; name: string }[]
   >([]);
@@ -113,12 +110,6 @@ export const PropertyForm = () => {
           // Set featured image
           const featured = property.property_images?.find((img: any) => img.is_featured);
           if (featured) setImageUrl(featured.image_url);
-
-          // Set brochure
-          if (property.brochure_url) setBrochureUrl(property.brochure_url);
-
-          // Set Floor Plans
-          setFloorPlans(property.property_floor_plans || []);
 
           // Set Selected Amenities
           setSelectedAmenities(property.property_amenity_relation?.map((ar: any) => ar.amenity_id) || []);
