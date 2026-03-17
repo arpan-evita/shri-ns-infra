@@ -4,7 +4,9 @@ import {
   Home, 
   MessageSquare, 
   Users, 
-  ArrowUpRight,
+  TrendingUp, 
+  ArrowUpRight, 
+  Clock
 } from 'lucide-react';
 import { Row, Col, Typography } from 'antd';
 
@@ -34,7 +36,6 @@ export const AdminDashboard = () => {
         totalAgents: agentsCount.count || 0,
         recentLeads: recentLeadsData.data || []
       });
-      setLoading(false);
     };
 
     fetchStats();
