@@ -693,14 +693,14 @@ export const PropertyForm = () => {
         }
       }}
     >
-      <div className="w-full max-w-[1400px] mx-auto space-y-12 pb-24">
+      <div className="w-full max-w-[1500px] mx-auto space-y-8 lg:space-y-12 pb-24">
       <style>{`
         .property-form-tabs .ant-tabs-nav::before {
           border-bottom: 2px solid rgba(255,255,255,0.05);
         }
         .property-form-tabs .ant-tabs-tab {
-          padding: 20px 0;
-          margin-right: 40px;
+          padding: 16px 0;
+          margin-right: 24px;
         }
         .property-form-tabs .ant-tabs-tab-btn {
           font-weight: 900;
@@ -775,7 +775,7 @@ export const PropertyForm = () => {
           bhk_type: '2 BHK',
           possession_status: 'Ready to Move'
         }}
-        className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-10 shadow-3xl"
+        className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 lg:p-10 shadow-3xl"
       >
         <Tabs 
           activeKey={activeTab} 
