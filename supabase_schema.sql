@@ -184,52 +184,27 @@ CREATE TABLE IF NOT EXISTS blogs (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- 8. Leads Table
-CREATE TABLE IF NOT EXISTS leads (
+-- 8. Specialized Property Leads Table
+CREATE TABLE IF NOT EXISTS property_leads (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    property_id UUID REFERENCES properties(id) ON DELETE SET NULL,
+    property_id UUID REFERENCES properties(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     phone TEXT,
     email TEXT,
     message TEXT,
+    status TEXT DEFAULT 'New', -- New, Contacted, Converted, Lost
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 9. Security & Policies (Idempotent)
-ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
-ALTER TABLE properties ENABLE ROW LEVEL SECURITY;
-ALTER TABLE property_images ENABLE ROW LEVEL SECURITY;
-ALTER TABLE amenities ENABLE ROW LEVEL SECURITY;
-ALTER TABLE property_amenity_relation ENABLE ROW LEVEL SECURITY;
-ALTER TABLE nearby_places ENABLE ROW LEVEL SECURITY;
-ALTER TABLE property_floor_plans ENABLE ROW LEVEL SECURITY;
-ALTER TABLE blogs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+-- Toggle RLS
+ALTER TABLE property_leads ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies to avoid conflicts
+-- Policy
 DO $$ 
 BEGIN 
-    DROP POLICY IF EXISTS "Public Read Access" ON properties;
-    DROP POLICY IF EXISTS "Public Read Access" ON property_images;
-    DROP POLICY IF EXISTS "Public Read Access" ON property_floor_plans;
-    DROP POLICY IF EXISTS "Public Read Access" ON agents;
-    DROP POLICY IF EXISTS "Public Read Access" ON amenities;
-    DROP POLICY IF EXISTS "Public Read Access" ON property_amenity_relation;
-    DROP POLICY IF EXISTS "Public Read Access" ON nearby_places;
-    DROP POLICY IF EXISTS "Public Read Access" ON blogs;
-    DROP POLICY IF EXISTS "Public Insert Leads" ON leads;
+    DROP POLICY IF EXISTS "Public Insert Leads" ON property_leads;
 END $$;
-
--- Create Policies
-CREATE POLICY "Public Read Access" ON properties FOR SELECT USING (true);
-CREATE POLICY "Public Read Access" ON property_images FOR SELECT USING (true);
-CREATE POLICY "Public Read Access" ON property_floor_plans FOR SELECT USING (true);
-CREATE POLICY "Public Read Access" ON agents FOR SELECT USING (true);
-CREATE POLICY "Public Read Access" ON amenities FOR SELECT USING (true);
-CREATE POLICY "Public Read Access" ON property_amenity_relation FOR SELECT USING (true);
-CREATE POLICY "Public Read Access" ON nearby_places FOR SELECT USING (true);
-CREATE POLICY "Public Read Access" ON blogs FOR SELECT USING (true);
-CREATE POLICY "Public Insert Leads" ON leads FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public Insert Leads" ON property_leads FOR INSERT WITH CHECK (true);
 
 -- 10. Seed Default Amenities
 INSERT INTO amenities (name, icon, category) VALUES

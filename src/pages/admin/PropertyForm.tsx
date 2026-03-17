@@ -28,24 +28,28 @@ import {
   LoadingOutlined,
   InfoCircleOutlined,
   EnvironmentOutlined,
-  SafetyCertificateOutlined,
-  UnorderedListOutlined,
   DeleteOutlined,
-  FilePdfOutlined,
-  LayoutOutlined,
-  CarOutlined
+  CarOutlined,
+  UploadOutlined,
+  FormatPainterOutlined,
+  DollarOutlined,
+  EyeOutlined,
+  GlobalOutlined,
+  ShareAltOutlined,
+  VideoCameraOutlined
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 import dayjs from 'dayjs';
 import { useAdmin } from '@/components/admin/AdminLayout';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-const CheckCircle2 = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-);
+import MapSelector from '@/components/admin/MapSelector';
+// Custom Icons or Components
+
+// Custom Icons or Components
 
 export const PropertyForm = () => {
   const { id } = useParams();
@@ -56,10 +60,20 @@ export const PropertyForm = () => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
-  const [floorPlans, setFloorPlans] = useState<any[]>([]);
-  const [agents, setAgents] = useState<any[]>([]);
-  const [amenities, setAmenities] = useState<any[]>([]);
+  const [floorPlans, setFloorPlans] = useState<
+    { id?: string; title: string; image_url: string }[]
+  >([]);
+  const [agents, setAgents] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [amenities, setAmenities] = useState<
+    { id: string; name: string }[]
+  >([]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [galleryImages, setGalleryImages] = useState<
+    { id?: string; image_url: string }[]
+  >([]);
+  const [ogImage, setOgImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('1');
 
   useEffect(() => {
@@ -108,6 +122,16 @@ export const PropertyForm = () => {
 
           // Set Selected Amenities
           setSelectedAmenities(property.property_amenity_relation?.map((ar: any) => ar.amenity_id) || []);
+
+          // Set Gallery Images
+          const gallery = property.property_images?.filter((img: any) => !img.is_featured) || [];
+          setGalleryImages(gallery.map((img: any) => ({ image_url: img.image_url })));
+          
+          // Set OG Image
+          if (property.og_image) setOgImage(property.og_image);
+          
+          // Set Featured Image (imageUrl state)
+          if (property.brochure_url) setImageUrl(property.brochure_url);
         }
         setLoading(false);
       }
@@ -167,7 +191,9 @@ export const PropertyForm = () => {
     const finalPropertyData = {
       ...propertyData,
       slug,
-      brochure_url: brochureUrl
+      og_image: ogImage,
+      brochure_url: imageUrl, // Reusing brochure_url as the featured image DB column
+      updated_at: new Date().toISOString()
     };
 
     let propertyId = id;
@@ -230,15 +256,31 @@ export const PropertyForm = () => {
       await supabase.from('nearby_places').insert(landmarkData);
     }
     
+    // 5. Handle Gallery Images
+    // Clear old non-featured images if editing
+    if (id) {
+       await supabase.from('property_images').delete().eq('property_id', propertyId).eq('is_featured', false);
+    }
+    if (galleryImages.length > 0) {
+      const galleryData = galleryImages.map(img => ({
+        property_id: propertyId,
+        image_url: img.image_url,
+        is_featured: false
+      }));
+      await supabase.from('property_images').insert(galleryData);
+    }
+    
     message.success(`Property ${id ? 'updated' : 'created'} successfully`);
     navigate('/admin/properties');
     setLoading(false);
   };
 
   const uploadButton = (
-    <div>
-      {uploadLoading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
+    <div className="flex flex-col items-center justify-center">
+      {uploadLoading ? <LoadingOutlined className="text-2xl text-primary" /> : <PlusOutlined className="text-2xl text-slate-500" />}
+      <div className="mt-2 text-slate-500 uppercase font-black text-[10px] tracking-widest">
+        {uploadLoading ? 'Uploading...' : 'Upload'}
+      </div>
     </div>
   );
 
@@ -247,18 +289,27 @@ export const PropertyForm = () => {
       key: '1',
       label: (
         <span className="flex items-center gap-2">
-          <InfoCircleOutlined /> Basic Info
+          <InfoCircleOutlined /> BASIC INFO
         </span>
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
           <Row gutter={[24, 24]}>
-            <Col xs={24} lg={16}>
+            <Col xs={24} md={12}>
               <Form.Item name="title" label="Listing Title" rules={[{ required: true }]}>
                 <Input size="large" placeholder="E.g. Luxury 4BHK Apartment in Noida" className="rounded-lg" />
               </Form.Item>
             </Col>
-            <Col xs={24} lg={8}>
+            <Col xs={24} md={6}>
+              <Form.Item name="status" label="Listing Status" rules={[{ required: true }]}>
+                <Select size="large" className="rounded-lg">
+                  <Option value="Draft">Draft</Option>
+                  <Option value="Published">Published</Option>
+                  <Option value="Archived">Archived</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={6}>
               <Form.Item name="project_name" label="Project / Society Name">
                 <Input size="large" placeholder="E.g. Godrej Woods" className="rounded-lg" />
               </Form.Item>
@@ -278,7 +329,7 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
-              <Form.Item name="status" label="Purpose" rules={[{ required: true }]}>
+              <Form.Item name="purpose" label="Purpose" rules={[{ required: true }]}>
                 <Select size="large" className="rounded-lg">
                   <Option value="buy">For Sale</Option>
                   <Option value="rent">For Rent</Option>
@@ -306,31 +357,36 @@ export const PropertyForm = () => {
       key: '2',
       label: (
         <span className="flex items-center gap-2">
-          <UnorderedListOutlined /> Specifications
+          <FormatPainterOutlined /> SPECIFICATIONS
         </span>
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
           <Row gutter={[24, 24]}>
-            <Col xs={24} md={8}>
+            <Col xs={24} md={6}>
               <Form.Item name="bhk_type" label="BHK Configuration">
                 <Select size="large" className="rounded-lg">
                   <Option value="1 BHK">1 BHK</Option>
                   <Option value="2 BHK">2 BHK</Option>
                   <Option value="3 BHK">3 BHK</Option>
                   <Option value="4 BHK">4 BHK</Option>
-                  <Option value="4+ BHK">4+ BHK</Option>
+                  <Option value="5 BHK">5 BHK</Option>
                   <Option value="Studio">Studio</Option>
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="bedrooms" label="Bedrooms Count">
+            <Col xs={24} md={6}>
+              <Form.Item name="bedrooms" label="Total Bedrooms">
                 <InputNumber min={0} className="w-full" size="large" />
               </Form.Item>
             </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="bathrooms" label="Bathrooms Count">
+            <Col xs={24} md={6}>
+              <Form.Item name="bathrooms" label="Total Bathrooms">
+                <InputNumber min={0} className="w-full" size="large" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={6}>
+              <Form.Item name="balcony_count" label="Balcony Count">
                 <InputNumber min={0} className="w-full" size="large" />
               </Form.Item>
             </Col>
@@ -338,24 +394,24 @@ export const PropertyForm = () => {
 
           <Row gutter={[24, 24]}>
             <Col xs={24} md={8}>
-              <Form.Item name="carpet_area" label="Carpet Area (Sq.Ft)">
-                <InputNumber className="w-full" size="large" />
+              <Form.Item name="carpet_area" label="Carpet Area">
+                <InputNumber className="w-full" size="large" addonAfter="Sq.Ft" />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
-              <Form.Item name="builtup_area" label="Built-up Area (Sq.Ft)">
-                <InputNumber className="w-full" size="large" />
+              <Form.Item name="builtup_area" label="Built-up Area">
+                <InputNumber className="w-full" size="large" addonAfter="Sq.Ft" />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
-              <Form.Item name="super_builtup_area" label="Super Built-up Area (Sq.Ft)">
-                <InputNumber className="w-full" size="large" />
+              <Form.Item name="super_builtup_area" label="Super Built-up Area">
+                <InputNumber className="w-full" size="large" addonAfter="Sq.Ft" />
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={[24, 24]}>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} md={6}>
               <Form.Item name="facing" label="Facing (Vaastu)">
                 <Select size="large" className="rounded-lg">
                   <Option value="East">East</Option>
@@ -369,7 +425,7 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} md={6}>
               <Form.Item name="furnishing_status" label="Furnishing">
                 <Select size="large" className="rounded-lg">
                   <Option value="Unfurnished">Unfurnished</Option>
@@ -378,12 +434,36 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} md={6}>
+              <Form.Item name="property_age" label="Property Age">
+                <Select size="large" className="rounded-lg">
+                  <Option value="New Construction">New Construction</Option>
+                  <Option value="0–1 years">0–1 years</Option>
+                  <Option value="1–5 years">1–5 years</Option>
+                  <Option value="5–10 years">5–10 years</Option>
+                  <Option value="10+ years">10+ years</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={6}>
+              <Form.Item name="parking_type" label="Parking Type">
+                <Select size="large" className="rounded-lg">
+                  <Option value="Covered Parking">Covered Parking</Option>
+                  <Option value="Open Parking">Open Parking</Option>
+                  <Option value="Basement Parking">Basement Parking</Option>
+                  <Option value="No Parking">No Parking</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
               <Form.Item name="floor_no" label="Floor Number">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} md={12}>
               <Form.Item name="total_floors" label="Total Floors">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
@@ -396,26 +476,35 @@ export const PropertyForm = () => {
       key: '3',
       label: (
         <span className="flex items-center gap-2">
-          <EnvironmentOutlined /> Location & Connectivity
+          <EnvironmentOutlined /> LOCATION & CONNECTIVITY
         </span>
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
           <Row gutter={[24, 24]}>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={6}>
               <Form.Item name="city" label="City" rules={[{ required: true }]}>
                 <Input size="large" placeholder="E.g. Noida" />
               </Form.Item>
             </Col>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={6}>
               <Form.Item name="location" label="Area / Sector" rules={[{ required: true }]}>
                 <Input size="large" placeholder="E.g. Sector 150" />
               </Form.Item>
             </Col>
+            <Col xs={24} md={12}>
+              <Form.Item name="pincode" label="Pincode">
+                <InputNumber className="w-full" size="large" placeholder="201301" />
+              </Form.Item>
+            </Col>
           </Row>
 
+          <Form.Item name="full_address" label="Full Address">
+            <TextArea rows={3} placeholder="House No, Street, Landmark details..." className="rounded-lg" />
+          </Form.Item>
+
           <Row gutter={[24, 24]}>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={8}>
               <Form.Item name="possession_status" label="Possession Status">
                 <Select size="large" className="rounded-lg">
                   <Option value="Ready to Move">Ready to Move</Option>
@@ -424,12 +513,39 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={8}>
               <Form.Item name="possession_date" label="Possession Date (Expected)">
                 <DatePicker size="large" className="w-full rounded-lg" />
               </Form.Item>
             </Col>
+            <Col xs={24} md={4}>
+              <Form.Item name="latitude" label="Latitude">
+                <InputNumber className="w-full" size="large" precision={6} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={4}>
+              <Form.Item name="longitude" label="Longitude">
+                <InputNumber className="w-full" size="large" precision={6} />
+              </Form.Item>
+            </Col>
           </Row>
+
+          <div className="space-y-4">
+             <Title level={5} className="text-white mb-0 text-xs uppercase tracking-widest font-black">Interactive Map Placement</Title>
+             <Form.Item noStyle shouldUpdate={(prev, curr) => prev.latitude !== curr.latitude || prev.longitude !== curr.longitude}>
+                {({ getFieldsValue, setFieldsValue }) => {
+                   const { latitude, longitude } = getFieldsValue(['latitude', 'longitude']);
+                   return (
+                     <MapSelector 
+                        value={{ lat: latitude || 28.6139, lng: longitude || 77.209 }}
+                        onChange={(val) => {
+                           setFieldsValue({ latitude: val.lat, longitude: val.lng });
+                        }}
+                     />
+                   );
+                }}
+             </Form.Item>
+          </div>
 
           <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Nearby Landmarks (Connectivity)</Divider>
           <Form.List name="nearby_places">
@@ -487,7 +603,7 @@ export const PropertyForm = () => {
       key: '4',
       label: (
         <span className="flex items-center gap-2">
-          <CarOutlined /> Amenities & Features
+          <CarOutlined /> AMENITIES & FEATURES
         </span>
       ),
       children: (
@@ -515,114 +631,103 @@ export const PropertyForm = () => {
       key: '5',
       label: (
         <span className="flex items-center gap-2">
-          <LayoutOutlined /> Files & Floor Plans
+          <EyeOutlined /> MEDIA & TOURS
         </span>
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
           <Row gutter={[24, 24]}>
-            <Col xs={24} lg={12}>
-               <Card className="bg-[#1a1a1a] border-white/10 h-full">
-                  <Title level={5} className="text-white mb-2">Property Brochure (PDF)</Title>
-                  <Text className="text-slate-500 text-xs block mb-4">Upload the detailed project brochure.</Text>
-                  <Upload
-                    name="brochure"
-                    showUploadList={false}
-                    customRequest={(opt) => handleFileUpload(opt, 'properties', setBrochureUrl)}
-                  >
-                    <Button 
-                      icon={brochureUrl ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <FilePdfOutlined />}
-                      className="bg-white/5 border-white/10 text-white h-12 px-6 rounded-lg uppercase font-bold text-xs tracking-widest w-full"
-                    >
-                      {brochureUrl ? 'Brochure Uploaded' : 'Select PDF Brochure'}
-                    </Button>
-                  </Upload>
-                  {brochureUrl && (
-                    <div className="mt-4 flex items-center gap-2 text-primary text-[10px] uppercase font-black">
-                       <PlusOutlined /> File Ready for Publishing
-                    </div>
-                  )}
-               </Card>
+            <Col xs={24} md={12}>
+              <Form.Item label="Featured Cover Photo">
+                <Upload
+                  name="featured"
+                  listType="picture-card"
+                  showUploadList={false}
+                  customRequest={(opt) => handleFileUpload(opt, 'property-images', setImageUrl)}
+                >
+                  {imageUrl ? <img src={imageUrl} alt="featured" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : uploadButton}
+                </Upload>
+              </Form.Item>
             </Col>
-            <Col xs={24} lg={12}>
-               <Card className="bg-[#1a1a1a] border-white/10 h-full">
-                  <Title level={5} className="text-white mb-2">Featured Image</Title>
-                  <Upload
-                    name="image"
+            <Col xs={24} md={12}>
+              <Form.Item label="Property Gallery (Multiple)">
+                 <Upload
                     listType="picture-card"
-                    showUploadList={false}
-                    customRequest={(opt) => handleFileUpload(opt, 'properties', setImageUrl)}
-                    className="w-full aspect-video featured-upload"
-                  >
-                    {imageUrl ? (
-                      <img src={imageUrl} alt="property" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
-                    ) : (
-                      uploadButton
-                    )}
-                  </Upload>
-               </Card>
+                    fileList={galleryImages.map((img, i) => ({ uid: i.toString(), name: 'image', status: 'done', url: img.image_url }))}
+                    onRemove={(file) => setGalleryImages(prev => prev.filter(img => img.image_url !== file.url))}
+                    customRequest={(opt) => handleFileUpload(opt, 'property-images', (url) => setGalleryImages(prev => [...prev, { image_url: url }]))}
+                 >
+                    {uploadButton}
+                 </Upload>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
+              <Form.Item name="video_url" label="Video Tour URL">
+                <Input size="large" prefix={<VideoCameraOutlined />} placeholder="YouTube or Vimeo Link" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item name="virtual_tour_360" label="360° Virtual Tour URL">
+                <Input size="large" prefix={<GlobalOutlined />} placeholder="Kuula or Matterport Link" />
+              </Form.Item>
             </Col>
           </Row>
 
           <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Property Floor Plans</Divider>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-             {floorPlans.map((plan, idx) => (
-                <Card key={idx} className="bg-[#111] border-white/10 relative overflow-hidden group" bodyStyle={{ padding: 12 }}>
-                   <img src={plan.image_url} className="w-full h-32 object-cover rounded-md mb-3" />
-                   <Input 
-                      value={plan.title} 
-                      onChange={(e) => {
-                        const newPlans = [...floorPlans];
-                        newPlans[idx].title = e.target.value;
-                        setFloorPlans(newPlans);
-                      }}
-                      placeholder="e.g., 2BHK Layout"
-                      className="bg-white/5 border-none text-white text-xs"
-                   />
-                   <Button 
-                      icon={<DeleteOutlined />} 
-                      danger 
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => setFloorPlans(prev => prev.filter((_, i) => i !== idx))}
-                   />
-                </Card>
-             ))}
-             <Upload
-               showUploadList={false}
-               customRequest={async (opt) => {
-                  const url = await handleFileUpload(opt, 'properties');
-                  if (url) {
-                    setFloorPlans(prev => [...prev, { title: 'New Plan', image_url: url }]);
-                  }
-               }}
-             >
-               <div className="w-full h-44 bg-white/5 border-2 border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-slate-500 hover:border-primary transition-all cursor-pointer">
-                  <PlusOutlined className="text-2xl mb-2" />
-                  <span className="uppercase font-bold tracking-widest text-[10px]">Add Floor Plan</span>
-               </div>
-             </Upload>
-          </div>
+          <Form.List name="property_floor_plans">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Row key={key} gutter={16} align="bottom" className="mb-4">
+                    <Col span={10}>
+                      <Form.Item {...restField} name={[name, 'title']} label="Plan Title">
+                        <Input placeholder="E.g. Unit Type A" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={10}>
+                      <Form.Item {...restField} name={[name, 'image_url']} label="Floor Plan Image">
+                        <Upload
+                           showUploadList={false}
+                           customRequest={(opt) => handleFileUpload(opt, 'property-images', (url) => {
+                              const plans = form.getFieldValue('property_floor_plans');
+                              plans[name].image_url = url;
+                              form.setFieldsValue({ property_floor_plans: plans });
+                           })}
+                        >
+                           <Button icon={<UploadOutlined />} className="w-full">
+                              {form.getFieldValue(['property_floor_plans', name, 'image_url']) ? 'Update Image' : 'Upload Plan'}
+                           </Button>
+                        </Upload>
+                      </Form.Item>
+                    </Col>
+                    <Col span={4}>
+                      <Button onClick={() => remove(name)} danger icon={<DeleteOutlined />} block />
+                    </Col>
+                  </Row>
+                ))}
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>Add Floor Plan</Button>
+              </>
+            )}
+          </Form.List>
         </Space>
-      ),
+      )
     },
     {
       key: '6',
       label: (
         <span className="flex items-center gap-2">
-          <SafetyCertificateOutlined /> Legal & Financial
+          <DollarOutlined /> LEGAL & FINANCIAL
         </span>
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
           <Row gutter={[24, 24]}>
             <Col xs={24} md={8}>
-              <Form.Item name="price" label="Total Price (₹)" rules={[{ required: true }]}>
-                <InputNumber 
-                  className="w-full" 
-                  size="large" 
-                  formatter={value => `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                  parser={value => value!.replace(/\₹\s?|(,*)/g, '')}
-                />
+              <Form.Item name="total_price" label="Total Price (₹)">
+                <InputNumber className="w-full" size="large" formatter={v => `₹ ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
@@ -631,26 +736,81 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
-              <Form.Item name="maintenance_charges" label="Monthly Maintenance (₹)">
+              <Form.Item name="booking_amount" label="Booking Amount (₹)">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={[24, 24]}>
-            <Col xs={24} md={18}>
-              <Form.Item name="rera_id" label="RERA Registration ID">
-                <Input size="large" className="rounded-lg" placeholder="UPRERAPRJ12345" />
+            <Col xs={24} md={8}>
+              <Form.Item name="stamp_duty" label="Stamp Duty (₹)">
+                <InputNumber className="w-full" size="large" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item name="registration_charges" label="Registration Charges (₹)">
+                <InputNumber className="w-full" size="large" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item name="monthly_maintenance" label="Monthly Maintenance (₹)">
+                <InputNumber className="w-full" size="large" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={6}>
+              <Form.Item name="price_negotiable" label="Price Negotiable" valuePropName="checked">
+                <Switch />
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>
-              <Form.Item name="is_featured" label="Promote as Featured" valuePropName="checked">
+              <Form.Item name="loan_available" label="Loan Available" valuePropName="checked">
                 <Switch />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item name="rera_registration_id" label="RERA Registration ID">
+                <Input size="large" placeholder="E.g. UPRERAPRJ12345" />
               </Form.Item>
             </Col>
           </Row>
         </Space>
+      )
+    },
+    {
+      key: '7',
+      label: (
+        <span className="flex items-center gap-2">
+          <ShareAltOutlined /> SEO SETTINGS
+        </span>
       ),
+      children: (
+        <Space direction="vertical" size="large" className="w-full">
+          <Form.Item name="meta_title" label="Meta Title">
+            <Input size="large" placeholder="Luxury 4BHK Apartment for Sale in Sector 150" />
+          </Form.Item>
+          <Form.Item name="meta_description" label="Meta Description">
+            <TextArea rows={4} placeholder="Find your dream home with 5-star amenities..." />
+          </Form.Item>
+          <Form.Item name="focus_keyword" label="Focus Keyword">
+            <Input size="large" placeholder="e.g. 4BHK Noida, Luxury Villa" />
+          </Form.Item>
+          <Form.Item label="Open Graph (Social) Image">
+             <Upload
+                name="og"
+                listType="picture-card"
+                showUploadList={false}
+                customRequest={(opt) => handleFileUpload(opt, 'property-images', setOgImage)}
+             >
+                {ogImage ? <img src={ogImage} alt="og" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : uploadButton}
+             </Upload>
+             <div className="text-slate-500 text-[10px] uppercase font-bold mt-2 italic">Standard 1200x630px recommended for social sharing previews</div>
+          </Form.Item>
+        </Space>
+      )
     }
   ];
 

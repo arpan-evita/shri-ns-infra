@@ -22,9 +22,38 @@ import {
   Trees,
   CloudLightning,
   Construction,
-  Car
+  Car,
+  Video,
+  MousePointer2,
+  Layers,
+  ArrowUpRight
 } from "lucide-react";
-import { Button, Slider, Card, Tag, Divider, Typography, Empty, Modal } from 'antd';
+import { 
+  Button, 
+  Slider, 
+  Card, 
+  Tag, 
+  Divider, 
+  Typography, 
+  Empty, 
+  Modal, 
+  message 
+} from 'antd';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix for default marker icon in Leaflet + React
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 const { Title, Text } = Typography;
 
@@ -39,7 +68,12 @@ const AmenityIcons: Record<string, any> = {
   'Parking': Car,
   'Power Backup': CloudLightning,
   'Elevator': Construction,
+  'CCTV': Shield,
+  'Lift': Construction,
+  'Park': Trees,
 };
+
+// Utility Constants
 
 export const PropertyDetailPage = () => {
   const { slug } = useParams();
@@ -74,7 +108,16 @@ export const PropertyDetailPage = () => {
         navigate('/properties');
       } else {
         setProperty(data);
-        setLoanAmount(data.price * 0.8); // Default 80% loan
+        setLoanAmount(data.total_price || data.price * 0.8);
+
+        // Update SEO Tags
+        if (data.meta_title) document.title = `${data.meta_title} | Shri NS Infra`;
+        else document.title = `${data.title} | Shri NS Infra`;
+
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+          metaDescription.setAttribute('content', data.meta_description || data.description.substring(0, 160));
+        }
       }
       setLoading(false);
     };
@@ -84,12 +127,40 @@ export const PropertyDetailPage = () => {
 
   useEffect(() => {
     if (loanAmount > 0) {
-      const r = interestRate / (12 * 100);
-      const n = tenure * 12;
+      const r = (interestRate || 8.5) / (12 * 100);
+      const n = (tenure || 20) * 12;
       const emiVal = (loanAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
       setEmi(Math.round(emiVal));
     }
   }, [loanAmount, interestRate, tenure]);
+
+  const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const leadData = {
+      property_id: property.id,
+      name: formData.get('name'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      message: formData.get('message'),
+      source: 'Property Detail Page',
+      status: 'New'
+    };
+
+    if (!leadData.name || !leadData.phone) {
+       message.warning("Please provide your name and phone number");
+       return;
+    }
+
+    const { error } = await supabase.from('property_leads').insert([leadData]);
+
+    if (error) {
+       message.error("Failed to send inquiry: " + error.message);
+    } else {
+       message.success("Your inquiry has been established. Our consultant will contact you shortly.");
+       (e.target as HTMLFormElement).reset();
+    }
+  };
 
   if (loading) return <div className="pt-32 px-6 text-center text-slate-500 min-h-screen flex items-center justify-center bg-background-dark font-black uppercase tracking-[0.5em] animate-pulse">Engineering your premium view...</div>;
   if (!property) return null;
@@ -175,15 +246,19 @@ export const PropertyDetailPage = () => {
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                {[
-                 { icon: <BedDouble className="w-6 h-6" />, label: "BHK Type", value: property.bhk_type },
-                 { icon: <Maximize className="w-6 h-6" />, label: "Carpet Area", value: `${property.carpet_area} ${property.area_unit || 'Sq.Ft'}` },
+                 { icon: <BedDouble className="w-6 h-6" />, label: "Configuration", value: property.bhk_type },
+                 { icon: <Maximize className="w-6 h-6" />, label: "Carpet Area", value: property.carpet_area ? `${property.carpet_area} Sq.Ft` : null },
                  { icon: <Compass className="w-6 h-6" />, label: "Facing", value: property.facing },
-                 { icon: <Clock className="w-6 h-6" />, label: "Property Age", value: property.age_of_property }
-               ].map((item, i) => (
+                 { icon: <Clock className="w-6 h-6" />, label: "Possession", value: property.possession_status },
+                 { icon: <Layers className="w-6 h-6" />, label: "Floor", value: property.floor_no ? `${property.floor_no} of ${property.total_floors}` : null },
+                 { icon: <Car className="w-6 h-6" />, label: "Parking", value: property.parking_type },
+                 { icon: <Construction className="w-6 h-6" />, label: "Age", value: property.property_age },
+                 { icon: <CheckCircle2 className="w-6 h-6" />, label: "Status", value: property.status }
+               ].filter(item => item.value).map((item, i) => (
                  <div key={i} className="bg-white/5 border border-white/10 p-8 rounded-3xl group hover:border-primary transition-all duration-500">
                     <div className="text-primary mb-4 group-hover:scale-110 transition-transform">{item.icon}</div>
-                    <div className="text-white font-black text-xl uppercase tracking-tighter">{item.value || 'N/A'}</div>
-                    <div className="text-slate-500 uppercase tracking-widest text-[10px] font-bold mt-1">{item.label}</div>
+                    <div className="text-white font-black text-lg uppercase tracking-tighter truncate">{item.value || 'N/A'}</div>
+                    <div className="text-slate-500 uppercase tracking-widest text-[9px] font-bold mt-1">{item.label}</div>
                  </div>
                ))}
             </div>
@@ -224,6 +299,78 @@ export const PropertyDetailPage = () => {
               </div>
             </div>
 
+            {/* Video & 360 Tour (Dynamic) */}
+            {(property.video_url || property.virtual_tour_360) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {property.video_url && (
+                  <div className="space-y-6">
+                    <Title level={4} className="text-white uppercase tracking-tighter flex items-center gap-3">
+                      <Video className="text-primary w-5 h-5" /> Video Presentation
+                    </Title>
+                    <div className="aspect-video bg-white/5 rounded-3xl overflow-hidden border border-white/10 group relative">
+                       <iframe 
+                         src={property.video_url.includes('youtube.com') ? property.video_url.replace('watch?v=', 'embed/') : property.video_url} 
+                         className="w-full h-full border-0"
+                         allowFullScreen
+                       />
+                    </div>
+                  </div>
+                )}
+                {property.virtual_tour_360 && (
+                  <div className="space-y-6">
+                    <Title level={4} className="text-white uppercase tracking-tighter flex items-center gap-3">
+                      <MousePointer2 className="text-primary w-5 h-5" /> 360° Experience
+                    </Title>
+                    <div className="aspect-video bg-white/5 rounded-3xl overflow-hidden border border-white/10 relative group">
+                       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4 z-10 bg-black/60 opacity-100 group-hover:opacity-0 transition-opacity pointer-events-none">
+                          <MousePointer2 className="w-12 h-12 text-primary animate-bounce" />
+                          <span className="text-white font-black uppercase tracking-widest text-[10px]">Click to launch virtual world</span>
+                       </div>
+                       <iframe src={property.virtual_tour_360} className="w-full h-full border-0" allowFullScreen />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Interactive Location Hub */}
+            {(property.latitude && property.longitude) && (
+              <div className="space-y-8">
+                <div className="flex justify-between items-end">
+                   <div className="space-y-2">
+                     <Title level={3} className="text-white uppercase tracking-tighter mb-0">Location Hub</Title>
+                     <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Explore the neighborhood ecosystem</p>
+                   </div>
+                   <Button 
+                     icon={<ArrowUpRight className="w-4 h-4" />}
+                     href={`https://www.google.com/maps?q=${property.latitude},${property.longitude}`}
+                     target="_blank"
+                     className="bg-white/5 border-white/10 text-white hover:text-primary uppercase text-[10px] font-black tracking-widest h-12 px-6 rounded-2xl"
+                   >
+                     Open in Maps
+                   </Button>
+                </div>
+                <div className="h-[500px] w-full bg-white/5 rounded-[3rem] overflow-hidden border border-white/10 z-0">
+                  <MapContainer 
+                    center={[property.latitude, property.longitude]} 
+                    zoom={15} 
+                    scrollWheelZoom={false}
+                    style={{ height: '100%', width: '100%', filter: 'invert(100%) hue-rotate(180deg) brightness(0.9) contrast(0.9)' }}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    <Marker position={[property.latitude, property.longitude]}>
+                      <Popup className="premium-popup">
+                        <div className="font-black uppercase tracking-tighter text-xs pt-2">{property.title}</div>
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                </div>
+              </div>
+            )}
+
             {/* Floor Plans */}
             <div className="space-y-12">
                <Title level={3} className="text-white uppercase tracking-tighter">Spatial Layouts (Floor Plans)</Title>
@@ -239,12 +386,12 @@ export const PropertyDetailPage = () => {
                             <span className="text-white font-black uppercase tracking-widest text-xs">{plan.title}</span>
                             <Maximize className="w-4 h-4 text-slate-500 group-hover:text-primary" />
                          </div>
-                         <img src={plan.image_url} className="w-full h-64 object-contain p-8 bg-white/2 bg-white/10" alt={plan.title} />
+                         <img src={plan.image_url} className="w-full h-64 object-contain p-8 bg-white/10" alt={plan.title} />
                       </div>
                     ))
                  ) : (
                     <div className="col-span-full bg-white/5 border border-white/10 p-12 rounded-3xl text-center">
-                       <Layout className="w-12 h-12 text-slate-700 mx-auto mb-4" />
+                       <Layers className="w-12 h-12 text-slate-700 mx-auto mb-4" />
                        <Text className="text-slate-500 uppercase tracking-widest text-[10px] font-bold">Floor plans available on visit request</Text>
                     </div>
                  )}
@@ -274,17 +421,21 @@ export const PropertyDetailPage = () => {
                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-16 border-t border-white/10 pt-12">
                    {[
                     { label: "BHK Configuration", value: property.bhk_type },
-                    { label: "Built-up Area", value: `${property.builtup_area} ${property.area_unit}` },
-                    { label: "Super Built-up", value: `${property.super_builtup_area} ${property.area_unit}` },
-                    { label: "Balconies", value: property.balconies },
-                    { label: "Structure", value: `${property.floor_no} Stories of ${property.total_floors}` },
-                    { label: "Parking Space", value: property.parking },
-                    { label: "Maintenance", value: property.maintenance_charges ? `₹${property.maintenance_charges} / MO` : "Standard" },
-                    { label: "RERA Registry", value: property.rera_id || "Registered", color: "text-primary font-black" }
-                   ].map((spec, i) => (
+                    { label: "Built-up Area", value: property.builtup_area ? `${property.builtup_area} ${property.area_unit}` : null },
+                    { label: "Super Built-up", value: property.super_builtup_area ? `${property.super_builtup_area} ${property.area_unit}` : null },
+                    { label: "Carpet Area", value: property.carpet_area ? `${property.carpet_area} ${property.area_unit}` : null },
+                    { label: "Balconies", value: property.balcony_count },
+                    { label: "Structure", value: (property.floor_no && property.total_floors) ? `${property.floor_no} Stories of ${property.total_floors}` : null },
+                    { label: "Parking Space", value: property.parking_type },
+                    { label: "Monthly Maintenance", value: property.monthly_maintenance ? `₹${property.monthly_maintenance}` : null },
+                    { label: "Booking Amount", value: property.booking_amount ? `₹${property.booking_amount}` : null },
+                    { label: "RERA Registry ID", value: property.rera_registration_id, color: "text-primary font-black" },
+                    { label: "Property Age", value: property.property_age },
+                    { label: "Negotiable", value: property.price_negotiable ? "Yes" : "No" }
+                   ].filter(spec => spec.value !== null && spec.value !== undefined).map((spec, i) => (
                     <div key={i} className="flex justify-between items-center border-b border-white/10 pb-6">
                        <span className="text-slate-500 uppercase tracking-widest text-[10px] font-black">{spec.label}</span>
-                       <span className={spec.color || "text-white font-black text-sm"}>{spec.value || 'Verified'}</span>
+                       <span className={spec.color || "text-white font-black text-sm"}>{spec.value}</span>
                     </div>
                    ))}
                </div>
@@ -313,7 +464,7 @@ export const PropertyDetailPage = () => {
                         </div>
                         <Slider 
                           min={100000} 
-                          max={property.price} 
+                          max={property.total_price || property.price || 100000000} 
                           step={100000}
                           value={loanAmount} 
                           onChange={setLoanAmount}
@@ -375,13 +526,16 @@ export const PropertyDetailPage = () => {
                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Priority callback within 30 minutes</p>
                </div>
                
-               <form className="space-y-4">
-                  <input placeholder="Personal Identity (Name)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
-                  <input placeholder="Digital Mailbox (Email)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
-                  <input placeholder="Tele-Connection (Phone)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
-                  <textarea rows={4} placeholder="Detailed Requirements..." className="w-full bg-white/5 border border-white/5 rounded-3xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest resize-none" />
+               <form className="space-y-4" onSubmit={handleLeadSubmit}>
+                  <input name="name" required placeholder="Personal Identity (Name)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
+                  <input name="email" type="email" placeholder="Digital Mailbox (Email)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
+                  <input name="phone" required placeholder="Tele-Connection (Phone)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
+                  <textarea name="message" rows={4} placeholder="Detailed Requirements..." className="w-full bg-white/5 border border-white/5 rounded-3xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest resize-none" />
                   
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-black border-none font-black py-8 rounded-[2rem] uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/40 mt-6">
+                  <Button 
+                    htmlType="submit"
+                    className="w-full bg-primary hover:bg-primary/90 text-black border-none font-black py-8 rounded-[2rem] uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/40 mt-6"
+                  >
                     Establish Connection
                   </Button>
                </form>
@@ -402,12 +556,37 @@ export const PropertyDetailPage = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Button icon={<Share2 className="w-4 h-4" />} className="h-20 bg-white/5 border-white/10 text-white hover:text-primary rounded-[2rem] font-black uppercase text-[9px] tracking-[0.2em]">Share Report</Button>
-              <Button icon={<Download className="w-4 h-4" />} className="h-20 bg-white/5 border-white/10 text-white hover:text-primary rounded-[2rem] font-black uppercase text-[9px] tracking-[0.2em]">Key Features</Button>
+              <Button icon={<Share2 className="w-4 h-4" />} onClick={() => {
+                navigator.share({ title: property.title, url: window.location.href });
+              }} className="h-20 bg-white/5 border-white/10 text-white hover:text-primary rounded-[2rem] font-black uppercase text-[9px] tracking-[0.2em]">Share Report</Button>
+              <Button 
+                href={property.brochure_url}
+                target="_blank"
+                icon={<Download className="w-4 h-4" />} 
+                className="h-20 bg-white/5 border-white/10 text-white hover:text-primary rounded-[2rem] font-black uppercase text-[9px] tracking-[0.2em]"
+              >
+                Key Features
+              </Button>
             </div>
           </div>
         </div>
       </div>
+
+      <style>{`
+        .leaflet-container {
+          border-radius: 3rem;
+          z-index: 0;
+        }
+        .premium-popup .leaflet-popup-content-wrapper {
+          background: #000 !important;
+          color: white !important;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+        }
+        .premium-popup .leaflet-popup-tip {
+          background: #000;
+        }
+      `}</style>
 
       {/* Plan Modal */}
       <Modal
@@ -424,7 +603,3 @@ export const PropertyDetailPage = () => {
     </div>
   );
 };
-
-const Layout = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>
-);

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Table, Tag, Typography, message, Space, Button } from 'antd';
-import { EyeOutlined, DeleteOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import { DeleteOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 
 const { Text } = Typography;
@@ -12,7 +12,7 @@ export const AdminLeads = () => {
   const fetchLeads = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from('leads')
+      .from('property_leads')
       .select('*, properties(title)')
       .order('created_at', { ascending: false });
 
@@ -56,20 +56,47 @@ export const AdminLeads = () => {
       render: (prop: any) => prop?.title || <Tag color="default">General Inquiry</Tag>
     },
     { 
+      title: 'Status', 
+      dataIndex: 'status', 
+      key: 'status',
+      render: (status: string) => (
+        <Tag color={status === 'New' ? 'gold' : 'blue'} className="font-bold uppercase tracking-widest text-[10px]">
+          {status}
+        </Tag>
+      )
+    },
+    { 
+      title: 'Source', 
+      dataIndex: 'source', 
+      key: 'source',
+      render: (source: string) => <Text className="text-slate-400 text-[10px] uppercase font-bold tracking-tighter">{source || 'Direct'}</Text>
+    },
+    { 
       title: 'Message', 
       dataIndex: 'message', 
       key: 'message',
       ellipsis: true,
-      render: (msg: string) => <Text className="text-slate-500 italic">"{msg}"</Text>
+      render: (msg: string) => <Text className="text-slate-500 italic truncate block max-w-[200px]">"{msg}"</Text>
     },
     {
       title: 'Actions',
       key: 'actions',
       align: 'right' as const,
-      render: () => (
+      render: (_: any, record: any) => (
         <Space size="middle">
-          <Button type="text" icon={<EyeOutlined className="text-slate-400 hover:text-primary" />} />
-          <Button type="text" icon={<DeleteOutlined className="text-slate-400 hover:text-red-500" />} danger />
+          <Button 
+            type="text" 
+            danger 
+            icon={<DeleteOutlined />} 
+            onClick={async () => {
+              const { error } = await supabase.from('property_leads').delete().eq('id', record.id);
+              if (error) message.error('Failed to delete lead');
+              else {
+                message.success('Lead removed');
+                fetchLeads();
+              }
+            }} 
+          />
         </Space>
       ),
     },
