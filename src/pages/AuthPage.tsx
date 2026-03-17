@@ -19,14 +19,16 @@ export const AuthPage = () => {
     if (isSignUp) {
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) {
-        alert(error.message);
+        console.error("Signup Error:", error);
+        alert(`Registration failed: ${error.message}`);
       } else {
         alert("Check your email for the confirmation link!");
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        alert(error.message);
+        console.error("Login Error:", error);
+        alert(`Login failed: ${error.message}`);
       } else {
         navigate(from, { replace: true });
       }
