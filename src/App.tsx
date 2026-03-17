@@ -1,5 +1,23 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-// ... other imports unchanged
+import { Navbar } from './components/layout/Navbar';
+import { Footer } from './components/layout/Footer';
+import { HomePage } from './pages/HomePage';
+import { AboutPage } from './pages/AboutPage';
+import { PropertiesPage } from './pages/PropertiesPage';
+import { BlogPage } from './pages/BlogPage';
+import { ContactPage } from './pages/ContactPage';
+import { PropertyDetailPage } from './pages/PropertyDetailPage';
+import { AuthPage } from './pages/AuthPage';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AdminProperties } from './pages/admin/AdminProperties';
+import { PropertyForm } from './pages/admin/PropertyForm';
+import { AdminLeads } from './pages/admin/AdminLeads';
+import { AdminAgents } from './pages/admin/AdminAgents';
+import { AdminFeatures } from './pages/admin/AdminFeatures';
+import { AdminBlogs } from './pages/admin/AdminBlogs';
+import { BlogForm } from './pages/admin/BlogForm';
 
 function AppContent() {
   const location = useLocation();
