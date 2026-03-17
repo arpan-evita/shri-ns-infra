@@ -250,21 +250,21 @@ export const PropertyForm = () => {
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={24}>
-            <Col span={16}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} lg={16}>
               <Form.Item name="title" label="Listing Title" rules={[{ required: true }]}>
                 <Input size="large" placeholder="E.g. Luxury 4BHK Apartment in Noida" className="rounded-lg" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} lg={8}>
               <Form.Item name="project_name" label="Project / Society Name">
                 <Input size="large" placeholder="E.g. Godrej Woods" className="rounded-lg" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={24}>
-            <Col span={8}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={8}>
               <Form.Item name="property_type" label="Property Type" rules={[{ required: true }]}>
                 <Select size="large" className="rounded-lg">
                   <Option value="Apartment">Apartment</Option>
@@ -275,7 +275,7 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="status" label="Purpose" rules={[{ required: true }]}>
                 <Select size="large" className="rounded-lg">
                   <Option value="buy">For Sale</Option>
@@ -283,7 +283,7 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="agent_id" label="Assigned Agent">
                 <Select size="large" placeholder="Select Agent" className="rounded-lg">
                   {agents.map(agent => (
@@ -309,8 +309,8 @@ export const PropertyForm = () => {
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={24}>
-            <Col span={8}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={8}>
               <Form.Item name="bhk_type" label="BHK Configuration">
                 <Select size="large" className="rounded-lg">
                   <Option value="1 BHK">1 BHK</Option>
@@ -322,38 +322,38 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="bedrooms" label="Bedrooms Count">
                 <InputNumber min={0} className="w-full" size="large" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="bathrooms" label="Bathrooms Count">
                 <InputNumber min={0} className="w-full" size="large" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={24}>
-            <Col span={8}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={8}>
               <Form.Item name="carpet_area" label="Carpet Area (Sq.Ft)">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="builtup_area" label="Built-up Area (Sq.Ft)">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="super_builtup_area" label="Super Built-up Area (Sq.Ft)">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={24}>
-            <Col span={6}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} sm={12} md={6}>
               <Form.Item name="facing" label="Facing (Vaastu)">
                 <Select size="large" className="rounded-lg">
                   <Option value="East">East</Option>
@@ -367,7 +367,7 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Form.Item name="furnishing_status" label="Furnishing">
                 <Select size="large" className="rounded-lg">
                   <Option value="Unfurnished">Unfurnished</Option>
@@ -376,12 +376,12 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Form.Item name="floor_no" label="Floor Number">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Form.Item name="total_floors" label="Total Floors">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
@@ -399,21 +399,21 @@ export const PropertyForm = () => {
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={24}>
-            <Col span={12}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
               <Form.Item name="city" label="City" rules={[{ required: true }]}>
                 <Input size="large" placeholder="E.g. Noida" />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item name="location" label="Area / Sector" rules={[{ required: true }]}>
                 <Input size="large" placeholder="E.g. Sector 150" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={24}>
-            <Col span={12}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
               <Form.Item name="possession_status" label="Possession Status">
                 <Select size="large" className="rounded-lg">
                   <Option value="Ready to Move">Ready to Move</Option>
@@ -422,7 +422,7 @@ export const PropertyForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item name="possession_date" label="Possession Date (Expected)">
                 <DatePicker size="large" className="w-full rounded-lg" />
               </Form.Item>
@@ -434,10 +434,10 @@ export const PropertyForm = () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Row key={key} gutter={16} align="bottom" className="mb-4">
-                    <Col span={6}>
+                  <Row key={key} gutter={[16, 16]} align="bottom" className="mb-6 bg-white/5 p-6 rounded-2xl relative border border-white/5">
+                    <Col xs={24} md={6}>
                       <Form.Item {...restField} name={[name, 'type']} label="Type" rules={[{ required: true }]}>
-                        <Select placeholder="Select type">
+                        <Select placeholder="Select type" className="w-full">
                           <Option value="Metro">Metro</Option>
                           <Option value="School">School</Option>
                           <Option value="Hospital">Hospital</Option>
@@ -446,22 +446,22 @@ export const PropertyForm = () => {
                         </Select>
                       </Form.Item>
                     </Col>
-                    <Col span={10}>
+                    <Col xs={24} md={10}>
                       <Form.Item {...restField} name={[name, 'name']} label="Landmark Name" rules={[{ required: true }]}>
                         <Input placeholder="E.g. Noida Sector 18 Metro" />
                       </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col xs={18} md={6}>
                       <Form.Item {...restField} name={[name, 'distance']} label="Distance (KM)" rules={[{ required: true }]}>
                         <InputNumber className="w-full" step={0.1} />
                       </Form.Item>
                     </Col>
-                    <Col span={2}>
+                    <Col xs={6} md={2}>
                       <Button 
                         danger 
                         icon={<DeleteOutlined />} 
                         onClick={() => remove(name)} 
-                        className="mb-6 rounded-lg"
+                        className="h-14 w-full flex items-center justify-center rounded-xl bg-red-500/10 border-none hover:bg-red-500 hover:text-white transition-all mb-[0px]"
                       />
                     </Col>
                   </Row>
@@ -498,7 +498,7 @@ export const PropertyForm = () => {
           >
             <Row gutter={[16, 24]}>
               {amenities.map(amenity => (
-                <Col span={6} key={amenity.id}>
+                <Col xs={12} sm={8} md={6} lg={4} key={amenity.id}>
                   <Checkbox value={amenity.id} className="text-slate-300 font-bold uppercase tracking-tighter text-[11px]">
                     {amenity.name}
                   </Checkbox>
@@ -518,9 +518,9 @@ export const PropertyForm = () => {
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={24}>
-            <Col span={12}>
-               <Card className="bg-[#1a1a1a] border-white/10">
+          <Row gutter={[24, 24]}>
+            <Col xs={24} lg={12}>
+               <Card className="bg-[#1a1a1a] border-white/10 h-full">
                   <Title level={5} className="text-white mb-2">Property Brochure (PDF)</Title>
                   <Text className="text-slate-500 text-xs block mb-4">Upload the detailed project brochure.</Text>
                   <Upload
@@ -530,7 +530,7 @@ export const PropertyForm = () => {
                   >
                     <Button 
                       icon={brochureUrl ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <FilePdfOutlined />}
-                      className="bg-white/5 border-white/10 text-white h-12 px-6 rounded-lg uppercase font-bold text-xs tracking-widest"
+                      className="bg-white/5 border-white/10 text-white h-12 px-6 rounded-lg uppercase font-bold text-xs tracking-widest w-full"
                     >
                       {brochureUrl ? 'Brochure Uploaded' : 'Select PDF Brochure'}
                     </Button>
@@ -542,7 +542,7 @@ export const PropertyForm = () => {
                   )}
                </Card>
             </Col>
-            <Col span={12}>
+            <Col xs={24} lg={12}>
                <Card className="bg-[#1a1a1a] border-white/10 h-full">
                   <Title level={5} className="text-white mb-2">Featured Image</Title>
                   <Upload
@@ -550,6 +550,7 @@ export const PropertyForm = () => {
                     listType="picture-card"
                     showUploadList={false}
                     customRequest={(opt) => handleFileUpload(opt, 'properties', setImageUrl)}
+                    className="w-full aspect-video featured-upload"
                   >
                     {imageUrl ? (
                       <img src={imageUrl} alt="property" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
@@ -611,8 +612,8 @@ export const PropertyForm = () => {
       ),
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={24}>
-            <Col span={8}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={8}>
               <Form.Item name="price" label="Total Price (₹)" rules={[{ required: true }]}>
                 <InputNumber 
                   className="w-full" 
@@ -622,25 +623,25 @@ export const PropertyForm = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="price_per_sqft" label="Price per Sq.Ft (₹)">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item name="maintenance_charges" label="Monthly Maintenance (₹)">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={24}>
-            <Col span={12}>
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={18}>
               <Form.Item name="rera_id" label="RERA Registration ID">
                 <Input size="large" className="rounded-lg" placeholder="UPRERAPRJ12345" />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={6}>
               <Form.Item name="is_featured" label="Promote as Featured" valuePropName="checked">
                 <Switch />
               </Form.Item>
@@ -692,7 +693,7 @@ export const PropertyForm = () => {
         }
       }}
     >
-      <div className="max-w-6xl mx-auto space-y-12 pb-24">
+      <div className="w-full max-w-[1400px] mx-auto space-y-12 pb-24">
       <style>{`
         .property-form-tabs .ant-tabs-nav::before {
           border-bottom: 2px solid rgba(255,255,255,0.05);
