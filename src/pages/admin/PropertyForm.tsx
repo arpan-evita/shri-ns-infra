@@ -17,7 +17,9 @@ import {
   DatePicker,
   Upload,
   Checkbox,
-  Divider
+  Divider,
+  ConfigProvider,
+  theme
 } from 'antd';
 import { 
   ArrowLeftOutlined, 
@@ -39,6 +41,10 @@ import dayjs from 'dayjs';
 const { Title, Text } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
+
+const CheckCircle2 = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+);
 
 export const PropertyForm = () => {
   const { id } = useParams();
@@ -460,7 +466,13 @@ export const PropertyForm = () => {
                     </Col>
                   </Row>
                 ))}
-                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} className="h-12 border-white/10 text-slate-400">
+                <Button 
+                  type="dashed" 
+                  onClick={() => add()} 
+                  block 
+                  icon={<PlusOutlined />} 
+                  className="h-16 border-white/10 text-slate-400 hover:text-primary hover:border-primary bg-white/5 rounded-2xl"
+                >
                   Add Nearby Landmark
                 </Button>
               </>
@@ -640,7 +652,18 @@ export const PropertyForm = () => {
   ];
 
   return (
-    <div className="space-y-12">
+    <ConfigProvider
+      theme={{
+        algorithm: theme.darkAlgorithm,
+        token: {
+          colorPrimary: '#c9a41d',
+          borderRadius: 12,
+          colorBgContainer: '#1a1a1a',
+          colorBorder: 'rgba(255, 255, 255, 0.1)',
+        },
+      }}
+    >
+      <div className="space-y-12">
       <style>{`
         .property-form-tabs .ant-tabs-nav::before {
           border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -718,10 +741,7 @@ export const PropertyForm = () => {
           className="property-form-tabs"
         />
       </Form>
-    </div>
+      </div>
+    </ConfigProvider>
   );
 };
-
-const CheckCircle2 = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-);
