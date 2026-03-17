@@ -8,7 +8,6 @@ interface PageBannerProps {
 
 export const PageBanner = ({ 
   title, 
-  subtitle = "Home", 
   image = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
 }: PageBannerProps) => {
   return (
