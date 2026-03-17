@@ -6,7 +6,6 @@ import { Partners } from "@/components/sections/Partners";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Team } from "@/components/sections/Team";
 import { PropertyDetailsCTA } from "@/components/sections/PropertyDetailsCTA";
-import { ContactSection } from "@/components/sections/ContactSection";
 
 export const HomePage = () => {
   return (
@@ -19,7 +18,6 @@ export const HomePage = () => {
       <Testimonials />
       <Team />
       <PropertyDetailsCTA />
-      <ContactSection />
     </div>
   );
 };
