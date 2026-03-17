@@ -71,7 +71,6 @@ export const PropertyForm = () => {
     { id?: string; image_url: string }[]
   >([]);
   const [ogImage, setOgImage] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('1');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -216,15 +215,17 @@ export const PropertyForm = () => {
     }
 
     // 2. Handle Floor Plans
-    if (floorPlans.length > 0) {
+    if (property_floor_plans && property_floor_plans.length > 0) {
       // Clear old plans if editing
       if (id) await supabase.from('property_floor_plans').delete().eq('property_id', id);
-      const floorPlanData = floorPlans.map(plan => ({
+      const floorPlanData = property_floor_plans.filter((p: any) => p.image_url).map((plan: any) => ({
         property_id: propertyId,
         title: plan.title,
         image_url: plan.image_url
       }));
-      await supabase.from('property_floor_plans').insert(floorPlanData);
+      if (floorPlanData.length > 0) {
+        await supabase.from('property_floor_plans').insert(floorPlanData);
+      }
     }
 
     // 3. Handle Amenities
