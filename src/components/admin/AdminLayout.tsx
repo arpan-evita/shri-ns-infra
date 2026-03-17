@@ -1,3 +1,11 @@
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  Home, 
+  Users, 
+  MessageSquare, 
+  Settings, 
+  LogOut,
   ChevronRight,
   ChevronLeft,
   Menu,
