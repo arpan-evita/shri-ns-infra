@@ -8,7 +8,6 @@ import {
   LogOut,
   ChevronRight,
   ChevronLeft,
-  Menu,
   BookOpen
 } from 'lucide-react';
 import { useState } from 'react';
