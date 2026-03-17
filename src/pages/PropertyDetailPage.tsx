@@ -3,77 +3,41 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { 
   MapPin, 
-  BedDouble, 
-  Maximize, 
   CheckCircle2,
   Phone,
   Mail,
-  Calculator,
-  Compass,
-  Clock,
-  ArrowLeft,
-  Share2,
   Download,
   Shield,
-  Wifi,
-  Waves,
-  Cigarette,
-  Dumbbell,
-  Trees,
-  CloudLightning,
   Construction,
-  Car,
-  Video,
-  MousePointer2,
-  Layers,
   ArrowUpRight
 } from "lucide-react";
 import { 
   Button, 
-  Slider, 
-  Card, 
   Tag, 
-  Divider, 
   Typography, 
   Empty, 
   Modal, 
   message 
 } from 'antd';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 
-// Fix for default marker icon in Leaflet + React
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
-
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 // Icon Mapping for Amenities
 const AmenityIcons: Record<string, any> = {
   'Security': Shield,
-  'Swimming Pool': Waves,
-  'Gym': Dumbbell,
-  'WiFi': Wifi,
-  'Clubhouse': Cigarette,
-  'Garden': Trees,
-  'Parking': Car,
-  'Power Backup': CloudLightning,
+  'Swimming Pool': Construction,
+  'Gym': Construction,
+  'WiFi': Construction,
+  'Clubhouse': Construction,
+  'Garden': Construction,
+  'Parking': Construction,
+  'Power Backup': Construction,
   'Elevator': Construction,
   'CCTV': Shield,
   'Lift': Construction,
-  'Park': Trees,
+  'Park': Construction,
 };
-
-// Utility Constants
 
 export const PropertyDetailPage = () => {
   const { slug } = useParams();
@@ -82,12 +46,6 @@ export const PropertyDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [activePlan, setActivePlan] = useState<string | null>(null);
   
-  // EMI Calculator State
-  const [loanAmount, setLoanAmount] = useState(0);
-  const [interestRate, setInterestRate] = useState(8.5);
-  const [tenure, setTenure] = useState(20);
-  const [emi, setEmi] = useState(0);
-
   useEffect(() => {
     const fetchProperty = async () => {
       setLoading(true);
@@ -108,7 +66,6 @@ export const PropertyDetailPage = () => {
         navigate('/properties');
       } else {
         setProperty(data);
-        setLoanAmount(data.total_price || data.price * 0.8);
 
         // Update SEO Tags
         if (data.meta_title) document.title = `${data.meta_title} | Shri NS Infra`;
@@ -124,15 +81,6 @@ export const PropertyDetailPage = () => {
 
     fetchProperty();
   }, [slug, navigate]);
-
-  useEffect(() => {
-    if (loanAmount > 0) {
-      const r = (interestRate || 8.5) / (12 * 100);
-      const n = (tenure || 20) * 12;
-      const emiVal = (loanAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-      setEmi(Math.round(emiVal));
-    }
-  }, [loanAmount, interestRate, tenure]);
 
   const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -162,412 +110,248 @@ export const PropertyDetailPage = () => {
     }
   };
 
-  if (loading) return <div className="pt-32 px-6 text-center text-slate-500 min-h-screen flex items-center justify-center bg-background-dark font-black uppercase tracking-[0.5em] animate-pulse">Engineering your premium view...</div>;
+  if (loading) return <div className="pt-32 px-6 text-center text-slate-500 min-h-screen flex items-center justify-center bg-[#0a0a0a] font-black uppercase tracking-[0.5em] animate-pulse">Engineering your premium view...</div>;
   if (!property) return null;
 
   const featuredImage = property.property_images?.find((img: any) => img.is_featured)?.image_url || property.property_images?.[0]?.image_url;
 
   return (
-    <div className="bg-[#0a0a0a] min-h-screen pb-24">
-      {/* Premium Hero Section */}
-      <section className="relative h-[90vh] overflow-hidden">
-        <img 
-          src={featuredImage || "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop"} 
-          className="w-full h-full object-cover filter brightness-[0.4] scale-105 hover:scale-100 transition-transform duration-[3s]" 
-          alt={property.title} 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent" />
-        
-        <div className="absolute top-32 left-0 right-0 px-6">
-          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12">
-             <div className="space-y-8 flex-1">
-                <Button 
-                   onClick={() => navigate('/properties')}
-                   icon={<ArrowLeft className="w-4 h-4" />}
-                   className="bg-white/5 border-white/10 text-white hover:text-primary backdrop-blur-3xl uppercase text-[10px] font-black tracking-[0.3em] px-8 h-12 rounded-full"
-                >
-                  Back to listings
-                </Button>
-                
-                <div className="space-y-4">
-                  <div className="flex gap-3">
-                    <Tag className="bg-primary text-black border-none font-black uppercase tracking-widest px-6 py-2 rounded-full text-[10px] shadow-lg shadow-primary/20">
-                      {property.property_type}
-                    </Tag>
-                    <Tag className="bg-white/10 text-white border-none backdrop-blur-md font-black uppercase tracking-widest px-6 py-2 rounded-full text-[10px]">
-                      {property.possession_status}
-                    </Tag>
-                  </div>
-                  <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85] max-w-4xl">
-                    {property.title}
-                  </h1>
-                </div>
+    <div className="bg-[#0a0a0a] min-h-screen pb-24 selection:bg-primary/30 selection:text-white">
+      {/* 1. Bold Hero Header Section */}
+      <section className="bg-black pt-32 pb-20 px-6 border-b border-white/5">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+             <span className="hover:text-primary cursor-pointer transition-colors" onClick={() => navigate('/')}>Home</span>
+             <span className="text-white/20">/</span>
+             <span className="text-primary">{property.title}</span>
+          </nav>
+          
+          <div className="space-y-2">
+            <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.8] mb-0">
+               {property.title}
+            </h1>
+            <p className="text-2xl md:text-4xl font-bold text-primary/80 uppercase tracking-tighter">
+               {property.tagline || `The Best of ${property.location || 'Wave City'}`}
+            </p>
+          </div>
+        </div>
+      </section>
 
-                <div className="flex items-center gap-4 text-slate-400 text-xl uppercase tracking-widest font-bold">
-                  <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center border border-white/10">
-                    <MapPin className="w-6 h-6 text-primary" />
-                  </div>
-                  {property.location}, {property.city}
+      {/* 2. Main Visual Section */}
+      <section className="px-6 py-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="rounded-[3rem] overflow-hidden border border-white/10 group relative aspect-[21/9]">
+             <img 
+               src={featuredImage || "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop"} 
+               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[5s]" 
+               alt={property.title} 
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-12">
+                <div className="flex gap-4">
+                   <Tag className="bg-primary text-black border-none font-black uppercase tracking-widest px-8 py-3 rounded-full text-[11px] shadow-2xl">
+                     {property.property_type}
+                   </Tag>
+                   <Tag className="bg-black/50 text-white border-white/20 backdrop-blur-3xl font-black uppercase tracking-widest px-8 py-3 rounded-full text-[11px]">
+                     {property.possession_status}
+                   </Tag>
                 </div>
-             </div>
-             
-             <div className="w-full lg:w-[450px] space-y-4">
-                <Card className="bg-white/5 backdrop-blur-3xl border border-white/10 p-4 rounded-[2rem] overflow-hidden">
-                  <div className="space-y-1 text-center py-8">
-                     <Text className="text-slate-500 uppercase tracking-[0.4em] text-[10px] font-black">Investment Quotient</Text>
-                     <div className="text-6xl font-black text-primary tracking-tighter">₹{property.price?.toLocaleString('en-IN')}</div>
-                     <div className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[11px] mt-2">₹{property.price_per_sqft?.toLocaleString('en-IN')} / SQ.FT</div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    <Button 
-                      href={property.brochure_url}
-                      target="_blank"
-                      icon={<Download className="w-4 h-4" />}
-                      className="h-16 bg-white/5 hover:bg-white/10 text-white border-white/10 font-bold uppercase tracking-widest rounded-2xl text-[10px]"
-                    >
-                      Brochure
-                    </Button>
-                    <Button className="h-16 bg-primary hover:bg-primary/90 text-black border-none font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-primary/30">
-                      Book Now
-                    </Button>
-                  </div>
-                </Card>
              </div>
           </div>
         </div>
       </section>
 
-      {/* Content Layout */}
-      <div className="max-w-7xl mx-auto px-6 -mt-32 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      {/* 3. Quick Stats Grid (The "Wow" Info Bar) */}
+      <section className="px-6 -mt-10 mb-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-1 p-1 bg-white/10 rounded-[2.5rem] border border-white/5 overflow-hidden">
+           <div className="bg-[#111] p-10 flex items-center gap-6">
+              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-primary border border-white/10">
+                 <Shield className="w-8 h-8" />
+              </div>
+              <div>
+                <div className="text-white font-black text-xl uppercase tracking-tighter leading-tight">RERA Number</div>
+                <div className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">'{property.rera_registration_id || 'REGISTERED'}'</div>
+              </div>
+           </div>
+           <div className="bg-[#111] p-10 flex items-center gap-6">
+              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-primary border border-white/10">
+                 <MapPin className="w-8 h-8" />
+              </div>
+              <div>
+                <div className="text-white font-black text-xl uppercase tracking-tighter leading-tight">Location</div>
+                <div className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">{property.location}, {property.city}</div>
+              </div>
+           </div>
+           <div className="bg-[#111] p-10 flex items-center gap-6">
+              <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-black shadow-xl shadow-primary/20">
+                 <Construction className="w-8 h-8" />
+              </div>
+              <div>
+                <div className="text-white font-black text-xl uppercase tracking-tighter leading-tight">{property.title}</div>
+                <div className="text-primary font-black text-[10px] uppercase tracking-[0.2em] mt-1">{property.tagline || 'Premium Project'}</div>
+              </div>
+           </div>
+        </div>
+      </section>
+
+      {/* 4. Secondary Content Layout */}
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
           
+          {/* Main Info Side */}
           <div className="lg:col-span-8 space-y-24">
             
-            {/* Quick Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-               {[
-                 { icon: <BedDouble className="w-6 h-6" />, label: "Configuration", value: property.bhk_type },
-                 { icon: <Maximize className="w-6 h-6" />, label: "Carpet Area", value: property.carpet_area ? `${property.carpet_area} Sq.Ft` : null },
-                 { icon: <Compass className="w-6 h-6" />, label: "Facing", value: property.facing },
-                 { icon: <Clock className="w-6 h-6" />, label: "Possession", value: property.possession_status },
-                 { icon: <Layers className="w-6 h-6" />, label: "Floor", value: property.floor_no ? `${property.floor_no} of ${property.total_floors}` : null },
-                 { icon: <Car className="w-6 h-6" />, label: "Parking", value: property.parking_type },
-                 { icon: <Construction className="w-6 h-6" />, label: "Age", value: property.property_age },
-                 { icon: <CheckCircle2 className="w-6 h-6" />, label: "Status", value: property.status }
-               ].filter(item => item.value).map((item, i) => (
-                 <div key={i} className="bg-white/5 border border-white/10 p-8 rounded-3xl group hover:border-primary transition-all duration-500">
-                    <div className="text-primary mb-4 group-hover:scale-110 transition-transform">{item.icon}</div>
-                    <div className="text-white font-black text-lg uppercase tracking-tighter truncate">{item.value || 'N/A'}</div>
-                    <div className="text-slate-500 uppercase tracking-widest text-[9px] font-bold mt-1">{item.label}</div>
-                 </div>
-               ))}
-            </div>
-
-            {/* Description Section */}
-            <div className="space-y-8">
-              <div className="flex items-center gap-4">
-                <div className="h-[2px] w-24 bg-primary" />
-                <Title level={2} className="text-white uppercase tracking-tighter mb-0">The Narrative</Title>
+            {/* Story & Description */}
+            <div className="space-y-10">
+              <div className="flex items-center gap-6">
+                <div className="h-[3px] w-20 bg-primary" />
+                <Title level={2} className="text-white uppercase tracking-tighter mb-0 text-4xl">Project Narrative</Title>
               </div>
-              <p className="text-slate-400 leading-relaxed text-xl whitespace-pre-line font-light max-w-4xl">
+              <p className="text-slate-500 leading-relaxed text-lg whitespace-pre-line font-medium text-justify">
                 {property.description}
               </p>
+              
+              {/* Highlights List */}
+              <div className="space-y-4 pt-4">
+                 <Title level={4} className="text-white uppercase tracking-widest text-xs font-black">Project Highlights</Title>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {property.highlights?.split('\n').map((h: string, i: number) => (
+                      <div key={i} className="flex items-center gap-3 text-slate-400 font-bold text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-primary" />
+                        <span className="uppercase tracking-tight">{h.trim()}</span>
+                      </div>
+                    )) || (
+                      <>
+                        <div className="flex items-center gap-3 text-slate-400 font-bold text-sm">
+                          <CheckCircle2 className="w-5 h-5 text-primary" />
+                          <span className="uppercase tracking-tight">RERA Approved Project</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-400 font-bold text-sm">
+                          <CheckCircle2 className="w-5 h-5 text-primary" />
+                          <span className="uppercase tracking-tight">Prime Connectivity Options</span>
+                        </div>
+                      </>
+                    )}
+                 </div>
+              </div>
             </div>
 
-            {/* Amenities Section */}
+            {/* Premium Amenities */}
             <div className="space-y-12">
-              <Title level={3} className="text-white uppercase tracking-tighter">Premium Lifestyle Amenities</Title>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <Title level={3} className="text-white uppercase tracking-tighter text-3xl">Premium Facilities</Title>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-1 p-1 bg-white/10 rounded-[2rem] overflow-hidden">
                 {property.property_amenity_relation?.length > 0 ? (
                   property.property_amenity_relation.map((relation: any, i: number) => {
                     const amenity = relation.amenities;
                     const Icon = AmenityIcons[amenity.name] || CheckCircle2;
                     return (
-                      <div key={i} className="flex items-center gap-4 group">
-                        <div className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-black transition-all">
+                      <div key={i} className="bg-[#111] p-8 flex items-center gap-6 border-transparent hover:border-primary/20 transition-all group">
+                        <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                           <Icon className="w-6 h-6" />
                         </div>
-                        <div className="text-white font-black uppercase tracking-widest text-[10px]">{amenity.name}</div>
+                        <div className="text-white font-black uppercase tracking-[0.2em] text-[10px]">{amenity.name}</div>
                       </div>
                     );
                   })
                 ) : (
-                  <div className="col-span-full">
-                    <Empty description={<span className="text-slate-500">Contact agent for full list of amenities.</span>} />
+                  <div className="col-span-full bg-[#111] p-20 text-center">
+                    <Empty description={<span className="text-slate-500 uppercase font-black text-[10px] tracking-widest">Amenities verified upon request</span>} />
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Video & 360 Tour (Dynamic) */}
-            {(property.video_url || property.virtual_tour_360) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {property.video_url && (
-                  <div className="space-y-6">
-                    <Title level={4} className="text-white uppercase tracking-tighter flex items-center gap-3">
-                      <Video className="text-primary w-5 h-5" /> Video Presentation
-                    </Title>
-                    <div className="aspect-video bg-white/5 rounded-3xl overflow-hidden border border-white/10 group relative">
-                       <iframe 
-                         src={property.video_url.includes('youtube.com') ? property.video_url.replace('watch?v=', 'embed/') : property.video_url} 
-                         className="w-full h-full border-0"
-                         allowFullScreen
-                       />
-                    </div>
-                  </div>
-                )}
-                {property.virtual_tour_360 && (
-                  <div className="space-y-6">
-                    <Title level={4} className="text-white uppercase tracking-tighter flex items-center gap-3">
-                      <MousePointer2 className="text-primary w-5 h-5" /> 360° Experience
-                    </Title>
-                    <div className="aspect-video bg-white/5 rounded-3xl overflow-hidden border border-white/10 relative group">
-                       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4 z-10 bg-black/60 opacity-100 group-hover:opacity-0 transition-opacity pointer-events-none">
-                          <MousePointer2 className="w-12 h-12 text-primary animate-bounce" />
-                          <span className="text-white font-black uppercase tracking-widest text-[10px]">Click to launch virtual world</span>
-                       </div>
-                       <iframe src={property.virtual_tour_360} className="w-full h-full border-0" allowFullScreen />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Interactive Location Hub */}
-            {(property.latitude && property.longitude) && (
-              <div className="space-y-8">
-                <div className="flex justify-between items-end">
-                   <div className="space-y-2">
-                     <Title level={3} className="text-white uppercase tracking-tighter mb-0">Location Hub</Title>
-                     <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Explore the neighborhood ecosystem</p>
+            {/* Project Images Gallery */}
+            <div className="space-y-12">
+               <div className="text-center">
+                 <Title level={3} className="text-white uppercase tracking-tighter text-3xl mb-2">Project Images</Title>
+                 <div className="h-[3px] w-20 bg-primary mx-auto" />
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 {property.property_images?.filter((img: any) => !img.is_featured).map((img: any, i: number) => (
+                   <div key={i} className="aspect-square rounded-[2rem] overflow-hidden border border-white/10 group cursor-pointer" onClick={() => setActivePlan(img.image_url)}>
+                      <img src={img.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Property Detail" />
                    </div>
-                   <Button 
-                     icon={<ArrowUpRight className="w-4 h-4" />}
-                     href={`https://www.google.com/maps?q=${property.latitude},${property.longitude}`}
-                     target="_blank"
-                     className="bg-white/5 border-white/10 text-white hover:text-primary uppercase text-[10px] font-black tracking-widest h-12 px-6 rounded-2xl"
-                   >
-                     Open in Maps
-                   </Button>
-                </div>
-                <div className="h-[500px] w-full bg-white/5 rounded-[3rem] overflow-hidden border border-white/10 z-0">
-                  <MapContainer 
-                    center={[property.latitude, property.longitude]} 
-                    zoom={15} 
-                    scrollWheelZoom={false}
-                    style={{ height: '100%', width: '100%', filter: 'invert(100%) hue-rotate(180deg) brightness(0.9) contrast(0.9)' }}
-                  >
-                    <TileLayer
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                    <Marker position={[property.latitude, property.longitude]}>
-                      <Popup className="premium-popup">
-                        <div className="font-black uppercase tracking-tighter text-xs pt-2">{property.title}</div>
-                      </Popup>
-                    </Marker>
-                  </MapContainer>
-                </div>
-              </div>
-            )}
-
-            {/* Floor Plans */}
-            <div className="space-y-12">
-               <Title level={3} className="text-white uppercase tracking-tighter">Spatial Layouts (Floor Plans)</Title>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                 {property.property_floor_plans?.length > 0 ? (
-                    property.property_floor_plans.map((plan: any, i: number) => (
-                      <div 
-                        key={i} 
-                        className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-primary transition-all cursor-zoom-in group"
-                        onClick={() => setActivePlan(plan.image_url)}
-                      >
-                         <div className="p-6 border-b border-white/5 flex justify-between items-center">
-                            <span className="text-white font-black uppercase tracking-widest text-xs">{plan.title}</span>
-                            <Maximize className="w-4 h-4 text-slate-500 group-hover:text-primary" />
-                         </div>
-                         <img src={plan.image_url} className="w-full h-64 object-contain p-8 bg-white/10" alt={plan.title} />
-                      </div>
-                    ))
-                 ) : (
-                    <div className="col-span-full bg-white/5 border border-white/10 p-12 rounded-3xl text-center">
-                       <Layers className="w-12 h-12 text-slate-700 mx-auto mb-4" />
-                       <Text className="text-slate-500 uppercase tracking-widest text-[10px] font-bold">Floor plans available on visit request</Text>
-                    </div>
-                 )}
-               </div>
-            </div>
-
-            {/* Connectivity */}
-            <div className="space-y-12">
-               <Title level={3} className="text-white uppercase tracking-tighter">Prime Connectivity Landmarks</Title>
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-1 p-1 bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
-                 {property.nearby_places?.map((place: any, i: number) => (
-                    <div key={i} className="bg-[#0f0f0f] p-8 flex flex-col items-center justify-center text-center space-y-3">
-                       <div className="text-primary uppercase tracking-[0.3em] font-black text-[9px]">{place.type}</div>
-                       <div className="text-white font-bold text-sm leading-tight">{place.name}</div>
-                       <div className="text-slate-500 font-bold text-lg">{place.distance} <span className="text-[10px] uppercase">KM</span></div>
-                    </div>
                  ))}
-                 {(!property.nearby_places || property.nearby_places.length === 0) && (
-                   <div className="col-span-full p-12 text-center text-slate-600">Landmarks data being verified.</div>
-                 )}
                </div>
             </div>
 
-            {/* Full Specs Table */}
-            <div className="space-y-12">
-               <Title level={3} className="text-white uppercase tracking-tighter">Detailed Inventory Specs</Title>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-16 border-t border-white/10 pt-12">
-                   {[
-                    { label: "BHK Configuration", value: property.bhk_type },
-                    { label: "Built-up Area", value: property.builtup_area ? `${property.builtup_area} ${property.area_unit}` : null },
-                    { label: "Super Built-up", value: property.super_builtup_area ? `${property.super_builtup_area} ${property.area_unit}` : null },
-                    { label: "Carpet Area", value: property.carpet_area ? `${property.carpet_area} ${property.area_unit}` : null },
-                    { label: "Balconies", value: property.balcony_count },
-                    { label: "Structure", value: (property.floor_no && property.total_floors) ? `${property.floor_no} Stories of ${property.total_floors}` : null },
-                    { label: "Parking Space", value: property.parking_type },
-                    { label: "Monthly Maintenance", value: property.monthly_maintenance ? `₹${property.monthly_maintenance}` : null },
-                    { label: "Booking Amount", value: property.booking_amount ? `₹${property.booking_amount}` : null },
-                    { label: "RERA Registry ID", value: property.rera_registration_id, color: "text-primary font-black" },
-                    { label: "Property Age", value: property.property_age },
-                    { label: "Negotiable", value: property.price_negotiable ? "Yes" : "No" }
-                   ].filter(spec => spec.value !== null && spec.value !== undefined).map((spec, i) => (
-                    <div key={i} className="flex justify-between items-center border-b border-white/10 pb-6">
-                       <span className="text-slate-500 uppercase tracking-widest text-[10px] font-black">{spec.label}</span>
-                       <span className={spec.color || "text-white font-black text-sm"}>{spec.value}</span>
-                    </div>
-                   ))}
-               </div>
-            </div>
-
-            {/* EMI Section */}
-            <section className="bg-white/2 border border-white/10 rounded-[3rem] p-12 space-y-12">
-               <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-primary rounded-3xl flex items-center justify-center text-black shadow-2xl shadow-primary/40 rotate-12">
-                      <Calculator className="w-8 h-8" />
-                    </div>
-                    <div>
-                      <h3 className="text-3xl font-black text-white uppercase tracking-tight">Investment Planner</h3>
-                      <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Calculated Ownership Costs</p>
-                    </div>
-                  </div>
-               </div>
-
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-                  <div className="space-y-10">
-                     <div className="space-y-6">
-                        <div className="flex justify-between text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                          <span>Loan Portfolio</span>
-                          <span className="text-primary">₹{loanAmount.toLocaleString('en-IN')}</span>
-                        </div>
-                        <Slider 
-                          min={100000} 
-                          max={property.total_price || property.price || 100000000} 
-                          step={100000}
-                          value={loanAmount} 
-                          onChange={setLoanAmount}
-                          handleStyle={{ borderColor: '#c9a41d', backgroundColor: '#c9a41d', width: 24, height: 24 }}
-                          trackStyle={{ backgroundColor: '#c9a41d', height: 4 }}
-                          railStyle={{ height: 4, background: 'rgba(255,255,255,0.05)' }}
-                        />
-                     </div>
-                     <div className="space-y-6">
-                        <div className="flex justify-between text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                          <span>Interest Threshold</span>
-                          <span className="text-primary">{interestRate}%</span>
-                        </div>
-                        <Slider 
-                          min={7} max={15} step={0.1}
-                          value={interestRate} 
-                          onChange={setInterestRate}
-                          handleStyle={{ borderColor: '#c9a41d', backgroundColor: '#c9a41d', width: 24, height: 24 }}
-                          trackStyle={{ backgroundColor: '#c9a41d', height: 4 }}
-                          railStyle={{ height: 4, background: 'rgba(255,255,255,0.05)' }}
-                        />
-                     </div>
-                     <div className="space-y-6">
-                        <div className="flex justify-between text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                          <span>Tenure Horizon</span>
-                          <span className="text-primary">{tenure} CYCLES (Years)</span>
-                        </div>
-                        <Slider 
-                          min={5} max={30}
-                          value={tenure} 
-                          onChange={setTenure}
-                          handleStyle={{ borderColor: '#c9a41d', backgroundColor: '#c9a41d', width: 24, height: 24 }}
-                          trackStyle={{ backgroundColor: '#c9a41d', height: 4 }}
-                          railStyle={{ height: 4, background: 'rgba(255,255,255,0.05)' }}
-                        />
-                     </div>
-                  </div>
-
-                  <div className="bg-[#111] rounded-[2rem] p-12 text-center border border-white/5 relative overflow-hidden group">
-                     <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                     <Text className="text-slate-500 uppercase tracking-[0.4em] text-[10px] font-black mb-4 block">Monthly Commitment</Text>
-                     <div className="text-6xl font-black text-white mb-2 leading-none tracking-tighter">₹{emi.toLocaleString('en-IN')}</div>
-                     <div className="text-primary text-[10px] font-bold uppercase tracking-widest">per calendar month</div>
-                     <Divider className="border-white/5 my-8" />
-                     <p className="text-slate-600 text-[9px] leading-relaxed uppercase font-bold tracking-widest">
-                        Standard bank processing fees & local taxes apply. 
-                     </p>
-                  </div>
-               </div>
-            </section>
           </div>
 
-          {/* Premium Sidebar */}
+          {/* Sidebar Section */}
           <div className="lg:col-span-4 space-y-12">
             
-            <div className="bg-[#111] border border-white/10 p-10 rounded-[3rem] space-y-10 sticky top-32 shadow-2xl">
+            {/* Project Lead Profile */}
+            <div className="bg-[#111] border border-white/10 p-10 rounded-[2.5rem] space-y-8">
                <div className="space-y-2">
-                 <h3 className="text-4xl font-black text-white uppercase tracking-tighter">Ownership Inquiry</h3>
-                 <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Priority callback within 30 minutes</p>
+                 <Title level={4} className="text-white uppercase tracking-tighter mb-0">Project Architect</Title>
+                 <div className="h-[2px] w-12 bg-primary" />
                </div>
                
-               <form className="space-y-4" onSubmit={handleLeadSubmit}>
-                  <input name="name" required placeholder="Personal Identity (Name)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
-                  <input name="email" type="email" placeholder="Digital Mailbox (Email)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
-                  <input name="phone" required placeholder="Tele-Connection (Phone)" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest" />
-                  <textarea name="message" rows={4} placeholder="Detailed Requirements..." className="w-full bg-white/5 border border-white/5 rounded-3xl p-5 text-white focus:outline-none placeholder:text-slate-600 font-bold text-xs uppercase tracking-widest resize-none" />
-                  
+               <div className="flex flex-col items-center text-center space-y-6">
+                 <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 border-primary p-1 bg-black">
+                   <img 
+                     src={property.agents?.photo || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop"} 
+                     className="w-full h-full object-cover rounded-2xl filter brightness-95" 
+                     alt="Lead Profile" 
+                   />
+                 </div>
+                 <div>
+                    <div className="text-2xl font-black text-white uppercase tracking-tighter">{property.agents?.name || "Ajay Sharma"}</div>
+                    <div className="text-primary text-[10px] font-black uppercase tracking-[0.4em] mt-1">{property.agents?.position || "CEO | Founder"}</div>
+                 </div>
+                 <p className="text-slate-500 text-xs leading-relaxed font-bold">
+                    Leading the vision for sustainable urban development in Wave City.
+                 </p>
+                 <div className="flex gap-4">
+                    <Button shape="circle" icon={<Phone className="w-4 h-4" />} className="bg-white/5 border-white/10 text-white hover:text-primary h-12 w-12" />
+                    <Button shape="circle" icon={<Mail className="w-4 h-4" />} className="bg-white/5 border-white/10 text-white hover:text-primary h-12 w-12" />
+                 </div>
+               </div>
+            </div>
+
+            {/* Project Brochure */}
+            <div className="bg-[#111] border border-white/10 p-10 rounded-[2.5rem] space-y-6 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                 <Download className="w-24 h-24 text-white" />
+               </div>
+               <div className="space-y-2">
+                 <Title level={4} className="text-white uppercase tracking-tighter mb-0">Project Brochure</Title>
+                 <div className="h-[2px] w-12 bg-primary" />
+               </div>
+               <div className="bg-white/5 rounded-2xl p-6 flex items-center justify-between group-hover:bg-white/10 transition-colors cursor-pointer" onClick={() => window.open(property.brochure_url, '_blank')}>
+                 <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center text-red-500">
+                     <Download className="w-5 h-5" />
+                   </div>
+                   <div>
+                     <div className="text-white font-black uppercase tracking-widest text-[10px]">E -Brochure</div>
+                     <div className="text-slate-500 text-[9px] font-bold">Download PDF</div>
+                   </div>
+                 </div>
+                 <ArrowUpRight className="w-5 h-5 text-slate-500 group-hover:text-primary transition-colors" />
+               </div>
+            </div>
+
+            {/* Connection Form (CTA) */}
+            <div className="bg-primary p-12 rounded-[3rem] space-y-10 shadow-2xl shadow-primary/20 relative overflow-hidden">
+               <div className="absolute -top-12 -right-12 w-48 h-48 bg-black/10 rounded-full blur-3xl" />
+               <div className="space-y-4 relative z-10">
+                 <h3 className="text-6xl font-black text-black uppercase tracking-tighter leading-[0.8]">Get Details</h3>
+                 <p className="text-black/60 text-[11px] font-black uppercase tracking-widest">For Next Project.</p>
+               </div>
+               
+               <form className="space-y-4 relative z-10" onSubmit={handleLeadSubmit}>
+                  <input name="name" required placeholder="Full Identity" className="w-full bg-black/5 border-b-2 border-black/10 p-4 text-black focus:outline-none placeholder:text-black/30 font-bold text-xs uppercase tracking-widest" />
+                  <input name="phone" required placeholder="Tele-Connection" className="w-full bg-black/5 border-b-2 border-black/10 p-4 text-black focus:outline-none placeholder:text-black/30 font-bold text-xs uppercase tracking-widest" />
                   <Button 
                     htmlType="submit"
-                    className="w-full bg-primary hover:bg-primary/90 text-black border-none font-black py-8 rounded-[2rem] uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/40 mt-6"
+                    className="w-full bg-black hover:bg-black/90 text-white border-none font-black py-8 rounded-[2rem] uppercase tracking-[0.2em] text-xs shadow-2xl mt-6 transition-all active:scale-95"
                   >
-                    Establish Connection
+                    Establish Contact
                   </Button>
                </form>
-
-               {property.agents && (
-                 <div className="flex items-center gap-6 p-6 bg-white/5 rounded-[2rem] border border-white/5">
-                    <img src={property.agents.photo} className="w-16 h-16 rounded-2xl object-cover filter grayscale hover:grayscale-0 transition-all cursor-pointer" />
-                    <div>
-                       <div className="text-white font-black uppercase tracking-tighter text-lg leading-tight">{property.agents.name}</div>
-                       <div className="text-primary text-[9px] font-black uppercase tracking-[0.2em]">Portfolio Consultant</div>
-                       <div className="flex gap-4 mt-2">
-                          <a href={`tel:${property.agents.phone}`} className="text-white hover:text-primary transition-colors"><Phone className="w-4 h-4" /></a>
-                          <a href={`mailto:${property.agents.email}`} className="text-white hover:text-primary transition-colors"><Mail className="w-4 h-4" /></a>
-                       </div>
-                    </div>
-                 </div>
-               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <Button icon={<Share2 className="w-4 h-4" />} onClick={() => {
-                navigator.share({ title: property.title, url: window.location.href });
-              }} className="h-20 bg-white/5 border-white/10 text-white hover:text-primary rounded-[2rem] font-black uppercase text-[9px] tracking-[0.2em]">Share Report</Button>
-              <Button 
-                href={property.brochure_url}
-                target="_blank"
-                icon={<Download className="w-4 h-4" />} 
-                className="h-20 bg-white/5 border-white/10 text-white hover:text-primary rounded-[2rem] font-black uppercase text-[9px] tracking-[0.2em]"
-              >
-                Key Features
-              </Button>
-            </div>
           </div>
         </div>
       </div>
@@ -590,15 +374,15 @@ export const PropertyDetailPage = () => {
 
       {/* Plan Modal */}
       <Modal
-        visible={!!activePlan}
+        open={!!activePlan}
         onCancel={() => setActivePlan(null)}
         footer={null}
         width={1000}
         centered
         className="premium-modal"
-        bodyStyle={{ background: '#000', padding: 0 }}
+        styles={{ body: { background: '#000', padding: 0 } }}
       >
-        <img src={activePlan || ""} className="w-full h-auto p-4" />
+        <img src={activePlan || ""} className="w-full h-auto p-4" alt="Property View" />
       </Modal>
     </div>
   );
