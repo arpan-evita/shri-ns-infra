@@ -7,7 +7,6 @@ import {
   Select, 
   Switch, 
   Button, 
-  Upload, 
   message, 
   Card, 
   Row, 
@@ -17,14 +16,12 @@ import {
   Divider
 } from 'antd';
 import { 
-  PlusOutlined, 
   ArrowLeftOutlined, 
   SaveOutlined,
-  UploadOutlined
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -34,7 +31,6 @@ export const PropertyForm = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [agents, setAgents] = useState<any[]>([]);
-  const [fileList, setFileList] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,14 +50,6 @@ export const PropertyForm = () => {
           message.error('Failed to load property');
         } else {
           form.setFieldsValue(property);
-          // Set images
-          const images = property.property_images?.map((img: any) => ({
-            uid: img.id,
-            name: 'image.png',
-            status: 'done',
-            url: img.image_url,
-          })) || [];
-          setFileList(images);
         }
         setLoading(false);
       }
@@ -78,25 +66,6 @@ export const PropertyForm = () => {
       ...values,
       slug,
     };
-
-    let propertyId = id;
-
-    if (id) {
-      const { error } = await supabase.from('properties').update(propertyData).eq('id', id);
-      if (error) {
-        message.error('Update failed: ' + error.message);
-        setLoading(false);
-        return;
-      }
-    } else {
-      const { data, error } = await supabase.from('properties').insert([propertyData]).select().single();
-      if (error) {
-        message.error('Creation failed: ' + error.message);
-        setLoading(false);
-        return;
-      }
-      propertyId = data.id;
-    }
 
     // Handle Images (Note: Direct image upload to Supabase Storage would go here)
     // For now, we assume URLs are provided or handled via placeholders

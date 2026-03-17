@@ -4,14 +4,11 @@ import {
   Home, 
   MessageSquare, 
   Users, 
-  TrendingUp, 
-  ArrowUpRight, 
-  ArrowDownRight,
-  Clock
+  ArrowUpRight,
 } from 'lucide-react';
-import { Card, Row, Col, Statistic, Table, Tag, Typography } from 'antd';
+import { Row, Col, Typography } from 'antd';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 export const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -20,11 +17,9 @@ export const AdminDashboard = () => {
     totalAgents: 0,
     recentLeads: [] as any[]
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
-      setLoading(true);
       
       const [propertiesCount, leadsCount, agentsCount, recentLeadsData] = await Promise.all([
         supabase.from('properties').select('id', { count: 'exact' }),

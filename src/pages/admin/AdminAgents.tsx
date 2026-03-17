@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Space, Typography, message, Avatar, Card, Tag } from 'antd';
+import { Table, Button, Space, Typography, message, Avatar } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 

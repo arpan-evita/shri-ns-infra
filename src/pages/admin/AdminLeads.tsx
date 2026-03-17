@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Tag, Typography, message, Card, Space, Button } from 'antd';
+import { Table, Tag, Typography, message, Space, Button } from 'antd';
 import { EyeOutlined, DeleteOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 
@@ -66,7 +66,7 @@ export const AdminLeads = () => {
       title: 'Actions',
       key: 'actions',
       align: 'right' as const,
-      render: (_: any, record: any) => (
+      render: () => (
         <Space size="middle">
           <Button type="text" icon={<EyeOutlined className="text-slate-400 hover:text-primary" />} />
           <Button type="text" icon={<DeleteOutlined className="text-slate-400 hover:text-red-500" />} danger />
