@@ -67,6 +67,22 @@ export const PropertyForm = () => {
       slug,
     };
 
+    if (id) {
+      const { error } = await supabase.from('properties').update(propertyData).eq('id', id);
+      if (error) {
+        message.error('Update failed: ' + error.message);
+        setLoading(false);
+        return;
+      }
+    } else {
+      const { error } = await supabase.from('properties').insert([propertyData]);
+      if (error) {
+        message.error('Creation failed: ' + error.message);
+        setLoading(false);
+        return;
+      }
+    }
+
     // Handle Images (Note: Direct image upload to Supabase Storage would go here)
     // For now, we assume URLs are provided or handled via placeholders
     
