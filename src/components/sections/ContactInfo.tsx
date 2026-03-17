@@ -1,6 +1,41 @@
-import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Youtube, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Youtube, ArrowRight, Loader2, CheckCircle } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 export const ContactInfo = () => {
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase
+      .from('leads')
+      .insert([
+        { 
+          name: formData.name, 
+          email: formData.email, 
+          phone: formData.phone, 
+          message: formData.message 
+        }
+      ]);
+
+    if (!error) {
+      setSubmitted(true);
+      setFormData({ name: '', email: '', phone: '', message: '' });
+    } else {
+      alert("Error submitting request. Please try again.");
+    }
+    setLoading(false);
+  };
+
   return (
     <section className="bg-background-dark py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-7xl">
@@ -77,29 +112,84 @@ export const ContactInfo = () => {
           </div>
 
           {/* Right Side: Form */}
-          <div className="bg-white/5 p-12 border border-white/10">
-            <h3 className="text-white text-4xl font-black mb-8 uppercase tracking-tight">Request Call Back</h3>
-            <form className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-white text-xs font-bold uppercase tracking-widest">Full Name</label>
-                <input type="text" placeholder="John Doe" className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" />
+          <div className="bg-white/5 p-12 border border-white/10 relative overflow-hidden">
+            {submitted ? (
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-12 animate-in fade-in zoom-in duration-500">
+                <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-12 h-12 text-primary" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-white text-3xl font-black uppercase">Thank You!</h3>
+                  <p className="text-slate-400">Your message has been received. Our team will contact you shortly.</p>
+                </div>
+                <button 
+                  onClick={() => setSubmitted(false)}
+                  className="text-primary font-bold uppercase tracking-widest text-sm hover:underline"
+                >
+                  Send another message
+                </button>
               </div>
-              <div className="space-y-2">
-                <label className="text-white text-xs font-bold uppercase tracking-widest">Email Address</label>
-                <input type="email" placeholder="john@example.com" className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-white text-xs font-bold uppercase tracking-widest">Phone Number</label>
-                <input type="text" placeholder="+91 99999 99999" className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-white text-xs font-bold uppercase tracking-widest">Message</label>
-                <textarea rows={4} placeholder="How can we help you?" className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors resize-none"></textarea>
-              </div>
-              <button className="w-full bg-primary text-black font-bold py-5 flex items-center justify-center gap-2 hover:bg-primary/90 transition-all uppercase tracking-widest">
-                Submit Request <ArrowRight className="w-5 h-5" />
-              </button>
-            </form>
+            ) : (
+              <>
+                <h3 className="text-white text-4xl font-black mb-8 uppercase tracking-tight">Request Call Back</h3>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-white text-xs font-bold uppercase tracking-widest">Full Name</label>
+                    <input 
+                      required
+                      type="text" 
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      placeholder="John Doe" 
+                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-white text-xs font-bold uppercase tracking-widest">Email Address</label>
+                    <input 
+                      required
+                      type="email" 
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      placeholder="john@example.com" 
+                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-white text-xs font-bold uppercase tracking-widest">Phone Number</label>
+                    <input 
+                      required
+                      type="text" 
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      placeholder="+91 99999 99999" 
+                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-white text-xs font-bold uppercase tracking-widest">Message</label>
+                    <textarea 
+                      required
+                      rows={4} 
+                      value={formData.message}
+                      onChange={(e) => setFormData({...formData, message: e.target.value})}
+                      placeholder="How can we help you?" 
+                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors resize-none"
+                    ></textarea>
+                  </div>
+                  <button 
+                    disabled={loading}
+                    className="w-full bg-primary text-black font-bold py-5 flex items-center justify-center gap-2 hover:bg-primary/90 transition-all uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <><Loader2 className="w-5 h-5 animate-spin" /> Submitting...</>
+                    ) : (
+                      <>Submit Request <ArrowRight className="w-5 h-5" /></>
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </div>
