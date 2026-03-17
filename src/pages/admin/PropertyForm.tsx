@@ -657,42 +657,84 @@ export const PropertyForm = () => {
         algorithm: theme.darkAlgorithm,
         token: {
           colorPrimary: '#c9a41d',
-          borderRadius: 12,
-          colorBgContainer: '#1a1a1a',
-          colorBorder: 'rgba(255, 255, 255, 0.1)',
+          borderRadius: 16,
+          colorBgContainer: '#141414',
+          colorBorder: 'rgba(255, 255, 255, 0.08)',
+          colorTextHeading: '#ffffff',
+          colorText: '#e2e8f0',
+          colorTextDescription: '#94a3b8',
         },
+        components: {
+          Tabs: {
+            titleFontSize: 12,
+            fontWeightStrong: 900,
+          },
+          Form: {
+            labelFontSize: 11,
+            labelColor: '#94a3b8',
+          },
+          Input: {
+            colorBgContainer: 'rgba(255,255,255,0.03)',
+            paddingBlockLG: 16,
+          },
+          Select: {
+            colorBgContainer: 'rgba(255,255,255,0.03)',
+            controlHeightLG: 56,
+          },
+          InputNumber: {
+            colorBgContainer: 'rgba(255,255,255,0.03)',
+            controlHeightLG: 56,
+          },
+          DatePicker: {
+            colorBgContainer: 'rgba(255,255,255,0.03)',
+            controlHeightLG: 56,
+          }
+        }
       }}
     >
-      <div className="space-y-12">
+      <div className="max-w-6xl mx-auto space-y-12 pb-24">
       <style>{`
         .property-form-tabs .ant-tabs-nav::before {
-          border-bottom: 1px solid rgba(255,255,255,0.05);
+          border-bottom: 2px solid rgba(255,255,255,0.05);
         }
         .property-form-tabs .ant-tabs-tab {
-          padding: 16px 0;
-          margin-right: 30px;
+          padding: 20px 0;
+          margin-right: 40px;
         }
         .property-form-tabs .ant-tabs-tab-btn {
-          font-weight: 700;
+          font-weight: 900;
           text-transform: uppercase;
-          letter-spacing: 0.12em;
-          font-size: 11px;
+          letter-spacing: 0.2em;
+          font-size: 10px;
           color: #64748b;
         }
         .property-form-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
           color: #c9a41d !important;
         }
         .ant-form-item-label label {
-          font-weight: bold;
+          font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.15em;
           font-size: 10px;
           color: #94a3b8;
+          height: auto;
+          margin-bottom: 8px;
         }
-        .ant-input, .ant-input-number, .ant-select-selector {
+        .ant-input, .ant-input-number, .ant-select-selector, .ant-picker {
           background: rgba(255,255,255,0.03) !important;
-          border: 1px solid rgba(255,255,255,0.05) !important;
+          border: 1px solid rgba(255,255,255,0.08) !important;
           color: white !important;
+          border-radius: 12px !important;
+        }
+        .ant-input:focus, .ant-input-number-focused, .ant-select-focused .ant-select-selector, .ant-picker-focused {
+          border-color: #c9a41d !important;
+          box-shadow: 0 0 0 2px rgba(201, 164, 29, 0.1) !important;
+        }
+        .ant-form-item {
+          margin-bottom: 32px;
+        }
+        .ant-divider-horizontal.ant-divider-with-text {
+          border-top-color: rgba(255,255,255,0.05);
         }
       `}</style>
 
@@ -739,6 +781,7 @@ export const PropertyForm = () => {
           onChange={setActiveTab} 
           items={items} 
           className="property-form-tabs"
+          size="large"
         />
       </Form>
       </div>

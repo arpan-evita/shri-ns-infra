@@ -87,8 +87,8 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-grow ml-72">
-        <div className="p-8 lg:p-12">
+      <main className="flex-grow ml-72 min-h-screen">
+        <div className="max-w-[1600px] mx-auto p-12 lg:p-16">
           {children}
         </div>
       </main>
