@@ -18,7 +18,7 @@ export const ContactMapSection = () => {
       </div>
 
       {/* Right Side: Trusted Quote */}
-      <div className="w-full lg:w-1/2 relative flex items-center justify-center p-12 lg:p-24 bg-[#1a170f]">
+      <div className="w-full lg:w-1/2 relative flex items-center justify-center p-8 md:p-16 lg:p-24 bg-[#1a170f] text-left">
         {/* Architectural Background Overlay */}
         <div className="absolute inset-0 z-0 opacity-10">
           <img 
@@ -28,18 +28,18 @@ export const ContactMapSection = () => {
           />
         </div>
 
-        <div className="relative z-10 space-y-12 max-w-lg">
+        <div className="relative z-10 space-y-8 md:space-y-12 max-w-lg">
           <div className="space-y-4">
-            <h3 className="text-white text-4xl font-black uppercase tracking-tight">Trusted From Over<br /><span className="text-primary">2,500 Client</span></h3>
-            <div className="w-20 h-1 bg-primary"></div>
+            <h3 className="text-white text-3xl md:text-4xl font-black uppercase tracking-tight leading-none md:leading-tight">Trusted From Over<br /><span className="text-primary">2,500 Clients.</span></h3>
+            <div className="w-16 md:w-20 h-1 bg-primary"></div>
           </div>
 
-          <p className="text-slate-300 text-2xl font-medium italic leading-relaxed">
-            " We want to create a better world through the products and services Good architecture makes you go WOW! "
+          <p className="text-slate-300 text-lg md:text-2xl font-medium italic leading-relaxed">
+            " We want to create a better world through the products and services. Good architecture makes you go WOW! "
           </p>
 
           <div className="flex justify-start">
-             <Quote className="w-24 h-24 text-primary opacity-30 rotate-180" strokeWidth={3} />
+             <Quote className="w-16 h-16 md:w-24 md:h-24 text-primary opacity-30 rotate-180" strokeWidth={3} />
           </div>
         </div>
       </div>

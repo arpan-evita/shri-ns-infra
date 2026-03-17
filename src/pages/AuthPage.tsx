@@ -38,7 +38,7 @@ export const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-background-dark flex items-center justify-center p-6 pt-32">
-      <div className="w-full max-w-md bg-white/5 border border-white/10 p-12 space-y-8">
+      <div className="w-full max-w-md bg-white/5 border border-white/10 p-8 md:p-12 space-y-8 rounded-sm">
         <div className="text-center space-y-2">
           <div className="flex justify-center mb-4">
              <div className="w-16 h-16 bg-primary/20 flex items-center justify-center rounded-sm">

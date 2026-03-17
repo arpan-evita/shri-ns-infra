@@ -15,20 +15,20 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
       
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 flex flex-col lg:flex-row items-center gap-12 pt-20">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 flex flex-col-reverse lg:flex-row items-center gap-12 pt-12 md:pt-20 pb-20">
         {/* Left: Form */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
-          className="w-full lg:w-1/2 bg-black/40 backdrop-blur-md p-10 rounded-sm border border-white/10"
+          className="w-full lg:w-1/2 bg-black/40 backdrop-blur-md p-6 md:p-10 rounded-sm border border-white/10"
         >
-          <h2 className="text-3xl font-black text-white mb-8">Request A Call Back</h2>
-          <form className="space-y-6">
-            <input type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/30 py-3 text-white focus:outline-none focus:border-[#c4a661] transition-colors" />
-            <input type="email" placeholder="Email" className="w-full bg-transparent border-b border-white/30 py-3 text-white focus:outline-none focus:border-[#c4a661] transition-colors" />
-            <input type="text" placeholder="Phone" className="w-full bg-transparent border-b border-white/30 py-3 text-white focus:outline-none focus:border-[#c4a661] transition-colors" />
-            <button className="w-full sm:w-48 border border-[#c4a661] text-[#c4a661] font-bold py-4 hover:bg-[#c4a661] hover:text-black transition-all">
-              Send
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-6 md:mb-8 uppercase tracking-tight">Request A Call Back</h2>
+          <form className="space-y-4 md:space-y-6">
+            <input type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
+            <input type="email" placeholder="Email" className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
+            <input type="text" placeholder="Phone" className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
+            <button className="w-full sm:w-48 border border-[#c4a661] text-[#c4a661] font-bold py-4 text-sm hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest">
+              Send Inquiry
             </button>
           </form>
         </motion.div>
@@ -37,21 +37,23 @@ export const Hero = () => {
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          className="w-full lg:w-1/2 text-left space-y-6"
+          className="w-full lg:w-1/2 text-left space-y-4 md:space-y-6"
         >
-          <h3 className="text-[#c4a661] text-4xl font-light leading-tight">Premium Residential &</h3>
-          <h3 className="text-[#c4a661] text-4xl font-light leading-tight">Commercial</h3>
-          <h1 className="text-white text-6xl md:text-8xl font-black leading-none">Properties In NCR</h1>
-          <p className="text-slate-300 text-lg max-w-md">
+          <div className="space-y-1">
+            <h3 className="text-[#c4a661] text-2xl md:text-4xl font-light leading-tight uppercase tracking-tighter">Premium Residential &</h3>
+            <h3 className="text-[#c4a661] text-2xl md:text-4xl font-light leading-tight uppercase tracking-tighter">Commercial</h3>
+          </div>
+          <h1 className="text-white text-5xl md:text-8xl font-black leading-none uppercase tracking-tighter">Properties In NCR</h1>
+          <p className="text-slate-300 text-sm md:text-lg max-w-md font-medium leading-relaxed">
             RERA approved projects with trusted developers across Noida, Greater Noida & Delhi NCR.
           </p>
-          <div className="flex items-center gap-8 pt-4">
-            <button className="border border-[#c4a661] px-10 py-4 text-white font-bold hover:bg-[#c4a661] hover:text-black transition-all">
+          <div className="flex items-center gap-6 md:gap-8 pt-4">
+            <button className="border border-[#c4a661] px-8 md:px-10 py-3 md:py-4 text-white text-xs md:text-sm font-bold hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest">
               DISCOVER WORK
             </button>
-            <button className="group relative flex items-center justify-center w-16 h-16 rounded-full bg-[#c4a661]/20 border border-[#c4a661]/40">
+            <button className="group relative flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#c4a661]/20 border border-[#c4a661]/40">
               <div className="absolute inset-0 rounded-full bg-[#c4a661]/20 animate-ping"></div>
-              <Play className="w-6 h-6 text-[#c4a661] fill-[#c4a661]" />
+              <Play className="w-4 h-4 md:w-6 md:h-6 text-[#c4a661] fill-[#c4a661]" />
             </button>
           </div>
         </motion.div>

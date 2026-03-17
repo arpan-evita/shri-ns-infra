@@ -8,25 +8,25 @@ export const Team = () => {
   ];
 
   return (
-    <section className="bg-background-dark py-24 px-6">
+    <section className="bg-background-dark py-16 md:py-24 px-6">
       <div className="mx-auto max-w-7xl">
-        <div className="flex justify-between items-end mb-16">
-          <div className="space-y-4">
-            <span className="text-primary text-4xl font-light">Our Team</span>
-            <h2 className="text-white text-6xl font-black">Meet With Expert Team.</h2>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 text-left">
+          <div className="space-y-3 md:space-y-4">
+            <span className="text-primary text-2xl md:text-4xl font-light uppercase tracking-tight">Our Team</span>
+            <h2 className="text-white text-4xl md:text-6xl font-black leading-tight uppercase tracking-tighter">Meet With Expert Team.</h2>
           </div>
-          <button className="hidden md:block border border-primary px-8 py-3 text-white font-bold hover:bg-primary hover:text-black transition-all">
+          <button className="hidden md:block border border-primary px-8 py-3 text-white font-bold hover:bg-primary hover:text-black transition-all uppercase tracking-widest text-sm">
             VIEW ALL TEAM
           </button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {members.map((member, idx) => (
-            <div key={idx} className="group">
-              <div className="relative overflow-hidden mb-6">
+            <div key={idx} className="group text-left">
+              <div className="relative overflow-hidden mb-6 rounded-sm">
                 <img 
                   src={member.image} 
-                  className="w-full h-[450px] object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                  className="w-full h-[350px] md:h-[450px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 font-bold"
                   alt={member.name}
                 />
                 <div className="absolute bottom-4 left-4 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -35,8 +35,8 @@ export const Team = () => {
                   <a href="#" className="text-white hover:text-primary"><Linkedin className="w-4 h-4" /></a>
                 </div>
               </div>
-              <h3 className="text-white text-2xl font-bold">{member.name}</h3>
-              <p className="text-primary font-semibold">{member.role}</p>
+              <h3 className="text-white text-xl md:text-2xl font-black uppercase tracking-tight mb-1">{member.name}</h3>
+              <p className="text-primary font-black uppercase tracking-widest text-[10px]">{member.role}</p>
             </div>
           ))}
         </div>

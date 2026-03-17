@@ -37,74 +37,74 @@ export const ContactInfo = () => {
   };
 
   return (
-    <section className="bg-background-dark py-24 px-6 overflow-hidden">
+    <section className="bg-background-dark py-16 md:py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Left Side: Contact Details */}
-          <div className="space-y-12">
+          <div className="space-y-10 md:space-y-12 text-left">
             <div className="space-y-4">
-              <span className="text-primary text-3xl font-light">Contact Us</span>
-              <h2 className="text-white text-6xl font-black uppercase leading-tight tracking-tighter">Get In Touch With Professionals.</h2>
-              <p className="text-slate-400 text-lg leading-relaxed max-w-xl">
+              <span className="text-primary text-xl md:text-3xl font-light uppercase tracking-tight">Contact Us</span>
+              <h2 className="text-white text-4xl md:text-6xl font-black uppercase leading-tight tracking-tighter">Get In Touch With Professionals.</h2>
+              <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-xl font-medium">
                 Looking for the right property in Delhi & NCR? Share your details and get verified listings, pricing, and site visit assistance from our team.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/20 flex items-center justify-center shrink-0">
-                    <Phone className="w-6 h-6 text-primary" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 flex items-center justify-center shrink-0">
+                    <Phone className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold uppercase tracking-wider mb-2">Call Us</h4>
-                    <p className="text-slate-400 text-sm">+91 9999999999</p>
-                    <p className="text-slate-400 text-sm">0120 456789</p>
+                    <h4 className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">Call Us</h4>
+                    <p className="text-slate-400 text-sm font-bold">+91 9999999999</p>
+                    <p className="text-slate-400 text-xs font-medium">0120 456789</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/20 flex items-center justify-center shrink-0">
-                    <Mail className="w-6 h-6 text-primary" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 flex items-center justify-center shrink-0">
+                    <Mail className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold uppercase tracking-wider mb-2">Email Us</h4>
-                    <p className="text-slate-400 text-sm">info@shrinsinfra.com</p>
-                    <p className="text-slate-400 text-sm">sales@shrinsinfra.com</p>
+                    <h4 className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">Email Us</h4>
+                    <p className="text-slate-400 text-sm font-bold">info@shrinsinfra.com</p>
+                    <p className="text-slate-400 text-xs font-medium">sales@shrinsinfra.com</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/20 flex items-center justify-center shrink-0">
-                    <MapPin className="w-6 h-6 text-primary" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 flex items-center justify-center shrink-0">
+                    <MapPin className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold uppercase tracking-wider mb-2">Office Address</h4>
-                    <p className="text-slate-400 text-sm">Sector 12, Noida<br />Uttar Pradesh 201301</p>
+                    <h4 className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">Office Address</h4>
+                    <p className="text-slate-400 text-sm font-bold">Sector 12, Noida<br /><span className="text-xs font-medium text-slate-500 uppercase">Uttar Pradesh 201301</span></p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/20 flex items-center justify-center shrink-0">
-                    <Clock className="w-6 h-6 text-primary" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 flex items-center justify-center shrink-0">
+                    <Clock className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold uppercase tracking-wider mb-2">Working Hours</h4>
-                    <p className="text-slate-400 text-sm">Mon - Sat: 10AM - 7PM</p>
-                    <p className="text-slate-400 text-sm">Sunday: Closed</p>
+                    <h4 className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">Working Hours</h4>
+                    <p className="text-slate-400 text-sm font-bold">Mon - Sat: 10AM - 7PM</p>
+                    <p className="text-slate-400 text-xs font-medium uppercase">Sunday: Closed</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="pt-8 border-t border-white/10">
-              <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6">Follow Our Socials</h4>
-              <div className="flex gap-4">
+              <h4 className="text-white font-black uppercase tracking-[0.2em] text-[10px] mb-6">Follow Our Socials</h4>
+              <div className="flex flex-wrap gap-3 md:gap-4">
                 {[Facebook, Twitter, Linkedin, Youtube].map((Icon, idx) => (
-                  <a key={idx} href="#" className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:text-black transition-all">
-                    <Icon className="w-5 h-5" />
+                  <a key={idx} href="#" className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:text-black transition-all">
+                    <Icon className="w-4 h-4 md:w-5 md:h-5" />
                   </a>
                 ))}
               </div>
@@ -112,79 +112,79 @@ export const ContactInfo = () => {
           </div>
 
           {/* Right Side: Form */}
-          <div className="bg-white/5 p-12 border border-white/10 relative overflow-hidden">
+          <div className="bg-white/5 p-8 md:p-12 border border-white/10 relative overflow-hidden rounded-sm text-left">
             {submitted ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-12 animate-in fade-in zoom-in duration-500">
                 <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-12 h-12 text-primary" />
+                  <CheckCircle className="w-10 h-10 text-primary" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-white text-3xl font-black uppercase">Thank You!</h3>
-                  <p className="text-slate-400">Your message has been received. Our team will contact you shortly.</p>
+                  <h3 className="text-white text-3xl font-black uppercase tracking-tighter">Thank You!</h3>
+                  <p className="text-slate-400 text-sm md:text-base font-medium">Your narrative has been received. Our expert will reach out shortly.</p>
                 </div>
                 <button 
                   onClick={() => setSubmitted(false)}
-                  className="text-primary font-bold uppercase tracking-widest text-sm hover:underline"
+                  className="text-primary font-black uppercase tracking-widest text-[10px] hover:underline"
                 >
-                  Send another message
+                  Establish another narrative
                 </button>
               </div>
             ) : (
               <>
-                <h3 className="text-white text-4xl font-black mb-8 uppercase tracking-tight">Request Call Back</h3>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-white text-xs font-bold uppercase tracking-widest">Full Name</label>
+                <h3 className="text-white text-3xl md:text-4xl font-black mb-10 uppercase tracking-tighter leading-none">Establish Contact.</h3>
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                  <div className="space-y-1">
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Full Identity</label>
                     <input 
                       required
                       type="text" 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="John Doe" 
-                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" 
+                      placeholder="e.g. John Doe" 
+                      className="w-full bg-transparent border-b border-white/20 py-3 text-white text-sm focus:outline-none focus:border-primary transition-colors font-medium placeholder:text-white/10" 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-white text-xs font-bold uppercase tracking-widest">Email Address</label>
+                  <div className="space-y-1">
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Digital Hub (Email)</label>
                     <input 
                       required
                       type="email" 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                       placeholder="john@example.com" 
-                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" 
+                      className="w-full bg-transparent border-b border-white/20 py-3 text-white text-sm focus:outline-none focus:border-primary transition-colors font-medium placeholder:text-white/10" 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-white text-xs font-bold uppercase tracking-widest">Phone Number</label>
+                  <div className="space-y-1">
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Tele-Connection</label>
                     <input 
                       required
                       type="text" 
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
                       placeholder="+91 99999 99999" 
-                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors" 
+                      className="w-full bg-transparent border-b border-white/20 py-3 text-white text-sm focus:outline-none focus:border-primary transition-colors font-medium placeholder:text-white/10" 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-white text-xs font-bold uppercase tracking-widest">Message</label>
+                  <div className="space-y-1">
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Narrative (Message)</label>
                     <textarea 
                       required
-                      rows={4} 
+                      rows={3} 
                       value={formData.message}
                       onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      placeholder="How can we help you?" 
-                      className="w-full bg-transparent border-b border-white/30 py-4 text-white focus:outline-none focus:border-primary transition-colors resize-none"
+                      placeholder="Describe your requirements..." 
+                      className="w-full bg-transparent border-b border-white/20 py-3 text-white text-sm focus:outline-none focus:border-primary transition-colors resize-none font-medium placeholder:text-white/10"
                     ></textarea>
                   </div>
                   <button 
                     disabled={loading}
-                    className="w-full bg-primary text-black font-bold py-5 flex items-center justify-center gap-2 hover:bg-primary/90 transition-all uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-primary text-black font-black py-5 flex items-center justify-center gap-2 hover:bg-white transition-all uppercase tracking-[0.2em] text-xs disabled:opacity-50 disabled:cursor-not-allowed group"
                   >
                     {loading ? (
-                      <><Loader2 className="w-5 h-5 animate-spin" /> Submitting...</>
+                      <><Loader2 className="w-5 h-5 animate-spin" /> ESTABLISHING...</>
                     ) : (
-                      <>Submit Request <ArrowRight className="w-5 h-5" /></>
+                      <>ESTABLISH CONTACT <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
                     )}
                   </button>
                 </form>

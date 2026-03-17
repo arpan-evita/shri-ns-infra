@@ -45,49 +45,49 @@ export const BlogGrid = () => {
   }
 
   return (
-    <section className="bg-background-dark py-24 px-6 gap-12">
+    <section className="bg-background-dark py-16 md:py-24 px-6 md:gap-12">
       <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {posts.map((post) => (
             <Link 
               key={post.id} 
               to={`/blog/${post.slug}`}
               className="group flex flex-col bg-white/5 border border-white/10 hover:border-primary/50 transition-all duration-300"
             >
-              <div className="relative overflow-hidden h-64">
+              <div className="relative overflow-hidden h-56 md:h-64">
                 <img 
                   src={post.image_url || "https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=2067&auto=format&fit=crop"} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   alt={post.title}
                 />
-                <div className="absolute top-0 left-0 bg-primary px-4 py-2 text-black text-xs font-bold uppercase tracking-widest translate-y-4 -translate-x-2">
+                <div className="absolute top-0 left-0 bg-primary px-4 py-2 text-black text-[10px] md:text-xs font-bold uppercase tracking-widest translate-y-4 -translate-x-2">
                   {post.category || 'Real Estate'}
                 </div>
               </div>
               
-              <div className="p-8 flex-grow flex flex-col">
-                <div className="flex items-center gap-4 text-slate-500 text-xs font-bold uppercase tracking-widest mb-4">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-primary" /> 
+              <div className="p-6 md:p-8 flex-grow flex flex-col items-start text-left">
+                <div className="flex items-center gap-4 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-primary" /> 
                     {new Date(post.published_at || post.created_at).toLocaleDateString()}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <User className="w-3 h-3 text-primary" /> 
+                  <div className="flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-primary" /> 
                     {post.author || 'Admin'}
                   </div>
                 </div>
                 
-                <h3 className="text-white text-2xl font-black mb-4 group-hover:text-primary transition-colors line-clamp-2">
+                <h3 className="text-white text-xl md:text-2xl font-black mb-4 group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tighter">
                   {post.title}
                 </h3>
                 
-                <p className="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                <p className="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-3 font-medium">
                   {post.excerpt}
                 </p>
                 
                 <div className="mt-auto">
-                  <div className="text-white font-bold text-sm uppercase flex items-center gap-2 hover:text-primary transition-all group/btn tracking-widest">
-                    Read More <ArrowRight className="w-4 h-4 text-primary group-hover/btn:translate-x-2 transition-transform" />
+                  <div className="text-white font-black text-[10px] md:text-xs uppercase flex items-center gap-2 hover:text-primary transition-all group/btn tracking-[0.2em]">
+                    Read Narrative <ArrowRight className="w-4 h-4 text-primary group-hover/btn:translate-x-2 transition-transform" />
                   </div>
                 </div>
               </div>
