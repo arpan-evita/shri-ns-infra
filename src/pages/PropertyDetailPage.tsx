@@ -95,7 +95,6 @@ export const PropertyDetailPage = () => {
   if (!property) return null;
 
   const featuredImage = property.property_images?.find((img: any) => img.is_featured)?.image_url || property.property_images?.[0]?.image_url;
-  const secondaryImages = property.property_images?.filter((img: any) => !img.is_featured) || [];
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen pb-24">

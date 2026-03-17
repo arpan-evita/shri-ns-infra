@@ -27,7 +27,6 @@ import {
   InfoCircleOutlined,
   EnvironmentOutlined,
   SafetyCertificateOutlined,
-  StarOutlined,
   UnorderedListOutlined,
   DeleteOutlined,
   FilePdfOutlined,
