@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 const { Title } = Typography;
 
 export default function AdminPropertiesPage() {
-  const [properties, setProperties] = useState([]);
+  const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
