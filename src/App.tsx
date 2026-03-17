@@ -16,6 +16,8 @@ import { PropertyForm } from './pages/admin/PropertyForm';
 import { AdminLeads } from './pages/admin/AdminLeads';
 import { AdminAgents } from './pages/admin/AdminAgents';
 import { AdminFeatures } from './pages/admin/AdminFeatures';
+import { AdminBlogs } from './pages/admin/AdminBlogs';
+import { BlogForm } from './pages/admin/BlogForm';
 
 function App() {
   return (
@@ -77,6 +79,27 @@ function App() {
               <ProtectedRoute>
                 <AdminLayout>
                   <AdminFeatures />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/blogs" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminBlogs />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/blogs/new" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <BlogForm />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/blogs/edit/:id" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <BlogForm />
                 </AdminLayout>
               </ProtectedRoute>
             } />

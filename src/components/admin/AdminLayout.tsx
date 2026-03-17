@@ -6,7 +6,8 @@ import {
   MessageSquare, 
   Settings, 
   LogOut,
-  ChevronRight
+  ChevronRight,
+  BookOpen
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -46,6 +47,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
     { icon: Home, label: 'Properties', path: '/admin/properties' },
+    { icon: BookOpen, label: 'Blogs', path: '/admin/blogs' },
     { icon: Users, label: 'Agents', path: '/admin/agents' },
     { icon: MessageSquare, label: 'Leads', path: '/admin/leads' },
     { icon: Settings, label: 'Features', path: '/admin/features' },
