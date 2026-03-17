@@ -1,6 +1,21 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
+  const location = useLocation();
+  
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'About Us', path: '/about' },
+    { name: 'Properties', path: '/properties' },
+    { name: 'Blog', path: '/blog' },
+    { name: 'Contact Us', path: '/contact' },
+  ];
+
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <header className="absolute top-0 z-50 w-full px-6 lg:px-20 py-6">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
@@ -13,11 +28,19 @@ export const Navbar = () => {
           <h2 className="text-xl font-extrabold tracking-tight text-white uppercase">Shri NS Infra</h2>
         </Link>
         <nav className="hidden md:flex items-center gap-8">
-          <Link className="text-sm font-bold text-[#c4a661] border-b-2 border-[#c4a661] pb-1" to="/">Home</Link>
-          <Link className="text-sm font-bold text-slate-300 hover:text-[#c4a661] transition-colors" to="/about">About Us</Link>
-          <Link className="text-sm font-bold text-slate-300 hover:text-[#c4a661] transition-colors" to="/properties">Properties</Link>
-          <Link className="text-sm font-bold text-slate-300 hover:text-[#c4a661] transition-colors" to="/blog">Blog</Link>
-          <Link className="text-sm font-bold text-slate-300 hover:text-[#c4a661] transition-colors" to="/contact">Contact Us</Link>
+          {navLinks.map((link) => (
+            <Link 
+              key={link.path}
+              to={link.path} 
+              className={`text-sm font-bold transition-all duration-300 pb-1 ${
+                isActive(link.path) 
+                  ? "text-[#c4a661] border-b-2 border-[#c4a661]" 
+                  : "text-slate-300 hover:text-[#c4a661]"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
         </nav>
       </div>
     </header>
