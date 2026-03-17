@@ -24,6 +24,7 @@ import {
   LoadingOutlined
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
+import { useAdmin } from '@/components/admin/AdminLayout';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -32,6 +33,7 @@ const { TextArea } = Input;
 export const BlogForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { collapsed } = useAdmin();
   const quillRef = useRef<any>(null);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -191,7 +193,7 @@ export const BlogForm = () => {
   );
 
   return (
-    <div className="space-y-12">
+    <div className={`space-y-12 mx-auto transition-all duration-300 ${collapsed ? 'max-w-7xl' : 'max-w-5xl'}`}>
       <style>{`
         .ql-container {
           min-height: 400px;

@@ -37,6 +37,7 @@ import {
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 import dayjs from 'dayjs';
+import { useAdmin } from '@/components/admin/AdminLayout';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -49,6 +50,7 @@ const CheckCircle2 = ({ className }: { className?: string }) => (
 export const PropertyForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { collapsed } = useAdmin();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -693,14 +695,15 @@ export const PropertyForm = () => {
         }
       }}
     >
-      <div className="w-full max-w-5xl mx-auto space-y-8 pb-24">
+      <div className={`w-full ${collapsed ? 'max-w-7xl' : 'max-w-5xl'} mx-auto space-y-8 pb-24 transition-all duration-300`}>
       <style>{`
         .property-form-tabs .ant-tabs-nav::before {
           border-bottom: 2px solid rgba(255,255,255,0.05);
         }
         .property-form-tabs .ant-tabs-tab {
           padding: 16px 0;
-          margin-right: 24px;
+          margin-right: ${collapsed ? '32px' : '12px'};
+          transition: margin 0.3s;
         }
         .property-form-tabs .ant-tabs-tab-btn {
           font-weight: 900;

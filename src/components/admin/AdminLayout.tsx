@@ -10,8 +10,21 @@ import {
   ChevronLeft,
   BookOpen
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, createContext, useContext } from 'react';
 import { supabase } from '@/lib/supabase';
+
+interface AdminContextType {
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+}
+
+const AdminContext = createContext<AdminContextType | undefined>(undefined);
+
+export const useAdmin = () => {
+  const context = useContext(AdminContext);
+  if (!context) throw new Error('useAdmin must be used within AdminProvider');
+  return context;
+};
 
 interface SidebarItemProps {
   icon: any;
@@ -59,7 +72,8 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-background-dark">
+    <AdminContext.Provider value={{ collapsed, setCollapsed }}>
+      <div className="flex min-h-screen bg-background-dark">
       {/* Sidebar */}
       <aside 
         className={`${
@@ -117,5 +131,6 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </main>
     </div>
+    </AdminContext.Provider>
   );
 };
