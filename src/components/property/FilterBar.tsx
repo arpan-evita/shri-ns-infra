@@ -6,7 +6,7 @@ import { Search, MapPin } from 'lucide-react';
 
 export const FilterBar = ({ initialFilters }: { initialFilters: any }) => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  useSearchParams();
   const [filters, setFilters] = useState({
     location: initialFilters.location || '',
     type: initialFilters.type || '',
