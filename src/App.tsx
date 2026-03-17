@@ -9,7 +9,13 @@ import { ContactPage } from './pages/ContactPage';
 import { PropertyDetailPage } from './pages/PropertyDetailPage';
 import { AuthPage } from './pages/AuthPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
-import { AdminPage } from './pages/AdminPage';
+import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AdminProperties } from './pages/admin/AdminProperties';
+import { PropertyForm } from './pages/admin/PropertyForm';
+import { AdminLeads } from './pages/admin/AdminLeads';
+import { AdminAgents } from './pages/admin/AdminAgents';
+import { AdminFeatures } from './pages/admin/AdminFeatures';
 
 function App() {
   return (
@@ -27,7 +33,51 @@ function App() {
             <Route path="/properties/:slug" element={<PropertyDetailPage />} />
             <Route path="/admin" element={
               <ProtectedRoute>
-                <AdminPage />
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/properties" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminProperties />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/properties/new" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <PropertyForm />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/properties/edit/:id" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <PropertyForm />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/agents" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminAgents />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/leads" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminLeads />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/features" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminFeatures />
+                </AdminLayout>
               </ProtectedRoute>
             } />
           </Routes>
