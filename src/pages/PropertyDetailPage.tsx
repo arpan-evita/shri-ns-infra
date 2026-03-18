@@ -37,6 +37,13 @@ const AmenityIcons: Record<string, any> = {
   'CCTV': Shield,
   'Lift': Construction,
   'Park': Construction,
+  'MEP': Construction,
+  'AC Provision': CheckCircle2,
+  'Conditioning': CheckCircle2,
+  'Inlet': CheckCircle2,
+  'Outlet': CheckCircle2,
+  'Toilets': CheckCircle2,
+  'Facing': CheckCircle2,
 };
 
 export const PropertyDetailPage = () => {
@@ -297,6 +304,39 @@ export const PropertyDetailPage = () => {
                  </div>
                </div>
             </div>
+
+            {/* Nearby Landmarks */}
+            {property.nearby_places && property.nearby_places.length > 0 && (
+              <div className="bg-[#111] border border-white/10 p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] space-y-6 md:space-y-8 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity hidden md:block">
+                  <MapPin className="w-24 h-24 text-white" />
+                </div>
+                <div className="space-y-2 text-left">
+                  <Title level={4} className="text-white uppercase tracking-tighter mb-0 text-xl">Nearby Landmarks</Title>
+                  <div className="h-[2px] w-12 bg-primary" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[...property.nearby_places].sort((a: any, b: any) => a.distance - b.distance).map((place: any, idx: number) => (
+                    <div key={idx} className="bg-white/5 border border-white/10 rounded-xl md:rounded-2xl p-4 flex items-center justify-between group/item hover:bg-white/10 transition-all hover:translate-x-1 duration-300">
+                      <div className="flex items-center gap-3 md:gap-4 text-left">
+                        <div className="w-8 h-8 md:w-10 md:h-10 bg-primary/20 rounded-lg flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform">
+                          <MapPin className="w-4 h-4 md:w-5 md:h-5" />
+                        </div>
+                        <div className="space-y-0.5">
+                          <div className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs">{place.name}</div>
+                          <div className="text-primary text-[8px] md:text-[9px] font-bold uppercase tracking-wider">{place.type}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-white font-black text-xs md:text-sm tracking-tighter">
+                          {place.distance} <span className="text-primary text-[10px]">KM</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Project Brochure */}
             <div className="bg-[#111] border border-white/10 p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] space-y-4 md:space-y-6 relative overflow-hidden group">
