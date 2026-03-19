@@ -53,8 +53,8 @@ export const Footer = () => {
   return (
     <footer className="bg-[#0f0d08] pt-16 md:pt-24 pb-8 md:pb-12 px-6">
       <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 md:gap-16 mb-16 md:mb-20">
-          <div className="col-span-2 lg:col-span-1 space-y-6 md:space-y-8">
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-12 md:gap-16 mb-16 md:mb-20">
+          <div className="col-span-2 lg:col-span-3 space-y-6 md:space-y-8">
             <div className="flex items-center gap-2">
               <img src={logoImg} alt="Shri NS Infra" className="h-10 md:h-12 w-auto" />
             </div>
@@ -82,7 +82,7 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div className="col-span-1">
+          <div className="col-span-1 lg:col-span-2">
             <h3 className="text-white text-lg md:text-2xl font-bold mb-6 md:mb-8 border-b-2 border-[#c4a661] inline-block pb-2">Quick Links</h3>
             <ul className="space-y-3 md:space-y-4">
               {[
@@ -101,7 +101,7 @@ export const Footer = () => {
             </ul>
           </div>
 
-          <div className="col-span-1">
+          <div className="col-span-1 lg:col-span-2">
             <h3 className="text-white text-lg md:text-2xl font-bold mb-6 md:mb-8 border-b-2 border-[#c4a661] inline-block pb-2">Top Areas</h3>
             <ul className="space-y-3 md:space-y-4">
               {['Noida', 'Greater Noida', 'Gurgaon', 'Delhi NCR'].map((item) => (
@@ -114,7 +114,7 @@ export const Footer = () => {
             </ul>
           </div>
 
-          <div className="col-span-2 lg:col-span-1 bg-white/5 p-6 md:p-8 rounded-sm overflow-hidden min-h-[350px] transition-all duration-500">
+          <div className="col-span-2 lg:col-span-5 bg-white/5 p-6 md:p-10 lg:p-12 rounded-sm overflow-hidden min-h-[350px] transition-all duration-500">
             <h3 className="text-white text-xl md:text-2xl font-bold mb-6 md:mb-8">Get Property Details</h3>
             {submitted ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-8 animate-in fade-in zoom-in duration-500">
