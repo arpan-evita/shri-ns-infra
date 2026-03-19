@@ -68,11 +68,13 @@ export const Footer = () => {
           </div>
 
           <div className="bg-white/5 p-6 md:p-8 rounded-sm">
-            <h3 className="text-white text-xl md:text-2xl font-bold mb-6 md:mb-8">Newsletter</h3>
+            <h3 className="text-white text-xl md:text-2xl font-bold mb-6 md:mb-8">Get Property Details</h3>
             <form className="space-y-4">
-              <input type="email" placeholder="Email Address" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
-              <button className="w-full border border-[#c4a661] text-[#c4a661] font-bold py-3 text-sm hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest">
-                Subscribe
+              <input type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
+              <input type="email" placeholder="Email" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
+              <input type="text" placeholder="Phone" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
+              <button className="w-full border border-[#c4a661] text-[#c4a661] font-bold py-3 text-sm hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest mt-2">
+                Send
               </button>
             </form>
           </div>
