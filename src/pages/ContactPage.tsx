@@ -7,7 +7,7 @@ export const ContactPage = () => {
     <div className="flex flex-col">
       <PageBanner 
         title="Contact Us" 
-        image="https://images.unsplash.com/photo-1503387762-592dee58c460?q=80&w=2070&auto=format&fit=crop"
+        image="https://images.unsplash.com/photo-1531971589569-0d93a00d4240?q=80&w=2037&auto=format&fit=crop"
       />
       <ContactInfo />
       <ContactMapSection />
