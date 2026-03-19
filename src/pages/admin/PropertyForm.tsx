@@ -539,6 +539,11 @@ export const PropertyForm = () => {
              </Form.Item>
           </div>
 
+          <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Google Maps Embed</Divider>
+          <Form.Item name="map_embed_url" label="Google Maps Embed URL" tooltip="Go to Google Maps → Search location → Share → Embed a map → Copy only the src=&quot;...&quot; URL from the iframe code">
+            <Input size="large" placeholder="https://www.google.com/maps/embed?pb=!1m18..." className="rounded-lg" />
+          </Form.Item>
+
           <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Nearby Landmarks (Connectivity)</Divider>
           <Form.List name="nearby_places">
             {(fields, { add, remove }) => (

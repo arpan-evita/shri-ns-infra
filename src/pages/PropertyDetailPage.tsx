@@ -3,48 +3,15 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { 
   MapPin, 
-  CheckCircle2,
   Phone,
   Mail,
-  Download,
   Shield,
   Construction,
-  ArrowUpRight
 } from "lucide-react";
 import { 
-  Button, 
-  Tag, 
-  Typography, 
-  Empty, 
   Modal, 
   message 
 } from 'antd';
-import 'leaflet/dist/leaflet.css';
-
-const { Title } = Typography;
-
-// Icon Mapping for Amenities
-const AmenityIcons: Record<string, any> = {
-  'Security': Shield,
-  'Swimming Pool': Construction,
-  'Gym': Construction,
-  'WiFi': Construction,
-  'Clubhouse': Construction,
-  'Garden': Construction,
-  'Parking': Construction,
-  'Power Backup': Construction,
-  'Elevator': Construction,
-  'CCTV': Shield,
-  'Lift': Construction,
-  'Park': Construction,
-  'MEP': Construction,
-  'AC Provision': CheckCircle2,
-  'Conditioning': CheckCircle2,
-  'Inlet': CheckCircle2,
-  'Outlet': CheckCircle2,
-  'Toilets': CheckCircle2,
-  'Facing': CheckCircle2,
-};
 
 export const PropertyDetailPage = () => {
   const { slug } = useParams();
@@ -285,6 +252,7 @@ export const PropertyDetailPage = () => {
       </div>
 
       {/* 5. Location Map Section */}
+      {property.map_embed_url && (
       <section className="mt-16 md:mt-24">
         <div className="max-w-7xl mx-auto px-6 space-y-8">
           <div className="space-y-4">
@@ -299,11 +267,7 @@ export const PropertyDetailPage = () => {
 
           <div className="border border-white/10 bg-black p-1 md:p-2">
             <iframe
-              src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(
-                (property.location ? property.location + ', ' : '') + 
-                (property.city || '') + 
-                (property.state ? ', ' + property.state : ', India')
-              )}&zoom=14`}
+              src={property.map_embed_url}
               width="100%"
               height="450"
               style={{ border: 0 }}
@@ -315,6 +279,7 @@ export const PropertyDetailPage = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Plan Modal */}
       <Modal
