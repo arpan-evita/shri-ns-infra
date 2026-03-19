@@ -63,17 +63,17 @@ export const BackToTop = () => {
                 cx="50%"
                 cy="50%"
                 r="30"
-                stroke="rgba(0,0,0,0.1)"
+                stroke="rgba(255,255,255,0.2)"
                 strokeWidth="2"
                 fill="none"
-                className="group-hover:stroke-black/5 transition-colors"
+                className="group-hover:stroke-primary/20 transition-colors"
                 style={{ r: "calc(50% - 2px)" }}
               />
               <motion.circle
                 cx="50%"
                 cy="50%"
                 r="30"
-                stroke="black"
+                stroke="white"
                 strokeWidth="2"
                 fill="none"
                 strokeLinecap="round"
@@ -81,7 +81,7 @@ export const BackToTop = () => {
                   pathLength,
                   r: "calc(50% - 2px)" 
                 }}
-                className="group-hover:stroke-black transition-colors"
+                className="group-hover:stroke-primary transition-colors"
               />
             </svg>
 
