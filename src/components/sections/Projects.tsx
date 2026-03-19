@@ -11,6 +11,16 @@ export const Projects = () => {
       title: "SKA Divine",
       location: "Noida",
       image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      title: "Karyan",
+      location: "Noida",
+      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      title: "Entilla 4CS",
+      location: "Noida",
+      image: "https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=2067&auto=format&fit=crop"
     }
   ];
 

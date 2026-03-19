@@ -3,8 +3,8 @@ import { Facebook, Twitter, Linkedin } from 'lucide-react';
 export const Team = () => {
   const members = [
     { name: "Ajay Sharma", role: "CEO | Founder", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" },
-    { name: "Vikram Singh", role: "Sales Director", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" },
-    { name: "John Doe", role: "Project Manager", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop" }
+    { name: "Pawan Soam", role: "VP - SALES", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" },
+    { name: "Gaurav Singh", role: "Manager Operations", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop" }
   ];
 
   return (
