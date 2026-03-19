@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { PropertyCard } from "@/components/property/PropertyCard";
 import { FilterBar } from "@/components/property/FilterBar";
+import { PageBanner } from "@/components/sections/PageBanner";
 
 export const PropertiesPage = () => {
   const [searchParams] = useSearchParams();
@@ -48,8 +49,10 @@ export const PropertiesPage = () => {
   }, [searchParams]);
 
   return (
-    <div className="pt-24 md:pt-32 pb-16 md:pb-24 px-6 min-h-screen">
-      <div className="mx-auto max-w-7xl space-y-8 md:space-y-12">
+    <div className="flex flex-col min-h-screen">
+      <PageBanner title="Properties" />
+      
+      <div className="pb-16 md:pb-24 px-6 pt-12 md:pt-20 mx-auto max-w-7xl w-full space-y-8 md:space-y-12">
         <div className="space-y-2 md:space-y-4 text-left">
           <span className="text-[#c4a661] text-xl md:text-3xl font-light uppercase tracking-tight">Explore</span>
           <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none">Property Listings</h1>
