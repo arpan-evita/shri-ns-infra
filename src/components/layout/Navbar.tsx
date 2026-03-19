@@ -1,11 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import logoImg from '../../assets/logo.png';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -21,7 +30,13 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full px-6 lg:px-20 py-4 bg-[hsl(0,0%,10%)] border-b border-white/5">
+    <header 
+      className={`fixed top-0 z-50 w-full px-6 lg:px-20 transition-all duration-300 ${
+        isScrolled 
+          ? 'py-4 bg-[hsl(0,0%,10%)]/95 backdrop-blur-md border-b border-white/10 shadow-lg' 
+          : 'py-6 bg-transparent border-b border-transparent'
+      }`}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link to="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
           <img src={logoImg} alt="Shri NS Infra" className="h-12 w-auto" />
