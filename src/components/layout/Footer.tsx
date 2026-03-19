@@ -1,5 +1,6 @@
 import { Phone, Mail, MapPin, Facebook, Twitter, Youtube, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logoImg from '../../assets/logo.png';
 
 export const Footer = () => {
   return (
@@ -8,12 +9,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 mb-16 md:mb-20">
           <div className="space-y-6 md:space-y-8">
             <div className="flex items-center gap-2">
-              <div className="text-[#c4a661]">
-                <svg className="h-8 w-8" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
-                </svg>
-              </div>
-              <h2 className="text-xl font-extrabold tracking-tight text-white uppercase">Shri NS Infra</h2>
+              <img src={logoImg} alt="Shri NS Infra" className="h-10 md:h-12 w-auto" />
             </div>
             <p className="text-slate-400 leading-relaxed text-sm md:text-base">
               We are a premium real estate advisory working with reputed NCR developers to offer only verified, RERA-approved projects.
