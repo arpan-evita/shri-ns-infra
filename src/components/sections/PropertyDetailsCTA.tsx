@@ -60,7 +60,7 @@ export const PropertyDetailsCTA = () => {
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.8, type: "spring" }}
           className="w-full lg:w-1/2 space-y-6"
         >
@@ -76,7 +76,7 @@ export const PropertyDetailsCTA = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="w-full lg:w-1/2 bg-black/80 p-8 md:p-12 border border-white/10 relative"
         >

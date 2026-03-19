@@ -1,10 +1,17 @@
 import founderImg from '../../assets/founder.png';
+import { motion } from 'framer-motion';
 
 export const About = () => {
   return (
-    <section className="bg-background-dark py-24 px-6">
+    <section className="bg-background-dark py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-7xl flex flex-col lg:flex-row gap-16 items-center">
-        <div className="w-full lg:w-1/2 relative">
+        <motion.div 
+          initial={{ opacity: 0, x: -80 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.8, type: "spring" }}
+          className="w-full lg:w-1/2 relative"
+        >
           <img 
             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop" 
             className="w-full rounded-sm"
@@ -21,8 +28,14 @@ export const About = () => {
               <p className="text-primary text-sm font-semibold uppercase tracking-wider">CEO | Founder</p>
             </div>
           </div>
-        </div>
-        <div className="w-full lg:w-1/2 space-y-8">
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, x: 80 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+          className="w-full lg:w-1/2 space-y-8"
+        >
           <div className="space-y-2">
             <span className="text-primary text-3xl md:text-4xl font-light">About</span>
             <h2 className="text-white text-4xl md:text-5xl font-black">Shri NS Infra</h2>
@@ -36,7 +49,7 @@ export const About = () => {
           <button className="border border-primary px-10 py-4 text-white font-bold hover:bg-primary hover:text-black transition-all">
             MORE ABOUT US
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ export const Partners = () => {
             key={idx} 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.25 }}
             transition={{ delay: idx * 0.1 }}
             className="flex items-center gap-3 grayscale hover:grayscale-0 transition-all cursor-pointer"
           >

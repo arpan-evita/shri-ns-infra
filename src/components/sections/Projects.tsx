@@ -144,7 +144,7 @@ export const Projects = () => {
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.6 }}
           className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 md:mb-16 gap-8 text-left"
         >
@@ -169,7 +169,7 @@ export const Projects = () => {
                 key={property.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <PropertyCard 

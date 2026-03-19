@@ -15,7 +15,7 @@ export const Testimonials = () => {
         <motion.div 
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.8 }}
           className="w-full lg:w-1/3 space-y-4 md:space-y-6"
         >
@@ -26,7 +26,7 @@ export const Testimonials = () => {
         <motion.div 
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="w-full lg:w-2/3 space-y-6 md:space-y-8"
         >

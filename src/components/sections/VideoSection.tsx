@@ -13,7 +13,7 @@ export const VideoSection = () => {
       <motion.button 
         initial={{ opacity: 0, scale: 0.5 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, amount: 0.25 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
         className="relative z-10 group flex items-center justify-center w-24 h-24 rounded-full bg-white/20 border border-white/40 backdrop-blur-sm"
       >

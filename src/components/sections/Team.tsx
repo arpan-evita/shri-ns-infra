@@ -16,7 +16,7 @@ export const Team = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.6 }}
           className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 text-left"
         >
@@ -35,7 +35,7 @@ export const Team = () => {
               key={idx} 
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.25 }}
               transition={{ duration: 0.5, delay: idx * 0.15 }}
               className="group text-left"
             >
