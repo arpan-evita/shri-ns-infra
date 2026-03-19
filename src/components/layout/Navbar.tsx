@@ -21,7 +21,7 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="absolute top-0 z-50 w-full px-6 lg:px-20 py-6">
+    <header className="fixed top-0 z-50 w-full px-6 lg:px-20 py-4 bg-[hsl(0,0%,10%)] border-b border-white/5">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link to="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
           <img src={logoImg} alt="Shri NS Infra" className="h-12 w-auto" />
