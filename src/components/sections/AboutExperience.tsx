@@ -10,8 +10,8 @@ export const AboutExperience = () => {
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
           {/* Left Side - Image with Overlay */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="w-full lg:w-1/2 relative"
@@ -41,10 +41,10 @@ export const AboutExperience = () => {
 
           {/* Right Side - Content */}
           <motion.div 
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             className="w-full lg:w-1/2 space-y-8 md:space-y-12 text-left"
           >
             <div className="space-y-4">
@@ -108,7 +108,7 @@ export const AboutExperience = () => {
                 Contact Us
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
