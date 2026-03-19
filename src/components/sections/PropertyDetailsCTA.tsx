@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronRight, Loader2, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
+import { motion } from 'framer-motion';
 
 export const PropertyDetailsCTA = () => {
   const [loading, setLoading] = useState(false);
@@ -56,17 +57,29 @@ export const PropertyDetailsCTA = () => {
       />
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
       <div className="relative z-10 mx-auto max-w-7xl w-full px-6 flex flex-col lg:flex-row items-center gap-16">
-        <div className="w-full lg:w-1/2 space-y-6">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, type: "spring" }}
+          className="w-full lg:w-1/2 space-y-6"
+        >
           <span className="text-primary text-3xl font-light">Get Property Details</span>
           <h2 className="text-white text-4xl md:text-6xl font-black uppercase tracking-tighter">Of Our Next Project.</h2>
-          <p className="text-slate-300 text-lg max-w-md font-medium">
+          <p className="text-slate-300 text-lg max-w-md font-medium leading-relaxed">
             Looking for the right property in <span className="text-white font-bold">Delhi & NCR</span>? Share your details and get verified listings, pricing, and site visit assistance from our team.
           </p>
           <button className="border border-primary px-10 py-5 text-white font-bold flex items-center gap-2 hover:bg-primary hover:text-black transition-all uppercase tracking-widest text-sm">
             GET DETAILS NOW <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </button>
-        </div>
-        <div className="w-full lg:w-1/2 bg-black/80 p-8 md:p-12 border border-white/10 relative">
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-full lg:w-1/2 bg-black/80 p-8 md:p-12 border border-white/10 relative"
+        >
           {submitted ? (
             <div className="h-[300px] flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in zoom-in duration-500">
               <CheckCircle className="w-16 h-16 text-primary" />
@@ -113,7 +126,7 @@ export const PropertyDetailsCTA = () => {
               </form>
             </>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

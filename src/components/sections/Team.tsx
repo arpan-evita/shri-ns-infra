@@ -1,6 +1,7 @@
 import { Facebook, Twitter, Linkedin } from 'lucide-react';
 import founderImg from '../../assets/founder.png';
 import pawanImg from '../../assets/pawan.png';
+import { motion } from 'framer-motion';
 
 export const Team = () => {
   const members = [
@@ -10,9 +11,15 @@ export const Team = () => {
   ];
 
   return (
-    <section className="bg-background-dark py-16 md:py-24 px-6">
+    <section className="bg-background-dark py-16 md:py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 text-left">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 text-left"
+        >
           <div className="space-y-3 md:space-y-4">
             <span className="text-primary text-xl md:text-2xl font-light uppercase tracking-tight">Our Team</span>
             <h2 className="text-white text-3xl md:text-5xl font-black leading-tight uppercase tracking-tighter">Meet With Expert Team.</h2>
@@ -20,11 +27,18 @@ export const Team = () => {
           <button className="hidden md:block border border-primary px-8 py-3 text-white font-bold hover:bg-primary hover:text-black transition-all uppercase tracking-widest text-sm">
             VIEW ALL TEAM
           </button>
-        </div>
+        </motion.div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {members.map((member, idx) => (
-            <div key={idx} className="group text-left">
+            <motion.div 
+              key={idx} 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.15 }}
+              className="group text-left"
+            >
               <div className="relative overflow-hidden mb-6 rounded-sm">
                 <img 
                   src={member.image} 
@@ -39,7 +53,7 @@ export const Team = () => {
               </div>
               <h3 className="text-white text-xl md:text-2xl font-black uppercase tracking-tight mb-1">{member.name}</h3>
               <p className="text-primary font-black uppercase tracking-widest text-[10px]">{member.role}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

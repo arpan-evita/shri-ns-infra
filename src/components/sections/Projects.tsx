@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { PropertyCard } from '@/components/property/PropertyCard';
+import { motion } from 'framer-motion';
 
 export const Projects = () => {
   const [properties, setProperties] = useState<any[]>([]);
@@ -138,9 +139,15 @@ export const Projects = () => {
   }, []);
 
   return (
-    <section className="bg-background-dark py-16 md:py-24 px-6">
+    <section className="bg-background-dark py-16 md:py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 md:mb-16 gap-8 text-left">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 md:mb-16 gap-8 text-left"
+        >
           <div className="space-y-4">
             <span className="text-primary text-xl md:text-2xl font-light uppercase tracking-tight">Our Project</span>
             <h2 className="text-white text-3xl md:text-5xl font-black leading-tight uppercase tracking-tighter">Delivering Quality Homes & Smart Investments</h2>
@@ -151,20 +158,27 @@ export const Projects = () => {
           <Link to="/properties" className="border border-primary px-8 py-3 text-white font-bold hover:bg-primary hover:text-black transition-all uppercase tracking-widest text-sm flex items-center gap-2 whitespace-nowrap">
             VIEW ALL <ChevronRight className="w-4 h-4" />
           </Link>
-        </div>
+        </motion.div>
         
         {loading ? (
            <div className="text-center py-24 text-slate-500 font-black uppercase tracking-[0.5em] animate-pulse">Loading Premium Properties...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-            {properties.map((property) => (
-              <PropertyCard 
-                key={property.id} 
-                property={{
-                  ...property,
-                  featured_image: property.property_images?.find((img: any) => img.is_featured)?.image_url || property.property_images?.[0]?.image_url || property.featured_image
-                }} 
-              />
+            {properties.map((property, index) => (
+              <motion.div
+                key={property.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <PropertyCard 
+                  property={{
+                    ...property,
+                    featured_image: property.property_images?.find((img: any) => img.is_featured)?.image_url || property.property_images?.[0]?.image_url || property.featured_image
+                  }} 
+                />
+              </motion.div>
             ))}
           </div>
         )}

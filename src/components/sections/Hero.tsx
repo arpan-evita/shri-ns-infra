@@ -18,8 +18,9 @@ export const Hero = () => {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 flex flex-col-reverse lg:flex-row items-center gap-12 pt-32 md:pt-40 pb-20">
         {/* Left: Form */}
         <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
           className="w-full lg:w-1/2 bg-black/40 backdrop-blur-md p-6 md:p-10 rounded-sm border border-white/10"
         >
           <h2 className="text-2xl md:text-3xl font-black text-white mb-6 md:mb-8 uppercase tracking-tight">Request A Call Back</h2>
@@ -35,8 +36,9 @@ export const Hero = () => {
 
         {/* Right: Content */}
         <motion.div 
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
           className="w-full lg:w-1/2 text-left space-y-4 md:space-y-6"
         >
           <div className="space-y-1">

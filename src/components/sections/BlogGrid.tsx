@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 import { Spin, Empty } from 'antd';
 import { supabase } from '@/lib/supabase';
+import { motion } from 'framer-motion';
 
 export const BlogGrid = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -45,15 +46,21 @@ export const BlogGrid = () => {
   }
 
   return (
-    <section className="bg-background-dark py-16 md:py-24 px-6 md:gap-12">
+    <section className="bg-background-dark py-16 md:py-24 px-6 md:gap-12 overflow-hidden">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-          {posts.map((post) => (
-            <Link 
-              key={post.id} 
-              to={`/blog/${post.slug}`}
-              className="group flex flex-col bg-white/5 border border-white/10 hover:border-primary/50 transition-all duration-300"
+          {posts.map((post, index) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
+              <Link 
+                to={`/blog/${post.slug}`}
+                className="group flex flex-col bg-white/5 border border-white/10 hover:border-primary/50 transition-all duration-300"
+              >
               <div className="relative overflow-hidden h-56 md:h-64">
                 <img 
                   src={post.image_url || "https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=2067&auto=format&fit=crop"} 
@@ -91,7 +98,8 @@ export const BlogGrid = () => {
                   </div>
                 </div>
               </div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>

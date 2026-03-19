@@ -1,6 +1,7 @@
 import { Target, Compass } from 'lucide-react';
 import founderImg from '../../assets/founder.png';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const AboutExperience = () => {
   return (
@@ -8,27 +9,44 @@ export const AboutExperience = () => {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
           {/* Left Side - Image with Overlay */}
-          <div className="w-full lg:w-1/2 relative">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full lg:w-1/2 relative"
+          >
             <div className="relative group overflow-hidden rounded-sm">
               <img 
                 src={founderImg} 
-                className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-black box-content hidden md:block"
+                className="w-full aspect-[4/5] object-cover"
                 alt="Ajay Sharma"
               />
+              {/* Floating Avatar for Detail */}
+              <div className="absolute -top-6 -right-6 w-20 h-20 md:w-32 md:h-32 bg-primary p-1 md:p-1.5 rounded-full hidden lg:block animate-bounce-slow">
+                 <img src={founderImg} className="w-full h-full object-cover rounded-full border-4 border-black" alt="Ajay Sharma detail" />
+              </div>
+
               <div className="absolute bottom-0 left-0 right-0 bg-black/90 p-6 md:p-8 m-4 md:m-6 border border-white/5">
                 <p className="text-slate-300 italic mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
-                  "Leading the vision for sustainable urban development in Wave City."
+                  "Leading the vision for sustainable urban development in NCR."
                 </p>
-                <div className="flex flex-col">
+                <div className="flex flex-col text-left">
                   <h4 className="text-white font-bold text-lg md:text-xl uppercase tracking-wider">Ajay Sharma</h4>
                   <p className="text-primary text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mt-1">CEO | Founder</p>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side - Content */}
-          <div className="w-full lg:w-1/2 space-y-8 md:space-y-12 text-left">
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="w-full lg:w-1/2 space-y-8 md:space-y-12 text-left"
+          >
             <div className="space-y-4">
               <span className="text-primary text-lg md:text-2xl font-light uppercase tracking-tight">About Us</span>
               <h2 className="text-white text-3xl md:text-5xl font-black leading-tight uppercase tracking-tighter">25 Years Of Experience.</h2>
@@ -39,7 +57,13 @@ export const AboutExperience = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {/* Vision Card */}
-              <div className="bg-white/5 p-6 md:p-8 border border-white/10 hover:border-primary/50 transition-colors group">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="bg-white/5 p-6 md:p-8 border border-white/10 hover:border-primary/50 transition-colors group"
+              >
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
                   <Target className="w-5 h-5 md:w-6 md:h-6 text-primary group-hover:text-black" />
                 </div>
@@ -47,10 +71,16 @@ export const AboutExperience = () => {
                 <p className="text-slate-400 text-xs md:text-sm leading-relaxed">
                   To redefine the real estate landscape through transparency, integrity, and verified excellence.
                 </p>
-              </div>
+              </motion.div>
 
               {/* Mission Card */}
-              <div className="bg-white/5 p-6 md:p-8 border border-white/10 hover:border-primary/50 transition-colors group">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5 }}
+                className="bg-white/5 p-6 md:p-8 border border-white/10 hover:border-primary/50 transition-colors group"
+              >
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
                   <Compass className="w-5 h-5 md:w-6 md:h-6 text-primary group-hover:text-black" />
                 </div>
@@ -58,7 +88,7 @@ export const AboutExperience = () => {
                 <p className="text-slate-400 text-xs md:text-sm leading-relaxed">
                   Empowering investors with deep market insights and exclusive access to the best properties.
                 </p>
-              </div>
+              </motion.div>
             </div>
 
             <div className="flex flex-wrap items-center gap-6 md:gap-8 pt-6 md:pt-8 border-t border-white/10">
