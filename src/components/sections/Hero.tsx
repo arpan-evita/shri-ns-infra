@@ -7,11 +7,15 @@ export const Hero = () => {
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex items-center">
       <div className="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
           className="h-full w-full object-cover"
-          alt="Modern Cityscape"
-        />
+        >
+          <source src="/banner-video.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
       
