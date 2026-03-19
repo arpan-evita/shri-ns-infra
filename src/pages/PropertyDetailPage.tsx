@@ -104,8 +104,8 @@ export const PropertyDetailPage = () => {
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full space-y-4 md:space-y-6">
           <div className="space-y-2">
-            <span className="text-primary text-xl md:text-3xl font-light uppercase tracking-widest block animate-fade-in">Single Project</span>
-            <h1 className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none m-0">
+            <span className="text-primary text-lg md:text-2xl font-light uppercase tracking-widest block animate-fade-in">Single Project</span>
+            <h1 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none m-0">
               {property.title}
             </h1>
           </div>
@@ -168,7 +168,7 @@ export const PropertyDetailPage = () => {
           <div className="lg:col-span-8 space-y-12 md:space-y-20">
             <div className="space-y-8 text-left">
               <div className="space-y-4">
-                <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none m-0">
+                <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none m-0">
                    {property.title}
                 </h2>
                 <div className="h-1 w-20 bg-primary" />

@@ -12,7 +12,7 @@ export const Testimonials = () => {
       </div>
       <div className="mx-auto max-w-7xl relative z-10 flex flex-col lg:flex-row gap-10 md:gap-16 items-center text-left">
         <div className="w-full lg:w-1/3 space-y-4 md:space-y-6">
-          <h2 className="text-white text-2xl md:text-4xl font-black leading-tight uppercase tracking-tighter">Trusted From Over 2,500 Client</h2>
+          <h2 className="text-white text-2xl md:text-3xl font-black leading-tight uppercase tracking-tighter">Trusted From Over 2,500 Client</h2>
           <div className="h-1 w-20 bg-primary" />
           <Quote className="w-16 h-16 md:w-24 md:h-24 text-primary fill-primary opacity-40" />
         </div>

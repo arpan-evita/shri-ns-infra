@@ -51,8 +51,8 @@ export const PropertiesPage = () => {
     <div className="pt-24 md:pt-32 pb-16 md:pb-24 px-6 min-h-screen">
       <div className="mx-auto max-w-7xl space-y-8 md:space-y-12">
         <div className="space-y-2 md:space-y-4 text-left">
-          <span className="text-[#c4a661] text-2xl md:text-4xl font-light uppercase tracking-tight">Explore</span>
-          <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">Property Listings</h1>
+          <span className="text-[#c4a661] text-xl md:text-3xl font-light uppercase tracking-tight">Explore</span>
+          <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none">Property Listings</h1>
           <p className="text-slate-400 max-w-2xl text-sm md:text-lg font-medium leading-relaxed">
             Find the perfect home or investment across the most premium locations in Delhi NCR. Use the filters below to refine your search.
           </p>

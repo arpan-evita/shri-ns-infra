@@ -11,8 +11,8 @@ export const PropertyDetailsCTA = () => {
       <div className="absolute inset-0 bg-black/60"></div>
       <div className="relative z-10 mx-auto max-w-7xl w-full px-6 flex flex-col lg:flex-row items-center gap-16">
         <div className="w-full lg:w-1/2 space-y-6">
-          <span className="text-primary text-4xl font-light">Get Property Details</span>
-          <h2 className="text-white text-6xl font-black">Of Our Next Project.</h2>
+          <span className="text-primary text-3xl font-light">Get Property Details</span>
+          <h2 className="text-white text-4xl md:text-5xl font-black">Of Our Next Project.</h2>
           <p className="text-slate-300 text-lg max-w-md">
             Looking for the right property in <span className="text-white font-bold">Delhi & NCR</span>? Share your details and get verified listings, pricing, and site visit assistance from our team.
           </p>

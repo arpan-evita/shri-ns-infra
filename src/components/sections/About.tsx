@@ -23,8 +23,8 @@ export const About = () => {
         </div>
         <div className="w-full lg:w-1/2 space-y-8">
           <div className="space-y-2">
-            <span className="text-primary text-4xl font-light">About</span>
-            <h2 className="text-white text-6xl font-black">Shri NS Infra</h2>
+            <span className="text-primary text-3xl md:text-4xl font-light">About</span>
+            <h2 className="text-white text-4xl md:text-5xl font-black">Shri NS Infra</h2>
           </div>
           <p className="text-white text-xl italic font-medium leading-relaxed">
             " We are a premium real estate advisory working with reputed NCR developers to offer only verified, RERA-approved residential & commercial projects. "

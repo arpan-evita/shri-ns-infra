@@ -12,8 +12,8 @@ export const Team = () => {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 text-left">
           <div className="space-y-3 md:space-y-4">
-            <span className="text-primary text-2xl md:text-4xl font-light uppercase tracking-tight">Our Team</span>
-            <h2 className="text-white text-4xl md:text-6xl font-black leading-tight uppercase tracking-tighter">Meet With Expert Team.</h2>
+            <span className="text-primary text-xl md:text-2xl font-light uppercase tracking-tight">Our Team</span>
+            <h2 className="text-white text-3xl md:text-5xl font-black leading-tight uppercase tracking-tighter">Meet With Expert Team.</h2>
           </div>
           <button className="hidden md:block border border-primary px-8 py-3 text-white font-bold hover:bg-primary hover:text-black transition-all uppercase tracking-widest text-sm">
             VIEW ALL TEAM

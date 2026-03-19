@@ -29,8 +29,8 @@ export const AboutExperience = () => {
           {/* Right Side - Content */}
           <div className="w-full lg:w-1/2 space-y-8 md:space-y-12 text-left">
             <div className="space-y-4">
-              <span className="text-primary text-xl md:text-3xl font-light uppercase tracking-tight">About Us</span>
-              <h2 className="text-white text-4xl md:text-6xl font-black leading-tight uppercase tracking-tighter">25 Years Of Experience.</h2>
+              <span className="text-primary text-lg md:text-2xl font-light uppercase tracking-tight">About Us</span>
+              <h2 className="text-white text-3xl md:text-5xl font-black leading-tight uppercase tracking-tighter">25 Years Of Experience.</h2>
               <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-xl">
                 We are a premium real estate advisory working with reputed NCR developers to offer only verified, RERA-approved residential & commercial projects.
               </p>

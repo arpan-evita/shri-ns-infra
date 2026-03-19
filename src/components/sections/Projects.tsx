@@ -108,8 +108,8 @@ export const Projects = () => {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 md:mb-16 gap-8 text-left">
           <div className="space-y-4">
-            <span className="text-primary text-2xl md:text-4xl font-light uppercase tracking-tight">Our Project</span>
-            <h2 className="text-white text-4xl md:text-6xl font-black leading-tight uppercase tracking-tighter">Delivering Quality Homes & Smart Investments</h2>
+            <span className="text-primary text-xl md:text-2xl font-light uppercase tracking-tight">Our Project</span>
+            <h2 className="text-white text-3xl md:text-5xl font-black leading-tight uppercase tracking-tighter">Delivering Quality Homes & Smart Investments</h2>
             <p className="text-slate-400 max-w-xl text-base md:text-lg font-medium leading-relaxed">
               We represent some of the most prestigious developments in the region, ensuring every investment provides long-term value and excellence.
             </p>

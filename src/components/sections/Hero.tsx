@@ -43,7 +43,7 @@ export const Hero = () => {
             <h3 className="text-[#c4a661] text-2xl md:text-4xl font-light leading-tight uppercase tracking-tighter">Premium Residential &</h3>
             <h3 className="text-[#c4a661] text-2xl md:text-4xl font-light leading-tight uppercase tracking-tighter">Commercial</h3>
           </div>
-          <h1 className="text-white text-5xl md:text-8xl font-black leading-none uppercase tracking-tighter">Properties In NCR</h1>
+          <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-black leading-none uppercase tracking-tighter">Properties In NCR</h1>
           <p className="text-slate-300 text-sm md:text-lg max-w-md font-medium leading-relaxed">
             RERA approved projects with trusted developers across Noida, Greater Noida & Delhi NCR.
           </p>
