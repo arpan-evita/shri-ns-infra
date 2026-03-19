@@ -6,8 +6,8 @@ export const Footer = () => {
   return (
     <footer className="bg-[#0f0d08] pt-16 md:pt-24 pb-8 md:pb-12 px-6">
       <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 mb-16 md:mb-20">
-          <div className="space-y-6 md:space-y-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 md:gap-16 mb-16 md:mb-20">
+          <div className="col-span-2 lg:col-span-1 space-y-6 md:space-y-8">
             <div className="flex items-center gap-2">
               <img src={logoImg} alt="Shri NS Infra" className="h-10 md:h-12 w-auto" />
             </div>
@@ -35,8 +35,8 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div>
-            <h3 className="text-white text-xl md:text-2xl font-bold mb-6 md:mb-8 border-b-2 border-[#c4a661] inline-block pb-2">Quick Links</h3>
+          <div className="col-span-1">
+            <h3 className="text-white text-lg md:text-2xl font-bold mb-6 md:mb-8 border-b-2 border-[#c4a661] inline-block pb-2">Quick Links</h3>
             <ul className="space-y-3 md:space-y-4">
               {[
                 { name: 'Home', path: '/' },
@@ -46,28 +46,28 @@ export const Footer = () => {
                 { name: 'Blog', path: '/blog' }
               ].map((item) => (
                 <li key={item.name}>
-                  <Link to={item.path} className="text-slate-400 hover:text-[#c4a661] flex items-center gap-2 transition-colors text-sm md:text-base">
-                    <ChevronRight className="w-4 h-4 text-[#c4a661]" /> {item.name}
+                  <Link to={item.path} className="text-slate-400 hover:text-[#c4a661] flex items-center gap-1 md:gap-2 transition-colors text-sm md:text-base">
+                    <ChevronRight className="w-4 h-4 text-[#c4a661] shrink-0" /> <span className="truncate">{item.name}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-white text-xl md:text-2xl font-bold mb-6 md:mb-8 border-b-2 border-[#c4a661] inline-block pb-2">Top Areas</h3>
+          <div className="col-span-1">
+            <h3 className="text-white text-lg md:text-2xl font-bold mb-6 md:mb-8 border-b-2 border-[#c4a661] inline-block pb-2">Top Areas</h3>
             <ul className="space-y-3 md:space-y-4">
               {['Noida', 'Greater Noida', 'Gurgaon', 'Delhi NCR'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-slate-400 hover:text-[#c4a661] flex items-center gap-2 transition-colors text-sm md:text-base">
-                    <ChevronRight className="w-4 h-4 text-[#c4a661]" /> {item}
+                  <a href="#" className="text-slate-400 hover:text-[#c4a661] flex items-center gap-1 md:gap-2 transition-colors text-sm md:text-base">
+                    <ChevronRight className="w-4 h-4 text-[#c4a661] shrink-0" /> <span className="truncate">{item}</span>
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="bg-white/5 p-6 md:p-8 rounded-sm">
+          <div className="col-span-2 lg:col-span-1 bg-white/5 p-6 md:p-8 rounded-sm">
             <h3 className="text-white text-xl md:text-2xl font-bold mb-6 md:mb-8">Get Property Details</h3>
             <form className="space-y-4">
               <input type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
