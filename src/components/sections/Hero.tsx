@@ -15,7 +15,7 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
       
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 flex flex-col-reverse lg:flex-row items-center gap-12 pt-12 md:pt-20 pb-20">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 flex flex-col-reverse lg:flex-row items-center gap-12 pt-32 md:pt-40 pb-20">
         {/* Left: Form */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
