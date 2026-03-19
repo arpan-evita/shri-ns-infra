@@ -54,25 +54,39 @@ export const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      <div className={`
-        fixed inset-0 bg-black/95 z-50 md:hidden transition-all duration-300 ease-in-out
-        ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
-      `}>
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          <button 
-            className="absolute top-8 right-8 text-white p-2"
-            onClick={() => setIsOpen(false)}
-          >
-            <X className="w-10 h-10" />
-          </button>
+      {/* Mobile Menu Backdrop */}
+      <div 
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-all duration-300 ${
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+        onClick={() => setIsOpen(false)}
+      />
+
+      {/* Mobile Sidebar */}
+      <div 
+        className={`fixed top-0 right-0 bottom-0 w-[80vw] max-w-sm bg-[#0a0a0a] border-l border-white/10 z-50 md:hidden flex flex-col pt-24 px-8 overflow-y-auto transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <button 
+          className="absolute top-6 right-6 text-white p-2 hover:text-[#c4a661] transition-colors"
+          onClick={() => setIsOpen(false)}
+        >
+          <X className="w-8 h-8" />
+        </button>
+
+        <div className="flex flex-col gap-6 w-full mt-4">
+          <Link to="/" className="mb-8" onClick={() => setIsOpen(false)}>
+             <img src={logoImg} alt="Shri NS Infra" className="h-10 w-auto" />
+          </Link>
+          
           {navLinks.map((link) => (
             <Link 
               key={link.path}
               to={link.path} 
               onClick={() => setIsOpen(false)}
-              className={`text-2xl font-black uppercase tracking-widest transition-all ${
-                isActive(link.path) ? "text-[#c4a661]" : "text-white hover:text-[#c4a661]"
+              className={`text-lg font-black uppercase tracking-widest transition-all w-full border-b border-white/5 pb-4 ${
+                isActive(link.path) ? "text-[#c4a661]" : "text-white hover:text-[#c4a661] hover:translate-x-2"
               }`}
             >
               {link.name}
