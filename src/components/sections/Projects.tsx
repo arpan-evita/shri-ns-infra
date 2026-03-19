@@ -77,6 +77,40 @@ export const Projects = () => {
       featured_image: "https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=2067&auto=format&fit=crop",
       status: "buy",
       possession_status: "Ready"
+    },
+    {
+      id: "5",
+      title: "Premium Plots",
+      slug: "premium-plots",
+      price: 4500000,
+      price_per_sqft: 9000,
+      location: "Sector 12",
+      city: "Greater Noida",
+      bedrooms: 0,
+      bathrooms: 0,
+      area: 500,
+      carpet_area: 500,
+      bhk_type: "Plot",
+      featured_image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2064&auto=format&fit=crop",
+      status: "buy",
+      possession_status: "Ready"
+    },
+    {
+      id: "6",
+      title: "Corporate Hub",
+      slug: "corporate-hub",
+      price: 15000000,
+      price_per_sqft: 18000,
+      location: "Sector 62",
+      city: "Noida",
+      bedrooms: 0,
+      bathrooms: 2,
+      area: 3000,
+      carpet_area: 2500,
+      bhk_type: "Office",
+      featured_image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop",
+      status: "buy",
+      possession_status: "Ready"
     }
   ];
 
@@ -90,7 +124,7 @@ export const Projects = () => {
           property_images(image_url, is_featured)
         `)
         .order('created_at', { ascending: false })
-        .limit(4);
+        .limit(6);
 
       if (!error && data && data.length > 0) {
         setProperties(data);
@@ -122,7 +156,7 @@ export const Projects = () => {
         {loading ? (
            <div className="text-center py-24 text-slate-500 font-black uppercase tracking-[0.5em] animate-pulse">Loading Premium Properties...</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
             {properties.map((property) => (
               <PropertyCard 
                 key={property.id} 
