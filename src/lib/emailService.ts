@@ -1,4 +1,4 @@
-const RESEND_API_KEY = 're_eAKHonJG_BLuNX1HVNXcFyGQ6pVZud4WK';
+const RESEND_API_KEY = import.meta.env.VITE_RESEND_API_KEY;
 
 interface EmailParams {
   name: string;
