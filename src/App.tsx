@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { BackToTop } from './components/layout/BackToTop';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { PropertiesPage } from './pages/PropertiesPage';
@@ -111,6 +112,7 @@ function AppContent() {
           } />
         </Routes>
       </main>
+      {!isAdminPath && <BackToTop />}
       {!isAdminPath && <Footer />}
     </div>
   );
