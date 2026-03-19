@@ -1,10 +1,11 @@
 import { Facebook, Twitter, Linkedin } from 'lucide-react';
 import founderImg from '../../assets/founder.png';
+import pawanImg from '../../assets/pawan.png';
 
 export const Team = () => {
   const members = [
     { name: "Ajay Sharma", role: "CEO | Founder", image: founderImg },
-    { name: "Pawan Soam", role: "VP - SALES", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop" },
+    { name: "Pawan Soam", role: "VP - SALES", image: pawanImg },
     { name: "Gaurav Singh", role: "Manager Operations", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop" }
   ];
 
