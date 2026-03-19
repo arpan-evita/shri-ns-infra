@@ -11,12 +11,12 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
-  font-family: 'Inter', sans-serif;
+  font-family: 'Sintony', sans-serif;
 }
 
 @layer base {
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight;
+    @apply font-poppins tracking-tight;
   }
 }
 
