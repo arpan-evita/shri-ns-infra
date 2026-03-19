@@ -1,4 +1,5 @@
 import { Target, Compass } from 'lucide-react';
+import founderImg from '../../assets/founder.png';
 import { Link } from 'react-router-dom';
 
 export const AboutExperience = () => {
@@ -10,8 +11,8 @@ export const AboutExperience = () => {
           <div className="w-full lg:w-1/2 relative">
             <div className="relative group overflow-hidden rounded-sm">
               <img 
-                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" 
-                className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
+                src={founderImg} 
+                className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-black box-content hidden md:block"
                 alt="Ajay Sharma"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-black/90 p-6 md:p-8 m-4 md:m-6 border border-white/5">
@@ -62,8 +63,8 @@ export const AboutExperience = () => {
 
             <div className="flex flex-wrap items-center gap-6 md:gap-8 pt-6 md:pt-8 border-t border-white/10">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border-2 border-primary">
-                  <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" alt="Ajay Sharma" className="w-full h-full object-cover" />
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-[#1a1c23] shrink-0">
+                  <img src={founderImg} alt="Ajay Sharma" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h4 className="text-white font-bold tracking-tight text-sm md:text-base">Ajay Sharma</h4>

@@ -1,3 +1,4 @@
+import founderImg from '../../assets/founder.png';
 
 export const About = () => {
   return (
@@ -11,8 +12,8 @@ export const About = () => {
           />
           <div className="mt-8 flex items-center gap-4">
             <img 
-              src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" 
-              className="w-20 h-20 rounded-full object-cover border-2 border-primary"
+              src={founderImg}
+              className="w-16 h-16 rounded-full object-cover border-2 border-primary"
               alt="Ajay Sharma"
             />
             <div>
