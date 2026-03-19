@@ -1,8 +1,55 @@
-import { Phone, Mail, MapPin, Facebook, Twitter, Youtube, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { Phone, Mail, MapPin, Facebook, Twitter, Youtube, ChevronRight, Loader2, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/lib/supabase';
+import { sendLeadEmail } from '@/lib/emailService';
 import logoImg from '../../assets/logo.png';
 
 export const Footer = () => {
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // 1. Save to Supabase
+      const { error: supabaseError } = await supabase
+        .from('leads')
+        .insert([{ 
+          name: formData.name, 
+          email: formData.email, 
+          phone: formData.phone,
+          message: 'Lead from Footer Form'
+        }]);
+
+      if (supabaseError) throw supabaseError;
+
+      // 2. Send Email via Resend
+      await sendLeadEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: `New Property Detail Inquiry: ${formData.name}`
+      });
+
+      setSubmitted(true);
+      setFormData({ name: '', email: '', phone: '' });
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch (error) {
+      console.error('Submission Error:', error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <footer className="bg-[#0f0d08] pt-16 md:pt-24 pb-8 md:pb-12 px-6">
       <div className="mx-auto max-w-7xl">
@@ -67,16 +114,48 @@ export const Footer = () => {
             </ul>
           </div>
 
-          <div className="col-span-2 lg:col-span-1 bg-white/5 p-6 md:p-8 rounded-sm">
+          <div className="col-span-2 lg:col-span-1 bg-white/5 p-6 md:p-8 rounded-sm overflow-hidden min-h-[350px] transition-all duration-500">
             <h3 className="text-white text-xl md:text-2xl font-bold mb-6 md:mb-8">Get Property Details</h3>
-            <form className="space-y-4">
-              <input type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
-              <input type="email" placeholder="Email" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
-              <input type="text" placeholder="Phone" className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
-              <button className="w-full border border-[#c4a661] text-[#c4a661] font-bold py-3 text-sm hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest mt-2">
-                Send
-              </button>
-            </form>
+            {submitted ? (
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-8 animate-in fade-in zoom-in duration-500">
+                <CheckCircle className="w-12 h-12 text-[#c4a661]" />
+                <p className="text-white font-bold uppercase tracking-widest text-xs">Request Received!</p>
+                <p className="text-slate-400 text-xs">We will contact you shortly.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <input 
+                  required
+                  type="text" 
+                  placeholder="Name" 
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" 
+                />
+                <input 
+                  required
+                  type="email" 
+                  placeholder="Email" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" 
+                />
+                <input 
+                  required
+                  type="text" 
+                  placeholder="Phone" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="w-full bg-transparent border-b border-white/30 py-2 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" 
+                />
+                <button 
+                  disabled={loading}
+                  className="w-full border border-[#c4a661] text-[#c4a661] font-bold py-3 text-sm hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest mt-2 flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send'}
+                </button>
+              </form>
+            )}
           </div>
         </div>
 

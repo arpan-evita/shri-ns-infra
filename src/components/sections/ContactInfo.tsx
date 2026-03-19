@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Youtube, ArrowRight, Loader2, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { sendLeadEmail } from '@/lib/emailService';
 
 export const ContactInfo = () => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,15 @@ export const ContactInfo = () => {
       ]);
 
     if (!error) {
+      // Send Email via Resend
+      await sendLeadEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        subject: `New Professional Inquiry: ${formData.name}`
+      });
+
       setSubmitted(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
     } else {

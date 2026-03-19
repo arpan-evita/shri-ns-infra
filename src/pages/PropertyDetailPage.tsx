@@ -12,6 +12,7 @@ import {
   Modal, 
   message 
 } from 'antd';
+import { sendLeadEmail } from "@/lib/emailService";
 
 export const PropertyDetailPage = () => {
   const { slug } = useParams();
@@ -79,6 +80,15 @@ export const PropertyDetailPage = () => {
     if (error) {
        message.error("Failed to send inquiry: " + error.message);
     } else {
+       // Send Email via Resend
+       await sendLeadEmail({
+         name: String(leadData.name),
+         email: String(leadData.email),
+         phone: String(leadData.phone),
+         message: String(leadData.message),
+         subject: `New Property Inquiry: ${property.title} from ${leadData.name}`
+       });
+
        message.success("Your inquiry has been established. Our consultant will contact you shortly.");
        (e.target as HTMLFormElement).reset();
     }
