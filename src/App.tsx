@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { BackToTop } from './components/layout/BackToTop';
+import { ScrollProgress } from './components/layout/ScrollProgress';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { PropertiesPage } from './pages/PropertiesPage';
@@ -27,6 +28,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {!isAdminPath && <ScrollProgress />}
       {!isAdminPath && <Navbar />}
       <main className="flex-grow">
         <Routes>

@@ -1,15 +1,10 @@
 import { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { scrollYProgress } = useScroll();
   
-  // Calculate the stroke dash offset based on scroll progress
-  // The circle has a circumference of 2 * PI * r = 2 * 3.14 * 24 = 150.72
-  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   useEffect(() => {
     const toggleVisibility = () => {
       if (window.pageYOffset > 300) {
@@ -56,34 +51,6 @@ export const BackToTop = () => {
               }}
               className="absolute inset-0 bg-primary shadow-2xl transition-colors duration-500 group-hover:bg-white"
             />
-
-            {/* Progress Ring */}
-            <svg className="absolute inset-0 w-full h-full -rotate-90">
-              <motion.circle
-                cx="50%"
-                cy="50%"
-                r="30"
-                stroke="rgba(255,255,255,0.2)"
-                strokeWidth="2"
-                fill="none"
-                className="group-hover:stroke-primary/20 transition-colors"
-                style={{ r: "calc(50% - 2px)" }}
-              />
-              <motion.circle
-                cx="50%"
-                cy="50%"
-                r="30"
-                stroke="white"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-                style={{ 
-                  pathLength,
-                  r: "calc(50% - 2px)" 
-                }}
-                className="group-hover:stroke-primary transition-colors"
-              />
-            </svg>
 
             {/* Icon */}
             <ArrowUp className="relative z-10 w-6 h-6 md:w-7 md:h-7 text-black transition-transform duration-300 group-hover:-translate-y-1" />
