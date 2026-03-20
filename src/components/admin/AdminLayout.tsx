@@ -68,6 +68,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { icon: BookOpen, label: 'Blogs', path: '/admin/blogs' },
     { icon: Users, label: 'Agents', path: '/admin/agents' },
     { icon: MessageSquare, label: 'Leads', path: '/admin/leads' },
+    { icon: Users, label: 'Testimonials', path: '/admin/testimonials' },
     { icon: Settings, label: 'Features', path: '/admin/features' },
   ];
 

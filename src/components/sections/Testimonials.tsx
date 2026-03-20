@@ -1,7 +1,50 @@
+import { useEffect, useState } from 'react';
 import { Quote } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
 
 export const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching testimonials:', error);
+      } else if (data && data.length > 0) {
+        setTestimonials(data);
+      } else {
+        // Fallback to static data if table is empty
+        setTestimonials([{
+          name: "Rohit Malhotra",
+          content: "What I liked most about Shri NS Infra is their market knowledge and transparency. They suggested genuine options that matched my requirements instead of pushing random projects. Complete peace of mind.",
+          location: "Delhi"
+        }]);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  useEffect(() => {
+    if (testimonials.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [testimonials]);
+
+  const current = testimonials[currentIndex];
+
+  if (!current) return null;
+
   return (
     <section className="bg-background-dark py-16 md:py-24 px-6 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10">
@@ -23,21 +66,39 @@ export const Testimonials = () => {
           <div className="h-1 w-20 bg-primary" />
           <Quote className="w-16 h-16 md:w-24 md:h-24 text-primary fill-primary opacity-40 animate-pulse" />
         </motion.div>
-        <motion.div 
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full lg:w-2/3 space-y-6 md:space-y-8"
-        >
-          <p className="text-white text-xl md:text-3xl font-medium leading-relaxed italic">
-            " What I liked most about Shri NS Infra is their market knowledge and transparency. They suggested genuine options that matched my requirements instead of pushing random projects. Complete peace of mind. "
-          </p>
-          <div>
-            <h4 className="text-white font-black text-xl md:text-2xl uppercase tracking-tighter">Rohit Malhotra</h4>
-            <p className="text-primary font-black uppercase tracking-widest text-[10px]">— Delhi</p>
-          </div>
-        </motion.div>
+
+        <div className="w-full lg:w-2/3 min-h-[250px] relative">
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={currentIndex}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="space-y-6 md:space-y-8"
+            >
+              <p className="text-white text-xl md:text-3xl font-medium leading-relaxed italic">
+                " {current.content} "
+              </p>
+              <div>
+                <h4 className="text-white font-black text-xl md:text-2xl uppercase tracking-tighter">{current.name}</h4>
+                <p className="text-primary font-black uppercase tracking-widest text-[10px]">— {current.location}</p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+          
+          {testimonials.length > 1 && (
+            <div className="flex gap-2 mt-8">
+              {testimonials.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`h-1 transition-all duration-300 ${idx === currentIndex ? 'w-8 bg-primary' : 'w-4 bg-white/20'}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

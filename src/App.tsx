@@ -21,6 +21,8 @@ import { AdminAgents } from './pages/admin/AdminAgents';
 import { AdminFeatures } from './pages/admin/AdminFeatures';
 import { AdminBlogs } from './pages/admin/AdminBlogs';
 import { BlogForm } from './pages/admin/BlogForm';
+import { AdminTestimonials } from './pages/admin/AdminTestimonials';
+import { TestimonialForm } from './pages/admin/TestimonialForm';
 
 function AppContent() {
   const location = useLocation();
@@ -105,10 +107,24 @@ function AppContent() {
               </AdminLayout>
             </ProtectedRoute>
           } />
-          <Route path="/admin/blogs/edit/:id" element={
+          <Route path="/admin/testimonials" element={
             <ProtectedRoute>
               <AdminLayout>
-                <BlogForm />
+                <AdminTestimonials />
+              </AdminLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/testimonials/new" element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <TestimonialForm />
+              </AdminLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/testimonials/edit/:id" element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <TestimonialForm />
               </AdminLayout>
             </ProtectedRoute>
           } />
