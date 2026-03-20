@@ -196,6 +196,16 @@ CREATE TABLE IF NOT EXISTS property_leads (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 9. Testimonials Table
+CREATE TABLE IF NOT EXISTS testimonials (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    content TEXT NOT NULL,
+    location TEXT, -- e.g., "Delhi", "Noida"
+    rating INTEGER DEFAULT 5,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Toggle RLS
 ALTER TABLE property_leads ENABLE ROW LEVEL SECURITY;
 
