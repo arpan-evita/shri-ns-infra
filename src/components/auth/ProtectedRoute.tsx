@@ -4,8 +4,8 @@ import { supabase } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
 
 const SUPER_ADMINS = [
-  'info@shrinsinfra.com',
-  'admin@shrinsinfra.com'
+  'arpansadhu13@gmail.com',
+  'admin@shrinsinfra.com' // Keeping placeholder just in case
 ];
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {

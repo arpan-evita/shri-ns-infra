@@ -18,11 +18,14 @@ TO authenticated
 USING (true);
 
 DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
-CREATE POLICY "Admins can update all profiles" 
+CREATE POLICY "Master Admin Full Access" 
 ON public.profiles FOR ALL 
 TO authenticated 
 USING (
-    auth.jwt() ->> 'email' IN ('info@shrinsinfra.com', 'shrinsinframarketing@gmail.com', 'arpansadhu13@gmail.com')
+    auth.jwt() ->> 'email' IN ('arpansadhu13@gmail.com', 'shrinsinframarketing@gmail.com', 'info@shrinsinfra.com')
+)
+WITH CHECK (
+    auth.jwt() ->> 'email' IN ('arpansadhu13@gmail.com', 'shrinsinframarketing@gmail.com', 'info@shrinsinfra.com')
 );
 
 -- Function to handle new user signups
@@ -34,7 +37,7 @@ BEGIN
         new.id, 
         new.email, 
         CASE 
-            WHEN new.email IN ('info@shrinsinfra.com', 'shrinsinframarketing@gmail.com', 'arpansadhu13@gmail.com') THEN TRUE 
+            WHEN new.email IN ('arpansadhu13@gmail.com', 'shrinsinframarketing@gmail.com') THEN TRUE 
             ELSE FALSE 
         END
     );
