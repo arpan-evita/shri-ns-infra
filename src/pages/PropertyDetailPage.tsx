@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { 
+  MapPin, 
   Phone,
   Mail,
   Shield,
@@ -205,45 +206,40 @@ export const PropertyDetailPage = () => {
            )}
         </div>
 
-        {/* 3. Metadata Info Bar (Floating) */}
-        <div className="relative z-30">
-          <div className="bg-black border border-white/10 grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/10 -mt-12 md:-mt-24 w-full shadow-[0_30px_60px_rgba(0,0,0,0.8)]">
-             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors">
-                <div className="text-primary bg-primary/10 p-3 rounded-full">
-                   <Home className="w-5 h-5 md:w-6 md:h-6" />
+        {/* 3. Metadata Info Bar */}
+        <div className="flex justify-end relative z-30">
+          <div className="bg-black border border-white/10 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10 -mt-12 md:-mt-20 w-full md:w-[70%] shadow-2xl">
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+                <div className="text-primary">
+                   <Shield className="w-6 h-6 md:w-8 md:h-8" />
                 </div>
-                <div className="text-center">
-                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Type</div>
-                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">{property.bhk_type || property.property_type}</div>
-                </div>
-             </div>
-             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors border-none md:border-l">
-                <div className="text-primary bg-primary/10 p-3 rounded-full">
-                   <Maximize className="w-5 h-5 md:w-6 md:h-6" />
-                </div>
-                <div className="text-center">
-                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Area</div>
-                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">
-                    {property.super_builtup_area || property.carpet_area || 'N/A'} <span className="text-[10px] text-slate-500">{property.area_unit || 'SQFT'}</span>
+                <div className="space-y-1 text-left">
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Project Name</div>
+                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest leading-none">
+                    {property.project_name || property.title}
                   </div>
                 </div>
              </div>
-             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors border-l">
-                <div className="text-primary bg-primary/10 p-3 rounded-full">
-                   <Bed className="w-5 h-5 md:w-6 md:h-6" />
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+                <div className="text-primary border-none md:border-l border-white/10 pl-0 md:pl-4">
+                   <Construction className="w-6 h-6 md:w-8 md:h-8" />
                 </div>
-                <div className="text-center">
-                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Size</div>
-                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">{property.bedrooms || 0} Beds</div>
+                <div className="space-y-1 text-left">
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">
+                    {property.rera_id ? 'RERA Number' : 'Published On'}
+                  </div>
+                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest leading-none">
+                    {property.rera_id || (property.created_at ? new Date(property.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A')}
+                  </div>
                 </div>
              </div>
-             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors border-l">
-                <div className="text-primary bg-primary/10 p-3 rounded-full">
-                   <Bath className="w-5 h-5 md:w-6 md:h-6" />
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+                <div className="text-primary border-none md:border-l border-white/10 pl-0 md:pl-4">
+                   <MapPin className="w-6 h-6 md:w-8 md:h-8" />
                 </div>
-                <div className="text-center">
-                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Bath</div>
-                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">{property.bathrooms || 0} Units</div>
+                <div className="space-y-1 text-left">
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Location</div>
+                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest leading-none">{property.city}</div>
                 </div>
              </div>
           </div>
