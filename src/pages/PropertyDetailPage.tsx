@@ -319,10 +319,10 @@ export const PropertyDetailPage = () => {
         open={galleryIndex !== null}
         onCancel={() => setGalleryIndex(null)}
         footer={null}
-        width={1200}
+        width="100%"
         centered
-        className="premium-modal-sharp"
-        styles={{ body: { background: '#000', padding: 0 } }}
+        className="premium-lightbox-modal"
+        styles={{ body: { background: 'transparent', padding: 0 } }}
       >
         <Carousel 
           arrows={true} 
@@ -332,8 +332,8 @@ export const PropertyDetailPage = () => {
           infinite={true}
         >
           {property.property_images?.map((img: any, i: number) => (
-            <div key={i} className="flex items-center justify-center bg-black outline-none p-4">
-              <img src={img.image_url} className="max-w-full max-h-[85vh] mx-auto object-contain" alt="Gallery View" />
+            <div key={i} className="h-screen w-screen flex items-center justify-center outline-none bg-black/90">
+              <img src={img.image_url} className="max-w-full max-h-screen object-contain select-none shadow-2xl" alt="Gallery View" />
             </div>
           ))}
         </Carousel>
@@ -353,6 +353,36 @@ export const PropertyDetailPage = () => {
       </Modal>
 
       <style dangerouslySetInnerHTML={{ __html: `
+        .premium-lightbox-modal {
+          max-width: 100vw !important;
+          top: 0 !important;
+          padding-bottom: 0 !important;
+          margin: 0 !important;
+        }
+        .premium-lightbox-modal .ant-modal-content {
+          border-radius: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          height: 100vh !important;
+        }
+        .premium-lightbox-modal .ant-modal-body {
+          padding: 0 !important;
+          height: 100vh !important;
+        }
+        .premium-lightbox-modal .ant-modal-close {
+          color: white !important;
+          top: 30px !important;
+          right: 30px !important;
+          z-index: 1000;
+          background: rgba(0,0,0,0.5);
+          border-radius: 50%;
+          width: 44px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
         .premium-modal-sharp .ant-modal-content {
           border-radius: 0 !important;
           background: #000 !important;
@@ -363,15 +393,27 @@ export const PropertyDetailPage = () => {
           color: white !important;
           z-index: 100;
         }
+
         .gallery-carousel .slick-prev,
         .gallery-carousel .slick-next {
           color: white !important;
           z-index: 100;
-          font-size: 24px;
-          padding: 10px;
+          font-size: 32px !important;
+          padding: 20px;
+          background: rgba(0,0,0,0.3);
+          height: 80px;
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          width: 60px;
+          transition: all 0.3s;
         }
-        .gallery-carousel .slick-prev { left: 10px; }
-        .gallery-carousel .slick-next { right: 10px; }
+        .gallery-carousel .slick-prev:hover,
+        .gallery-carousel .slick-next:hover {
+          background: var(--ant-primary-color);
+        }
+        .gallery-carousel .slick-prev { left: 0px; border-radius: 0 50px 50px 0; }
+        .gallery-carousel .slick-next { right: 0px; border-radius: 50px 0 0 50px; }
       ` }} />
     </div>
   );
