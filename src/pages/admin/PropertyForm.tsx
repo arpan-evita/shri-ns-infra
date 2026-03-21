@@ -942,7 +942,8 @@ export const PropertyForm = () => {
         onFinish={onFinish}
         initialValues={{ 
           is_featured: false, 
-          status: 'buy', 
+          purpose: 'buy', 
+          listing_status: 'Published',
           property_type: 'Apartment',
           bhk_type: '2 BHK',
           possession_status: 'Ready to Move'

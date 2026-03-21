@@ -56,12 +56,22 @@ export const AdminProperties = () => {
     },
     { title: 'Type', dataIndex: 'property_type', key: 'property_type' },
     { 
-      title: 'Status', 
+      title: 'Purpose', 
       dataIndex: 'status', 
       key: 'status',
       render: (status: string) => (
         <Tag color={status === 'buy' ? 'gold' : 'cyan'} className="uppercase font-bold border-none px-3">
           {status === 'buy' ? 'SALE' : 'RENT'}
+        </Tag>
+      )
+    },
+    { 
+      title: 'Visibility', 
+      dataIndex: 'listing_status', 
+      key: 'listing_status',
+      render: (status: string) => (
+        <Tag color={status === 'Published' ? 'green' : 'orange'} className="uppercase font-bold border-none px-3">
+          {status || 'DRAFT'}
         </Tag>
       )
     },
