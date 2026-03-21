@@ -39,14 +39,13 @@ import {
   VideoCameraOutlined
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
+import MapSelector from '@/components/admin/MapSelector';
 import dayjs from 'dayjs';
 import { useAdmin } from '@/components/admin/AdminLayout';
 
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
-
-import MapSelector from '@/components/admin/MapSelector';
 // Custom Icons or Components
 
 // Custom Icons or Components
@@ -556,7 +555,12 @@ export const PropertyForm = () => {
           </div>
 
           <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Google Maps Embed</Divider>
-          <Form.Item name="map_embed_url" label="Google Maps Embed URL" tooltip="Go to Google Maps → Search location → Share → Embed a map → Copy only the src=&quot;...&quot; URL from the iframe code">
+          <Form.Item 
+            name="map_embed_url" 
+            label="Google Maps Embed URL" 
+            tooltip="Go to Google Maps → Search location → Share → Embed a map → Copy only the src URL from the iframe code"
+            extra="Go to Google Maps -> Share -> Embed a map -> Copy ONLY the 'src' URL inside the <iframe>"
+          >
             <Input size="large" placeholder="https://www.google.com/maps/embed?pb=!1m18..." className="rounded-lg" />
           </Form.Item>
 
