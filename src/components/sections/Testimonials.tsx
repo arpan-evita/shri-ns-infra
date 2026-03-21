@@ -81,6 +81,20 @@ export const Testimonials = () => {
                 " {current.content} "
               </p>
               <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className={`w-4 h-4 ${i < (current.rating || 5) ? 'text-primary fill-primary' : 'text-white/20'}`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  ))}
+                </div>
                 <h4 className="text-white font-black text-xl md:text-2xl uppercase tracking-tighter">{current.name}</h4>
                 <p className="text-primary font-black uppercase tracking-widest text-[10px]">— {current.location}</p>
               </div>
