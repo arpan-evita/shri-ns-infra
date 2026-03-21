@@ -213,7 +213,13 @@ export const PropertyForm = () => {
 
     // 1. Handle Main Featured Image
     if (imageUrl) {
-      await supabase.from('property_images').upsert({
+      // Clear old featured image
+      await supabase.from('property_images')
+        .delete()
+        .eq('property_id', propertyId)
+        .eq('is_featured', true);
+
+      await supabase.from('property_images').insert({
         property_id: propertyId,
         image_url: imageUrl,
         is_featured: true

@@ -129,10 +129,19 @@ export const Projects = () => {
         .order('created_at', { ascending: false })
         .limit(6);
 
-      if (!error && data && data.length > 0) {
+      if (error) {
+        console.error('Error fetching properties:', error);
+        setProperties(fallbackProjects);
+      } else if (data && data.length > 0) {
         setProperties(data);
       } else {
-        setProperties(fallbackProjects);
+        // If query returned nothing, check if there are ANY properties at all
+        const { count } = await supabase.from('properties').select('*', { count: 'exact', head: true });
+        if (count === 0) {
+          setProperties(fallbackProjects);
+        } else {
+          setProperties([]); // Truly empty for the filter, don't show dummy data
+        }
       }
       setLoading(false);
     };
