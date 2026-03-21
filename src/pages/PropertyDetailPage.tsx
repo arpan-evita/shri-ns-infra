@@ -99,7 +99,7 @@ export const PropertyDetailPage = () => {
        return;
     }
 
-    const { error } = await supabase.from('property_leads').insert([leadData]);
+    const { error } = await supabase.from('leads').insert([leadData]);
 
     if (error) {
        message.error("Failed to send inquiry: " + error.message);

@@ -12,7 +12,7 @@ export const AdminLeads = () => {
   const fetchLeads = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from('property_leads')
+      .from('leads')
       .select('*, properties(title)')
       .order('created_at', { ascending: false });
 
@@ -89,7 +89,7 @@ export const AdminLeads = () => {
             danger 
             icon={<DeleteOutlined />} 
             onClick={async () => {
-              const { error } = await supabase.from('property_leads').delete().eq('id', record.id);
+              const { error } = await supabase.from('leads').delete().eq('id', record.id);
               if (error) message.error('Failed to delete lead');
               else {
                 message.success('Lead removed');
