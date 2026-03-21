@@ -122,7 +122,21 @@ export const PropertyDetailPage = () => {
   };
 
   if (loading) return <div className="pt-32 px-6 text-center text-slate-500 min-h-screen flex items-center justify-center bg-[#0a0a0a] font-black uppercase tracking-[0.5em] animate-pulse">Engineering your premium view...</div>;
-  if (!property) return null;
+  
+  if (!property) return (
+    <div className="pt-32 px-6 text-center text-slate-500 min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] space-y-6">
+      <div className="text-xl font-black text-white uppercase tracking-widest">Project Not Found</div>
+      <p className="text-slate-600 max-w-md uppercase text-[10px] font-bold tracking-[0.2em]">
+        We couldn't find the project with the ID "{slug}". 
+        Check if the property is published in the Admin Panel.
+      </p>
+      <Link to="/properties" className="bg-primary text-black px-8 py-3 font-black uppercase tracking-widest text-[10px] rounded-none hover:scale-105 transition-transform">
+        Back to listings
+      </Link>
+    </div>
+  );
+
+  console.log("Rendering Property:", property.title, property);
 
   const featuredImage = property.property_images?.find((img: any) => img.is_featured)?.image_url || property.property_images?.[0]?.image_url;
 
