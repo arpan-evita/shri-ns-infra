@@ -1,9 +1,53 @@
-"use client";
-
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Play, Facebook, Twitter, Linkedin, Loader2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { sendLeadEmail } from '@/lib/emailService';
+import { message } from 'antd';
 
 export const Hero = () => {
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // 1. Save to Supabase
+      const { error: dbError } = await supabase
+        .from('leads')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          source: 'Hero Slider'
+        }]);
+
+      if (dbError) throw dbError;
+
+      // 2. Send Email
+      await sendLeadEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: `New Hero Inquiry: ${formData.name}`
+      });
+
+      message.success('Thank you! We will call you back shortly.');
+      setFormData({ name: '', email: '', phone: '' });
+    } catch (error: any) {
+      console.error('Hero lead error:', error);
+      message.error('Oops! Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex items-center">
       <div className="absolute inset-0 z-0">
@@ -28,12 +72,37 @@ export const Hero = () => {
           className="w-full lg:w-1/2 bg-black/40 backdrop-blur-md p-6 md:p-10 rounded-sm border border-white/10"
         >
           <h2 className="text-2xl md:text-3xl font-black text-white mb-6 md:mb-8 uppercase tracking-tight">Request A Call Back</h2>
-          <form className="space-y-4 md:space-y-6">
-            <input type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
-            <input type="email" placeholder="Email" className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
-            <input type="text" placeholder="Phone" className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" />
-            <button className="w-full sm:w-48 border border-[#c4a661] text-[#c4a661] font-bold py-4 text-sm hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest">
-              Send Inquiry
+          <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <input 
+              type="text" 
+              required
+              placeholder="Name" 
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" 
+            />
+            <input 
+              type="email" 
+              required
+              placeholder="Email" 
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" 
+            />
+            <input 
+              type="text" 
+              required
+              placeholder="Phone" 
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              className="w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-[#c4a661] transition-colors" 
+            />
+            <button 
+              type="submit"
+              disabled={loading}
+              className="w-full sm:w-48 border border-[#c4a661] text-[#c4a661] font-bold py-4 text-sm hover:bg-[#c4a661] hover:text-black transition-all uppercase tracking-widest flex items-center justify-center gap-2"
+            >
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send Inquiry'}
             </button>
           </form>
         </motion.div>
