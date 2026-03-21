@@ -3,11 +3,9 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
 
-const AUTHORIZED_ADMINS = [
+const SUPER_ADMINS = [
   'info@shrinsinfra.com',
-  'shrinsinframarketing@gmail.com',
-  'arpansadhu13@gmail.com',
-  'admin@shrinsinfra.com' // Keeping placeholder just in case
+  'admin@shrinsinfra.com'
 ];
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -27,16 +25,16 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       try {
         if (session?.user?.email) {
           const userEmail = session.user.email.toLowerCase();
-          const isMasterAdmin = AUTHORIZED_ADMINS.includes(userEmail);
+          const isSuperAdmin = SUPER_ADMINS.includes(userEmail);
 
-          if (isMasterAdmin) {
+          if (isSuperAdmin) {
             setAuthenticated(true);
             setAuthorized(true);
             setLoading(false);
             return;
           }
 
-          // Check profiles for non-master admins
+          // Check profiles for all other administrators
           const { data: profile, error } = await supabase
             .from('profiles')
             .select('is_approved')
