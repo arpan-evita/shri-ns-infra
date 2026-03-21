@@ -405,15 +405,24 @@ export const PropertyDetailPage = () => {
           z-index: 100;
         }
 
+        .gallery-carousel,
+        .gallery-carousel .slick-list,
+        .gallery-carousel .slick-track {
+          height: 100vh !important;
+        }
+        
         .gallery-carousel .slick-track {
           display: flex !important;
           align-items: center !important;
+          justify-content: center !important;
         }
+        
         .gallery-carousel .slick-slide > div {
           display: flex !important;
           justify-content: center !important;
           align-items: center !important;
           height: 100vh !important;
+          width: 100vw !important;
           outline: none !important;
         }
 
