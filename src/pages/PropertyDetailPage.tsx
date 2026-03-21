@@ -428,23 +428,26 @@ export const PropertyDetailPage = () => {
         .gallery-carousel .slick-prev,
         .gallery-carousel .slick-next {
           color: white !important;
-          z-index: 100;
+          z-index: 1000;
           font-size: 32px !important;
           padding: 20px;
           background: transparent !important;
-          height: 100vh;
+          position: absolute !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
           width: 80px;
+          height: 100px !important;
           transition: all 0.3s;
         }
         .gallery-carousel .slick-prev:hover,
         .gallery-carousel .slick-next:hover {
           background: rgba(255,255,255,0.05) !important;
         }
-        .gallery-carousel .slick-prev { left: 0px; border-radius: 0 50px 50px 0; }
-        .gallery-carousel .slick-next { right: 0px; border-radius: 50px 0 0 50px; }
+        .gallery-carousel .slick-prev { left: 0px !important; border-radius: 0 50px 50px 0; }
+        .gallery-carousel .slick-next { right: 0px !important; border-radius: 50px 0 0 50px; }
       ` }} />
     </div>
   );
