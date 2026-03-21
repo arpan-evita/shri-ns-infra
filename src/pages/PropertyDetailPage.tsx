@@ -404,6 +404,18 @@ export const PropertyDetailPage = () => {
           z-index: 100;
         }
 
+        .gallery-carousel .slick-track {
+          display: flex !important;
+          align-items: center !important;
+        }
+        .gallery-carousel .slick-slide > div {
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          height: 100vh !important;
+          outline: none !important;
+        }
+
         .gallery-carousel .slick-prev,
         .gallery-carousel .slick-next {
           color: white !important;
