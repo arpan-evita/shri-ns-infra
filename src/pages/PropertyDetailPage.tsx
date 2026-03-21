@@ -133,42 +133,63 @@ export const PropertyDetailPage = () => {
       <div className="max-w-7xl mx-auto px-6 -mt-20 md:-mt-32 relative z-20">
         {/* 2. Main Visual Section */}
         <div className="border border-white/10 bg-black p-1 md:p-2 mb-0">
-           <img 
-             src={featuredImage} 
-             className="w-full aspect-video md:aspect-[21/9] object-cover" 
-             alt={property.title} 
-           />
+           {property.video_url ? (
+             <iframe 
+               src={property.video_url.includes('youtube.com/watch?v=') 
+                 ? property.video_url.replace('watch?v=', 'embed/') 
+                 : property.video_url.includes('youtu.be/') 
+                   ? property.video_url.replace('youtu.be/', 'youtube.com/embed/') 
+                   : property.video_url
+               }
+               className="w-full aspect-video md:aspect-[21/9] object-cover"
+               title={property.title}
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowFullScreen
+             />
+           ) : (
+             <img 
+               src={featuredImage} 
+               className="w-full aspect-video md:aspect-[21/9] object-cover" 
+               alt={property.title} 
+             />
+           )}
         </div>
 
         {/* 3. Metadata Info Bar */}
-        <div className="bg-black border-x border-b border-white/10 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
-           <div className="p-6 md:p-10 flex items-center gap-6 group hover:bg-white/[0.02] transition-colors">
-              <div className="text-primary">
-                 <Shield className="w-8 h-8 md:w-10 md:h-10" />
-              </div>
-              <div className="space-y-1">
-                <div className="text-white font-black text-lg md:text-xl uppercase tracking-tighter">Client Project</div>
-                <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">Shri NS Infra</div>
-              </div>
-           </div>
-           <div className="p-6 md:p-10 flex items-center gap-6 group hover:bg-white/[0.02] transition-colors">
-              <div className="text-primary">
-                 <Construction className="w-8 h-8 md:w-10 md:h-10" />
-              </div>
-              <div className="space-y-1">
-                <div className="text-white font-black text-lg md:text-xl uppercase tracking-tighter">Project Date</div>
-                <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">{property.possession_date || 'Enquire Now'}</div>
-              </div>
-           </div>
-           <div className="p-6 md:p-10 flex items-center gap-6 group hover:bg-white/[0.02] transition-colors">
-              <div className="text-primary">
-                 <MapPin className="w-8 h-8 md:w-10 md:h-10" />
-              </div>
-              <div className="space-y-1">
-                <div className="text-white font-black text-lg md:text-xl uppercase tracking-tighter">Location</div>
-                <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">{property.city}</div>
-              </div>
-           </div>
+        <div className="flex justify-end relative z-30">
+          <div className="bg-black border border-white/10 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10 -mt-12 md:-mt-20 w-full md:w-[70%] shadow-2xl">
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+                <div className="text-primary">
+                   <Shield className="w-6 h-6 md:w-8 md:h-8" />
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white font-black text-sm md:text-base uppercase tracking-tighter">Project Name</div>
+                  <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">{property.project_name || property.title}</div>
+                </div>
+             </div>
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+                <div className="text-primary">
+                   <Construction className="w-6 h-6 md:w-8 md:h-8" />
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white font-black text-sm md:text-base uppercase tracking-tighter">
+                    {property.rera_id ? 'RERA Number' : 'Published On'}
+                  </div>
+                  <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">
+                    {property.rera_id || (property.created_at ? new Date(property.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A')}
+                  </div>
+                </div>
+             </div>
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+                <div className="text-primary">
+                   <MapPin className="w-6 h-6 md:w-8 md:h-8" />
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white font-black text-sm md:text-base uppercase tracking-tighter">Location</div>
+                  <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">{property.city}</div>
+                </div>
+             </div>
+          </div>
         </div>
 
         {/* 4. Main Content Grid */}
