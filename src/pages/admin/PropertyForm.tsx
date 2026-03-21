@@ -106,7 +106,7 @@ export const PropertyForm = () => {
           
           form.setFieldsValue({
             ...property,
-            purpose: property.status // Map DB 'status' to form 'purpose'
+            purpose: property.status // Keep purpose mapping since DB status is buy/rent
           });
           
           // Set featured image
@@ -178,6 +178,7 @@ export const PropertyForm = () => {
       property_floor_plans, 
       property_amenity_relation, 
       nearby_places,
+      purpose, // Extracted to be mapped to 'status'
       ...propertyData 
     } = values;
 
@@ -383,7 +384,7 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>
-              <Form.Item name="balcony_count" label="Balcony Count">
+              <Form.Item name="balconies" label="Balcony Count">
                 <InputNumber min={0} className="w-full" size="large" />
               </Form.Item>
             </Col>
@@ -432,7 +433,7 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>
-              <Form.Item name="property_age" label="Property Age">
+              <Form.Item name="age_of_property" label="Property Age">
                 <Select size="large" className="rounded-lg">
                   <Option value="New Construction">New Construction</Option>
                   <Option value="0–1 years">0–1 years</Option>
@@ -443,7 +444,7 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>
-              <Form.Item name="parking_type" label="Parking Type">
+              <Form.Item name="parking" label="Parking Type">
                 <Select size="large" className="rounded-lg">
                   <Option value="Covered Parking">Covered Parking</Option>
                   <Option value="Open Parking">Open Parking</Option>
@@ -728,7 +729,7 @@ export const PropertyForm = () => {
         <Space direction="vertical" size="large" className="w-full">
           <Row gutter={[24, 24]}>
             <Col xs={24} md={8}>
-              <Form.Item name="total_price" label="Total Price (₹)">
+              <Form.Item name="price" label="Total Price (₹)">
                 <InputNumber className="w-full" size="large" formatter={v => `₹ ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} />
               </Form.Item>
             </Col>
@@ -756,7 +757,7 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
-              <Form.Item name="monthly_maintenance" label="Monthly Maintenance (₹)">
+              <Form.Item name="maintenance_charges" label="Monthly Maintenance (₹)">
                 <InputNumber className="w-full" size="large" />
               </Form.Item>
             </Col>
@@ -774,7 +775,7 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item name="rera_registration_id" label="RERA Registration ID">
+              <Form.Item name="rera_id" label="RERA Registration ID">
                 <Input size="large" placeholder="E.g. UPRERAPRJ12345" />
               </Form.Item>
             </Col>
