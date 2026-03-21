@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import { 
   Modal, 
-  message 
+  message,
+  Carousel
 } from 'antd';
 import { sendLeadEmail } from "@/lib/emailService";
 
@@ -20,6 +21,7 @@ export const PropertyDetailPage = () => {
   const [property, setProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activePlan, setActivePlan] = useState<string | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   
   useEffect(() => {
     const fetchProperty = async () => {
@@ -220,9 +222,9 @@ export const PropertyDetailPage = () => {
             {/* Gallery */}
             <div className="space-y-10">
                <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter m-0">Visual Showcase</h3>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 {property.property_images?.filter((img: any) => !img.is_featured).map((img: any, i: number) => (
-                   <div key={i} className="aspect-video bg-white/5 border border-white/10 group cursor-pointer overflow-hidden" onClick={() => setActivePlan(img.image_url)}>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                 {property.property_images?.map((img: any, i: number) => (
+                   <div key={i} className="aspect-video bg-white/5 border border-white/10 group cursor-pointer overflow-hidden" onClick={() => setGalleryIndex(i)}>
                       <img src={img.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Gallery" />
                    </div>
                  ))}
@@ -312,7 +314,32 @@ export const PropertyDetailPage = () => {
       </section>
       )}
 
-      {/* Plan Modal */}
+      {/* Gallery Slider Modal */}
+      <Modal
+        open={galleryIndex !== null}
+        onCancel={() => setGalleryIndex(null)}
+        footer={null}
+        width={1200}
+        centered
+        className="premium-modal-sharp"
+        styles={{ body: { background: '#000', padding: 0 } }}
+      >
+        <Carousel 
+          arrows={true} 
+          dots={false} 
+          initialSlide={galleryIndex || 0}
+          className="gallery-carousel"
+          infinite={true}
+        >
+          {property.property_images?.map((img: any, i: number) => (
+            <div key={i} className="flex items-center justify-center bg-black outline-none p-4">
+              <img src={img.image_url} className="max-w-full max-h-[85vh] mx-auto object-contain" alt="Gallery View" />
+            </div>
+          ))}
+        </Carousel>
+      </Modal>
+
+      {/* Plan Modal (Floor Plans) */}
       <Modal
         open={!!activePlan}
         onCancel={() => setActivePlan(null)}
@@ -330,7 +357,21 @@ export const PropertyDetailPage = () => {
           border-radius: 0 !important;
           background: #000 !important;
           border: 1px solid rgba(255,255,255,0.1);
+          padding: 0 !important;
         }
+        .premium-modal-sharp .ant-modal-close {
+          color: white !important;
+          z-index: 100;
+        }
+        .gallery-carousel .slick-prev,
+        .gallery-carousel .slick-next {
+          color: white !important;
+          z-index: 100;
+          font-size: 24px;
+          padding: 10px;
+        }
+        .gallery-carousel .slick-prev { left: 10px; }
+        .gallery-carousel .slick-next { right: 10px; }
       ` }} />
     </div>
   );
