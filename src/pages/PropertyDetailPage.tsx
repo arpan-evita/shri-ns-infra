@@ -148,10 +148,11 @@ export const PropertyDetailPage = () => {
                 </h1>
               </div>
               
-              <div className="bg-primary px-6 py-4 md:px-10 md:py-6 shadow-2xl shadow-primary/20 animate-slide-up">
-                 <div className="text-black font-black text-[10px] md:text-xs uppercase tracking-widest mb-1 opacity-60">Investment Value</div>
-                 <div className="text-black font-black text-2xl md:text-4xl uppercase tracking-tighter">
-                   ₹{property.price?.toLocaleString()}
+              <div className="bg-primary px-8 py-6 md:px-12 md:py-8 shadow-[0_20px_50px_rgba(234,179,8,0.3)] animate-slide-up border-b-4 border-black/20">
+                 <div className="text-black font-black text-xs uppercase tracking-[0.3em] mb-2 opacity-70">Investment Value</div>
+                 <div className="text-black font-black text-3xl md:text-5xl uppercase tracking-tighter flex items-baseline gap-1">
+                   <span className="text-xl md:text-2xl mr-1">₹</span>
+                   {property.price ? Number(property.price).toLocaleString('en-IN') : 'Price on Request'}
                  </div>
               </div>
             </div>
@@ -191,43 +192,45 @@ export const PropertyDetailPage = () => {
            )}
         </div>
 
-        {/* 3. Metadata Info Bar */}
-        <div className="flex justify-end relative z-30">
-          <div className="bg-black border border-white/10 grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/10 -mt-12 md:-mt-20 w-full shadow-2xl">
-             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
-                <div className="text-primary">
-                   <Home className="w-5 h-5 md:w-8 md:h-8" />
+        {/* 3. Metadata Info Bar (Floating) */}
+        <div className="relative z-30">
+          <div className="bg-black border border-white/10 grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/10 -mt-12 md:-mt-24 w-full shadow-[0_30px_60px_rgba(0,0,0,0.8)]">
+             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors">
+                <div className="text-primary bg-primary/10 p-3 rounded-full">
+                   <Home className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-                <div className="space-y-1">
-                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">BHK Type</div>
-                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.bhk_type}</div>
-                </div>
-             </div>
-             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors border-none md:border-l">
-                <div className="text-primary">
-                   <Maximize className="w-5 h-5 md:w-8 md:h-8" />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Super Area</div>
-                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.super_builtup_area || property.carpet_area} {property.area_unit}</div>
+                <div className="text-center">
+                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Type</div>
+                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">{property.bhk_type || property.property_type}</div>
                 </div>
              </div>
-             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors border-l">
-                <div className="text-primary">
-                   <Bed className="w-5 h-5 md:w-8 md:h-8" />
+             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors border-none md:border-l">
+                <div className="text-primary bg-primary/10 p-3 rounded-full">
+                   <Maximize className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-                <div className="space-y-1">
-                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Bedrooms</div>
-                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.bedrooms} Units</div>
+                <div className="text-center">
+                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Area</div>
+                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">
+                    {property.super_builtup_area || property.carpet_area || 'N/A'} <span className="text-[10px] text-slate-500">{property.area_unit || 'SQFT'}</span>
+                  </div>
                 </div>
              </div>
-             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors border-l">
-                <div className="text-primary">
-                   <Bath className="w-5 h-5 md:w-8 md:h-8" />
+             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors border-l">
+                <div className="text-primary bg-primary/10 p-3 rounded-full">
+                   <Bed className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-                <div className="space-y-1">
-                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Bathrooms</div>
-                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.bathrooms} Units</div>
+                <div className="text-center">
+                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Size</div>
+                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">{property.bedrooms || 0} Beds</div>
+                </div>
+             </div>
+             <div className="p-6 md:p-10 flex flex-col items-center justify-center gap-3 group hover:bg-white/[0.02] transition-colors border-l">
+                <div className="text-primary bg-primary/10 p-3 rounded-full">
+                   <Bath className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <div className="text-center">
+                  <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Bath</div>
+                  <div className="text-white font-black text-sm md:text-xl uppercase tracking-tighter">{property.bathrooms || 0} Units</div>
                 </div>
              </div>
           </div>
@@ -249,27 +252,34 @@ export const PropertyDetailPage = () => {
                 {property.description}
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
-                {[
-                  { label: "Project Name", value: property.project_name, icon: Shield },
-                  { label: "Status", value: property.listing_status, icon: CheckCircle2 },
-                  { label: "Configuration", value: property.bhk_type, icon: Home },
-                  { label: "Handover Date", value: property.possession_date, icon: Calendar },
-                  { label: "Facing", value: property.facing, icon: Compass },
-                  { label: "Balconies", value: property.balconies, icon: Wind },
-                  { label: "Floor No", value: `${property.floor_no} of ${property.total_floors}`, icon: Layers },
-                  { label: "Parking", value: property.parking, icon: Car },
-                  { label: "RERA ID", value: property.rera_id, icon: Lock },
-                  { label: "Property Age", value: property.age_of_property, icon: Construction }
-                ].filter(item => item.value).map((item, i) => (
-                  <div key={i} className="flex items-center justify-between py-4 border-b border-white/5">
-                    <div className="flex items-center gap-3">
-                      <item.icon className="w-4 h-4 text-primary opacity-60" />
-                      <span className="text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-widest">{item.label}</span>
+              <div className="space-y-8">
+                 <div className="space-y-2">
+                    <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter m-0">Specifications</h3>
+                    <div className="h-1 w-12 bg-primary/50" />
+                 </div>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
+                  {[
+                    { label: "Project Name", value: property.project_name, icon: Shield },
+                    { label: "Status", value: property.listing_status, icon: CheckCircle2 },
+                    { label: "Configuration", value: property.bhk_type, icon: Home },
+                    { label: "Handover Date", value: property.possession_date, icon: Calendar },
+                    { label: "Facing", value: property.facing, icon: Compass },
+                    { label: "Balconies", value: property.balconies, icon: Wind },
+                    { label: "Floor No", value: property.floor_no ? `${property.floor_no} of ${property.total_floors || 'N/A'}` : null, icon: Layers },
+                    { label: "Parking", value: property.parking, icon: Car },
+                    { label: "RERA ID", value: property.rera_id, icon: Lock },
+                    { label: "Property Age", value: property.age_of_property, icon: Construction },
+                    { label: "Maintenance", value: property.maintenance_charges ? `₹${Number(property.maintenance_charges).toLocaleString()} / Monthly` : null, icon: DollarSign }
+                  ].filter(item => item.value).map((item, i) => (
+                    <div key={i} className="flex items-center justify-between py-4 border-b border-white/5 group">
+                      <div className="flex items-center gap-3">
+                        <item.icon className="w-4 h-4 text-primary opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <span className="text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-widest">{item.label}</span>
+                      </div>
+                      <span className="text-white text-[10px] md:text-xs font-black uppercase tracking-widest text-right">{item.value}</span>
                     </div>
-                    <span className="text-white text-[10px] md:text-xs font-black uppercase tracking-widest text-right">{item.value}</span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
               {property.highlights && (
