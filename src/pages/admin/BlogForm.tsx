@@ -142,16 +142,24 @@ export const BlogForm = () => {
   const modules = useMemo(() => ({
     toolbar: {
       container: [
-        [{ 'header': [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        ['link', 'image'],
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'font': [] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],
+        ['blockquote', 'code-block'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'indent': '-1'}, { 'indent': '+1' }],
+        [{ 'align': [] }],
+        ['link', 'image', 'video'],
+        ['table'],
         ['clean']
       ],
       handlers: {
         image: imageHandler
       }
-    }
+    },
+    table: true
   }), []);
 
   const onFinish = async (values: any) => {
@@ -204,6 +212,16 @@ export const BlogForm = () => {
           height: auto;
           margin: 10px 0;
           border-radius: 8px;
+        }
+        .ql-editor table {
+          border-collapse: collapse;
+          width: 100%;
+          margin: 15px 0;
+        }
+        .ql-editor td {
+          border: 1px solid #ccc;
+          padding: 8px;
+          min-width: 50px;
         }
         .blog-editor .ant-form-item-label label {
           font-weight: bold;

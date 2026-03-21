@@ -24,6 +24,7 @@ import { AdminBlogs } from './pages/admin/AdminBlogs';
 import { BlogForm } from './pages/admin/BlogForm';
 import { AdminTestimonials } from './pages/admin/AdminTestimonials';
 import { TestimonialForm } from './pages/admin/TestimonialForm';
+import { AdminUsers } from './pages/admin/AdminUsers';
 
 function AppContent() {
   const location = useLocation();
@@ -84,6 +85,13 @@ function AppContent() {
             <ProtectedRoute>
               <AdminLayout>
                 <AdminLeads />
+              </AdminLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminUsers />
               </AdminLayout>
             </ProtectedRoute>
           } />

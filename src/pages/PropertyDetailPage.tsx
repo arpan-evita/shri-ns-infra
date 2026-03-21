@@ -310,7 +310,8 @@ export const PropertyDetailPage = () => {
                         const iconMap: Record<string, any> = {
                           'Shield': Shield, 'Waves': Waves, 'Dumbbell': Dumbbell, 'Wifi': Wifi,
                           'Cigarette': Lock, 'Trees': Trees, 'Car': Car, 'CloudLightning': CloudLightning,
-                          'Construction': Layers, 'Sparkles': Sparkles, 'Run': Wind, 'Baby': Home
+                          'Construction': Layers, 'Sparkles': Sparkles, 'Run': Wind, 'Baby': Home,
+                          'Compass': Compass, 'Calendar': Calendar, 'DollarSign': DollarSign, 'CheckCircle2': CheckCircle2
                         };
                         const IconComponent = iconMap[amenity.icon] || Shield;
                         return (

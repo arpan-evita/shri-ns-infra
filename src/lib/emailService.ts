@@ -18,7 +18,7 @@ export const sendLeadEmail = async ({ name, email, phone, message, subject }: Em
       },
       body: JSON.stringify({
         from: 'Shri NS Infra Leads <onboarding@resend.dev>',
-        to: ['info@shrinsinfra.com'],
+        to: ['info@shrinsinfra.com', 'shrinsinframarketing@gmail.com'],
         subject: subject || `New Lead: ${name}`,
         html: `
           <div style="font-family: sans-serif; padding: 20px; color: #333;">

@@ -165,6 +165,37 @@ export const BlogPostPage = () => {
           color: #94a3b8;
           margin: 2em 0;
         }
+        .rich-text-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 2em 0;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .rich-text-content th, .rich-text-content td {
+          padding: 12px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          text-align: left;
+        }
+        .rich-text-content th {
+          background: rgba(201, 164, 29, 0.1);
+          color: white;
+          font-weight: 900;
+          text-transform: uppercase;
+          font-size: 0.8rem;
+          letter-spacing: 0.05em;
+        }
+        .rich-text-content tr:nth-child(even) {
+          background: rgba(255, 255, 255, 0.01);
+        }
+        .rich-text-content .ql-video {
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          margin: 2em 0;
+          border-radius: 12px;
+        }
       `}</style>
     </div>
   );

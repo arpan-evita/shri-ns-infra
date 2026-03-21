@@ -17,12 +17,13 @@ export const AuthPage = () => {
     setLoading(true);
 
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) {
         console.error("Signup Error:", error);
         alert(`Registration failed: ${error.message}`);
-      } else {
-        alert("Check your email for the confirmation link!");
+      } else if (data.user) {
+        alert("Registration submitted! Please wait for an admin to approve your account before signing in.");
+        setIsSignUp(false);
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
