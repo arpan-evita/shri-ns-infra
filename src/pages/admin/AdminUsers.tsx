@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Table, Space, Typography, message, Tag, Switch } from 'antd';
-import { UserOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Table, Space, Typography, message, Tag, Switch, Button, Modal, Input } from 'antd';
+import { UserOutlined, CheckCircleOutlined, ClockCircleOutlined, UserAddOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
 
 const { Text } = Typography;
+const { confirm } = Modal;
+
+// Super Admins who cannot be modified or deleted
+const SUPER_ADMINS = ['arpansadhu13@gmail.com', 'shrinsinframarketing@gmail.com'];
 
 export const AdminUsers = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [addingAdmin, setAddingAdmin] = useState(false);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -28,27 +35,82 @@ export const AdminUsers = () => {
     fetchUsers();
   }, []);
 
-  const toggleApproval = async (id: string, currentStatus: boolean) => {
-    console.log(`Toggling approval for ${id} from ${currentStatus} to ${!currentStatus}`);
-    
-    const { data, error, count } = await supabase
+  const toggleApproval = async (id: string, currentStatus: boolean, email: string) => {
+    if (SUPER_ADMINS.includes(email)) {
+      message.error("Super Admin access cannot be restricted.");
+      return;
+    }
+
+    const { data, error } = await supabase
       .from('profiles')
       .update({ is_approved: !currentStatus })
       .eq('id', id)
       .select();
 
-    console.log("Update response:", { data, error, count });
-
     if (error) {
-      console.error("Supabase Update Error:", error);
       message.error(`Failed to update status: ${error.message}`);
     } else if (!data || data.length === 0) {
-      console.warn("No rows updated! RLS might be blocking it.");
-      message.warning('The request succeeded but the database did not allow the change (check permissions).');
+      message.warning('Update blocked by RLS permissions.');
     } else {
-      message.success(`User ${!currentStatus ? 'approved' : 'restricted'} successfully`);
+      message.success(`Access ${!currentStatus ? 'granted' : 'revoked'} successfully`);
       fetchUsers();
     }
+  };
+
+  const handleRemoveAdmin = (id: string, email: string) => {
+    if (SUPER_ADMINS.includes(email)) {
+      message.error("Super Admin accounts cannot be removed.");
+      return;
+    }
+
+    confirm({
+      title: 'Remove Admin Access?',
+      icon: <ExclamationCircleOutlined />,
+      content: `Are you sure you want to remove ${email}? They will no longer have access to the dashboard.`,
+      okText: 'Yes, Remove',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        const { error } = await supabase.from('profiles').delete().eq('id', id);
+        if (error) {
+          message.error(`Failed to remove: ${error.message}`);
+        } else {
+          message.success('Admin removed successfully');
+          fetchUsers();
+        }
+      },
+    });
+  };
+
+  const handleAddAdmin = async () => {
+    if (!newAdminEmail) return;
+    setAddingAdmin(true);
+    
+    // Check if user exists in profiles
+    const { data: existingUser } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', newAdminEmail)
+      .single();
+
+    if (existingUser) {
+      // User exists, just approve them
+      const { error } = await supabase
+        .from('profiles')
+        .update({ is_approved: true, is_admin: true })
+        .eq('email', newAdminEmail);
+
+      if (error) message.error(`Error: ${error.message}`);
+      else {
+        message.success(`${newAdminEmail} is now an approved Admin!`);
+        setIsModalOpen(false);
+        setNewAdminEmail('');
+        fetchUsers();
+      }
+    } else {
+      message.info(`User ${newAdminEmail} hasn't signed up yet. They must sign up first before you can grant them access.`);
+    }
+    setAddingAdmin(false);
   };
 
   const columns = [
@@ -58,8 +120,10 @@ export const AdminUsers = () => {
       key: 'email',
       render: (text: string) => (
         <Space>
-          <UserOutlined className="text-primary" />
-          <Text className="font-medium text-slate-800">{text}</Text>
+          <UserOutlined className={SUPER_ADMINS.includes(text) ? "text-gold" : "text-primary"} />
+          <Text className={`font-medium ${SUPER_ADMINS.includes(text) ? "text-slate-900" : "text-slate-800"}`}>
+            {text} {SUPER_ADMINS.includes(text) && <Tag color="gold" className="ml-2 text-[8px] font-black">SUPER ADMIN</Tag>}
+          </Text>
         </Space>
       )
     },
@@ -67,8 +131,10 @@ export const AdminUsers = () => {
       title: 'Status', 
       dataIndex: 'is_approved', 
       key: 'status',
-      render: (approved: boolean) => (
-        approved ? (
+      render: (approved: boolean, record: any) => (
+        SUPER_ADMINS.includes(record.email) ? (
+          <Tag color="gold" icon={<CheckCircleOutlined />}>PERMANENT</Tag>
+        ) : approved ? (
           <Tag color="success" icon={<CheckCircleOutlined />}>APPROVED</Tag>
         ) : (
           <Tag color="warning" icon={<ClockCircleOutlined />}>PENDING</Tag>
@@ -82,16 +148,31 @@ export const AdminUsers = () => {
       render: (date: string) => <Text className="text-slate-400 text-xs">{new Date(date).toLocaleDateString()}</Text>
     },
     {
-      title: 'Grant Access',
+      title: 'Actions',
       key: 'actions',
       align: 'right' as const,
       render: (_: any, record: any) => (
-        <Switch 
-          checked={record.is_approved} 
-          onChange={() => toggleApproval(record.id, record.is_approved)}
-          checkedChildren="YES"
-          unCheckedChildren="NO"
-        />
+        <Space size="middle">
+          {!SUPER_ADMINS.includes(record.email) && (
+            <>
+              <div className="flex flex-col items-center">
+                <span className="text-[8px] font-black text-slate-400 uppercase mb-1">Access</span>
+                <Switch 
+                  checked={record.is_approved} 
+                  onChange={() => toggleApproval(record.id, record.is_approved, record.email)}
+                  checkedChildren="YES"
+                  unCheckedChildren="NO"
+                />
+              </div>
+              <Button 
+                type="text" 
+                danger 
+                icon={<DeleteOutlined />} 
+                onClick={() => handleRemoveAdmin(record.id, record.email)}
+              />
+            </>
+          )}
+        </Space>
       ),
     },
   ];
@@ -101,19 +182,50 @@ export const AdminUsers = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-4">
           <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Security</span>
-          <h1 className="text-5xl font-black text-white uppercase tracking-tight">Admin Approval</h1>
+          <h1 className="text-5xl font-black text-white uppercase tracking-tight">Admin Control</h1>
         </div>
+        <Button 
+          type="primary" 
+          size="large"
+          icon={<UserAddOutlined />} 
+          onClick={() => setIsModalOpen(true)}
+          className="bg-primary hover:bg-primary/90 text-black border-none font-bold uppercase tracking-widest px-8"
+        >
+          Add New Admin
+        </Button>
       </div>
 
-      <div className="bg-white p-2 rounded-lg shadow-2xl">
+      <div className="bg-white p-2 rounded-lg shadow-2xl overflow-x-auto">
         <Table 
           columns={columns} 
           dataSource={users} 
           rowKey="id" 
           loading={loading}
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: 15 }}
         />
       </div>
+
+      <Modal
+        title={<span className="font-black uppercase tracking-widest text-[#1a1a1a]">Grant Admin Access</span>}
+        open={isModalOpen}
+        onOk={handleAddAdmin}
+        confirmLoading={addingAdmin}
+        onCancel={() => setIsModalOpen(false)}
+        okText="Grant Access"
+        okButtonProps={{ className: 'bg-primary border-none text-black font-bold uppercase tracking-widest' }}
+        cancelButtonProps={{ className: 'font-bold uppercase tracking-widest' }}
+      >
+        <div className="py-6 space-y-4 text-left">
+          <p className="text-slate-500 text-sm">Enter the email of an existing user to grant them administrative privileges. They must have already registered an account first.</p>
+          <Input 
+            size="large" 
+            placeholder="admin@shrinsinfra.com" 
+            value={newAdminEmail}
+            onChange={(e) => setNewAdminEmail(e.target.value)}
+            className="rounded-lg"
+          />
+        </div>
+      </Modal>
     </div>
   );
 };
