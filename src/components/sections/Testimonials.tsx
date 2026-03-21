@@ -9,22 +9,27 @@ export const Testimonials = () => {
 
   useEffect(() => {
     const fetchTestimonials = async () => {
+      console.log('Fetching testimonials from Supabase...');
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error fetching testimonials:', error);
-      } else if (data && data.length > 0) {
-        setTestimonials(data);
+        console.error('Testimonials Fetch Error:', error);
       } else {
-        // Fallback to static data if table is empty
-        setTestimonials([{
-          name: "Rohit Malhotra",
-          content: "What I liked most about Shri NS Infra is their market knowledge and transparency. They suggested genuine options that matched my requirements instead of pushing random projects. Complete peace of mind.",
-          location: "Delhi"
-        }]);
+        console.log('Testimonials fetched:', data?.length || 0, 'rows');
+        if (data && data.length > 0) {
+          setTestimonials(data);
+        } else {
+          console.warn('No testimonials found in database, using fallback data.');
+          setTestimonials([{
+            name: "Rohit Malhotra",
+            content: "What I liked most about Shri NS Infra is their market knowledge and transparency. They suggested genuine options that matched my requirements instead of pushing random projects. Complete peace of mind.",
+            location: "Delhi",
+            rating: 5
+          }]);
+        }
       }
     };
 
