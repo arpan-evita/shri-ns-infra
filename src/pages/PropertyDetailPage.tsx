@@ -252,22 +252,23 @@ export const PropertyDetailPage = () => {
                <div className="flex flex-col items-center text-center space-y-8">
                  <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-primary p-1.5 bg-black">
                    <img 
-                     src={property.agents?.name === "Ajay Sharma" ? founderImg : (property.agents?.photo || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop")} 
+                     src={founderImg} 
                      className="w-full h-full object-cover rounded-full" 
                      alt="Agent Profile" 
                    />
                  </div>
+                 
                  <div className="space-y-2">
-                    <div className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none">{property.agents?.name || "Ajay Sharma"}</div>
-                    <div className="text-primary text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">{property.agents?.position || "CEO | Founder"}</div>
+                   <div className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none">Ajay Sharma</div>
+                   <div className="text-primary text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">CEO | Founder</div>
                  </div>
                  
                  <div className="w-full pt-6 border-t border-white/10 flex justify-center gap-6">
-                    <a href={`tel:${property.agents?.phone}`} className="text-white hover:text-primary transition-colors"><Phone className="w-6 h-6" /></a>
-                    <a href={`https://wa.me/${property.agents?.phone?.replace(/\+/g, '').replace(/ /g, '')}`} target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary transition-colors">
+                    <a href="tel:+918090965996" className="text-white hover:text-primary transition-colors"><Phone className="w-6 h-6" /></a>
+                    <a href="https://wa.me/918090965996" target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary transition-colors">
                        <WhatsAppIcon className="w-6 h-6" />
                     </a>
-                    <a href={`mailto:${property.agents?.email}`} className="text-white hover:text-primary transition-colors"><Mail className="w-6 h-6" /></a>
+                    <a href="mailto:info@shrinsinfra.com" className="text-white hover:text-primary transition-colors"><Mail className="w-6 h-6" /></a>
                  </div>
                </div>
             </div>
