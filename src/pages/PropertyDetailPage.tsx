@@ -7,6 +7,24 @@ import {
   Mail,
   Shield,
   Construction,
+  Bed,
+  Bath,
+  Maximize,
+  Home,
+  Compass,
+  Car,
+  Layers,
+  Calendar,
+  DollarSign,
+  Wind,
+  CheckCircle2,
+  Lock,
+  Waves,
+  Dumbbell,
+  Wifi,
+  Trees,
+  CloudLightning,
+  Sparkles,
 } from "lucide-react";
 import { 
   Modal, 
@@ -40,7 +58,7 @@ export const PropertyDetailPage = () => {
           listing_status,
           property_images(*),
           property_floor_plans(*),
-          property_amenity_relation(amenity_id),
+          property_amenity_relation(amenities(name, icon)),
           nearby_places(*)
         `)
         .eq('slug', slug)
@@ -122,12 +140,21 @@ export const PropertyDetailPage = () => {
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full space-y-4 md:space-y-6">
-          <div className="space-y-2">
-            <span className="text-primary text-lg md:text-2xl font-light uppercase tracking-widest block animate-fade-in">Property Details</span>
-            <h1 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none m-0">
-              {property.title}
-            </h1>
-          </div>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div className="space-y-2">
+                <span className="text-primary text-lg md:text-2xl font-light uppercase tracking-widest block animate-fade-in">Property Details</span>
+                <h1 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none m-0">
+                  {property.title}
+                </h1>
+              </div>
+              
+              <div className="bg-primary px-6 py-4 md:px-10 md:py-6 shadow-2xl shadow-primary/20 animate-slide-up">
+                 <div className="text-black font-black text-[10px] md:text-xs uppercase tracking-widest mb-1 opacity-60">Investment Value</div>
+                 <div className="text-black font-black text-2xl md:text-4xl uppercase tracking-tighter">
+                   ₹{property.price?.toLocaleString()}
+                 </div>
+              </div>
+            </div>
           
           <nav className="flex items-center gap-3 text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">
              <Link to="/" className="hover:text-primary transition-colors">Home</Link>
@@ -166,36 +193,41 @@ export const PropertyDetailPage = () => {
 
         {/* 3. Metadata Info Bar */}
         <div className="flex justify-end relative z-30">
-          <div className="bg-black border border-white/10 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10 -mt-12 md:-mt-20 w-full md:w-[70%] shadow-2xl">
+          <div className="bg-black border border-white/10 grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/10 -mt-12 md:-mt-20 w-full shadow-2xl">
              <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
                 <div className="text-primary">
-                   <Shield className="w-6 h-6 md:w-8 md:h-8" />
+                   <Home className="w-5 h-5 md:w-8 md:h-8" />
                 </div>
                 <div className="space-y-1">
-                  <div className="text-white font-black text-sm md:text-base uppercase tracking-tighter">Project Name</div>
-                  <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">{property.project_name || property.title}</div>
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">BHK Type</div>
+                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.bhk_type}</div>
                 </div>
              </div>
-             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors border-none md:border-l">
                 <div className="text-primary">
-                   <Construction className="w-6 h-6 md:w-8 md:h-8" />
+                   <Maximize className="w-5 h-5 md:w-8 md:h-8" />
                 </div>
                 <div className="space-y-1">
-                  <div className="text-white font-black text-sm md:text-base uppercase tracking-tighter">
-                    {property.rera_id ? 'RERA Number' : 'Published On'}
-                  </div>
-                  <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">
-                    {property.rera_id || (property.created_at ? new Date(property.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A')}
-                  </div>
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Super Area</div>
+                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.super_builtup_area || property.carpet_area} {property.area_unit}</div>
                 </div>
              </div>
-             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors">
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors border-l">
                 <div className="text-primary">
-                   <MapPin className="w-6 h-6 md:w-8 md:h-8" />
+                   <Bed className="w-5 h-5 md:w-8 md:h-8" />
                 </div>
                 <div className="space-y-1">
-                  <div className="text-white font-black text-sm md:text-base uppercase tracking-tighter">Location</div>
-                  <div className="text-primary font-bold text-[10px] md:text-xs uppercase tracking-widest">{property.city}</div>
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Bedrooms</div>
+                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.bedrooms} Units</div>
+                </div>
+             </div>
+             <div className="p-4 md:p-8 flex items-center gap-4 group hover:bg-white/[0.02] transition-colors border-l">
+                <div className="text-primary">
+                   <Bath className="w-5 h-5 md:w-8 md:h-8" />
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Bathrooms</div>
+                  <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest">{property.bathrooms} Units</div>
                 </div>
              </div>
           </div>
@@ -217,13 +249,64 @@ export const PropertyDetailPage = () => {
                 {property.description}
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {property.highlights?.split('\n').filter((h: string) => h.trim().length > 0).map((h: string, i: number) => (
-                  <div key={i} className="flex items-start gap-4 text-slate-400 font-bold text-xs md:text-sm border-l-2 border-primary/30 pl-4 py-1">
-                    <span className="uppercase tracking-tight leading-tight">{h.trim()}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
+                {[
+                  { label: "Project Name", value: property.project_name, icon: Shield },
+                  { label: "Status", value: property.listing_status, icon: CheckCircle2 },
+                  { label: "Configuration", value: property.bhk_type, icon: Home },
+                  { label: "Handover Date", value: property.possession_date, icon: Calendar },
+                  { label: "Facing", value: property.facing, icon: Compass },
+                  { label: "Balconies", value: property.balconies, icon: Wind },
+                  { label: "Floor No", value: `${property.floor_no} of ${property.total_floors}`, icon: Layers },
+                  { label: "Parking", value: property.parking, icon: Car },
+                  { label: "RERA ID", value: property.rera_id, icon: Lock },
+                  { label: "Property Age", value: property.age_of_property, icon: Construction }
+                ].filter(item => item.value).map((item, i) => (
+                  <div key={i} className="flex items-center justify-between py-4 border-b border-white/5">
+                    <div className="flex items-center gap-3">
+                      <item.icon className="w-4 h-4 text-primary opacity-60" />
+                      <span className="text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-widest">{item.label}</span>
+                    </div>
+                    <span className="text-white text-[10px] md:text-xs font-black uppercase tracking-widest text-right">{item.value}</span>
                   </div>
                 ))}
               </div>
+
+              {property.highlights && (
+                <div className="space-y-6 pt-12">
+                   <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter m-0">Project Highlights</h3>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {property.highlights.split('\n').filter((h: string) => h.trim().length > 0).map((h: string, i: number) => (
+                      <div key={i} className="flex items-start gap-4 text-slate-400 font-bold text-xs md:text-sm border-l-2 border-primary/30 pl-4 py-1 bg-white/[0.02] hover:bg-white/[0.05] transition-colors pr-4">
+                        <span className="uppercase tracking-tight leading-tight">{h.trim()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {property.property_amenity_relation && property.property_amenity_relation.length > 0 && (
+                <div className="space-y-10 pt-12">
+                   <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter m-0">Curated Amenities</h3>
+                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      {property.property_amenity_relation.map((relation: any, i: number) => {
+                        const amenity = relation.amenities;
+                        const iconMap: Record<string, any> = {
+                          'Shield': Shield, 'Waves': Waves, 'Dumbbell': Dumbbell, 'Wifi': Wifi,
+                          'Cigarette': Lock, 'Trees': Trees, 'Car': Car, 'CloudLightning': CloudLightning,
+                          'Construction': Layers, 'Sparkles': Sparkles, 'Run': Wind, 'Baby': Home
+                        };
+                        const IconComponent = iconMap[amenity.icon] || Shield;
+                        return (
+                          <div key={i} className="flex flex-col items-center justify-center p-6 bg-white/[0.03] border border-white/5 hover:border-primary/30 group transition-all">
+                             <IconComponent className="w-8 h-8 text-slate-500 group-hover:text-primary transition-colors mb-4" />
+                             <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 text-center">{amenity.name}</span>
+                          </div>
+                        );
+                      })}
+                   </div>
+                </div>
+              )}
             </div>
 
             {/* Gallery */}

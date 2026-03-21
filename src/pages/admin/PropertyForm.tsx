@@ -354,6 +354,10 @@ export const PropertyForm = () => {
           <Form.Item name="description" label="Detailed Description">
             <TextArea rows={6} placeholder="Write a compelling story about the property..." className="rounded-lg" />
           </Form.Item>
+
+          <Form.Item name="highlights" label="Key Highlights (One per line)">
+            <TextArea rows={4} placeholder="E.g. Near Metro&#10;24/7 Security&#10;Modern Fittings" className="rounded-lg" />
+          </Form.Item>
         </Space>
       ),
     },
@@ -946,7 +950,8 @@ export const PropertyForm = () => {
           listing_status: 'Published',
           property_type: 'Apartment',
           bhk_type: '2 BHK',
-          possession_status: 'Ready to Move'
+          possession_status: 'Ready to Move',
+          area_unit: 'sqft'
         }}
         className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 lg:p-8 shadow-3xl"
       >
