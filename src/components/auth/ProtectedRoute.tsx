@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 const AUTHORIZED_ADMINS = [
   'info@shrinsinfra.com',
   'shrinsinframarketing@gmail.com',
+  'arpansadhu13@gmail.com',
   'admin@shrinsinfra.com' // Keeping placeholder just in case
 ];
 

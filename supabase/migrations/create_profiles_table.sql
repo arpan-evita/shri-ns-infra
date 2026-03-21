@@ -22,7 +22,7 @@ CREATE POLICY "Admins can update all profiles"
 ON public.profiles FOR ALL 
 TO authenticated 
 USING (
-    auth.jwt() ->> 'email' IN ('info@shrinsinfra.com', 'shrinsinframarketing@gmail.com')
+    auth.jwt() ->> 'email' IN ('info@shrinsinfra.com', 'shrinsinframarketing@gmail.com', 'arpansadhu13@gmail.com')
 );
 
 -- Function to handle new user signups
@@ -34,7 +34,7 @@ BEGIN
         new.id, 
         new.email, 
         CASE 
-            WHEN new.email IN ('info@shrinsinfra.com', 'shrinsinframarketing@gmail.com') THEN TRUE 
+            WHEN new.email IN ('info@shrinsinfra.com', 'shrinsinframarketing@gmail.com', 'arpansadhu13@gmail.com') THEN TRUE 
             ELSE FALSE 
         END
     );
