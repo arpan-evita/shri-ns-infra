@@ -116,7 +116,7 @@ export const PropertyDetailPage = () => {
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full space-y-4 md:space-y-6">
           <div className="space-y-2">
-            <span className="text-primary text-lg md:text-2xl font-light uppercase tracking-widest block animate-fade-in">Single Project</span>
+            <span className="text-primary text-lg md:text-2xl font-light uppercase tracking-widest block animate-fade-in">Property Details</span>
             <h1 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none m-0">
               {property.title}
             </h1>
@@ -125,7 +125,7 @@ export const PropertyDetailPage = () => {
           <nav className="flex items-center gap-3 text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">
              <Link to="/" className="hover:text-primary transition-colors">Home</Link>
              <span className="text-primary">/</span>
-             <Link to="/properties" className="hover:text-primary transition-colors">Single Project</Link>
+             <Link to="/properties" className="hover:text-primary transition-colors">Properties</Link>
              <span className="text-primary">/</span>
              <span className="text-white">{property.title}</span>
           </nav>
