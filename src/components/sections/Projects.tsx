@@ -122,8 +122,10 @@ export const Projects = () => {
         .from('properties')
         .select(`
           *,
+          listing_status,
           property_images(image_url, is_featured)
         `)
+        .eq('listing_status', 'Published')
         .order('created_at', { ascending: false })
         .limit(6);
 

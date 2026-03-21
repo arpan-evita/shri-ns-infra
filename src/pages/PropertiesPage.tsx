@@ -18,19 +18,29 @@ export const PropertiesPage = () => {
         .from('properties')
         .select(`
           *,
+          listing_status,
           property_images(image_url, is_featured)
         `);
 
       const location = searchParams.get('location');
       const type = searchParams.get('type');
-      const status = searchParams.get('status');
+      const statusParam = searchParams.get('status');
       const minPrice = searchParams.get('minPrice');
       const maxPrice = searchParams.get('maxPrice');
       const bedrooms = searchParams.get('bedrooms');
 
+      // If no status filter in URL, default to Published
+      if (!statusParam) {
+        query = query.eq('listing_status', 'Published');
+      } else if (statusParam !== 'all') {
+        query = query.eq('listing_status', statusParam);
+      }
+
       if (location) query = query.ilike('city', `%${location}%`);
       if (type) query = query.eq('property_type', type);
-      if (status) query = query.eq('status', status);
+      // 'status' column in DB is for Buy/Rent (purpose)
+      const purpose = searchParams.get('purpose');
+      if (purpose) query = query.eq('status', purpose);
       if (minPrice) query = query.gte('price', parseInt(minPrice));
       if (maxPrice) query = query.lte('price', parseInt(maxPrice));
       if (bedrooms) query = query.eq('bedrooms', parseInt(bedrooms));

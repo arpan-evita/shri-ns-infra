@@ -37,10 +37,10 @@ export const PropertyDetailPage = () => {
         .from('properties')
         .select(`
           *,
-          agents(*),
+          listing_status,
           property_images(*),
           property_floor_plans(*),
-          property_amenity_relation(amenities(*)),
+          property_amenity_relation(amenity_id),
           nearby_places(*)
         `)
         .eq('slug', slug)

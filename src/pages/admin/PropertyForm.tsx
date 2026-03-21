@@ -104,7 +104,10 @@ export const PropertyForm = () => {
             property.possession_date = dayjs(property.possession_date);
           }
           
-          form.setFieldsValue(property);
+          form.setFieldsValue({
+            ...property,
+            purpose: property.status // Map DB 'status' to form 'purpose'
+          });
           
           // Set featured image
           const featured = property.property_images?.find((img: any) => img.is_featured);
@@ -181,6 +184,8 @@ export const PropertyForm = () => {
     const finalPropertyData = {
       ...propertyData,
       slug,
+      status: values.purpose, // Map form 'purpose' to DB 'status' ('buy'/'rent')
+      listing_status: values.listing_status, // Map form 'listing_status' to DB 'listing_status'
       og_image: ogImage,
       brochure_url: imageUrl, // Reusing brochure_url as the featured image DB column
       updated_at: new Date().toISOString()
@@ -293,7 +298,7 @@ export const PropertyForm = () => {
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>
-              <Form.Item name="status" label="Listing Status" rules={[{ required: true }]}>
+              <Form.Item name="listing_status" label="Listing Status" rules={[{ required: true }]}>
                 <Select size="large" className="rounded-lg">
                   <Option value="Draft">Draft</Option>
                   <Option value="Published">Published</Option>
