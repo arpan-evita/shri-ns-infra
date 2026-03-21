@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { 
   Home, 
@@ -41,11 +42,13 @@ export const AdminDashboard = () => {
     fetchStats();
   }, []);
 
+  const navigate = useNavigate();
+
   const statCards = [
-    { title: 'Total Properties', value: stats.totalProperties, icon: Home, color: '#c9a41d' },
-    { title: 'Total Leads', value: stats.activeLeads, icon: MessageSquare, color: '#1890ff' },
-    { title: 'Total Agents', value: stats.totalAgents, icon: Users, color: '#52c41a' },
-    { title: 'New Listings', value: '+12%', icon: TrendingUp, color: '#eb2f96', suffix: <ArrowUpRight className="inline w-4 h-4 ml-1" /> }
+    { title: 'Total Properties', value: stats.totalProperties, icon: Home, color: '#c9a41d', link: '/admin/properties' },
+    { title: 'Total Leads', value: stats.activeLeads, icon: MessageSquare, color: '#1890ff', link: '/admin/leads' },
+    { title: 'Total Agents', value: stats.totalAgents, icon: Users, color: '#52c41a', link: '/admin/agents' },
+    { title: 'New Listings', value: '+12%', icon: TrendingUp, color: '#eb2f96', suffix: <ArrowUpRight className="inline w-4 h-4 ml-1" />, link: '/admin/properties' }
   ];
 
   return (
@@ -58,20 +61,22 @@ export const AdminDashboard = () => {
       <Row gutter={[24, 24]}>
         {statCards.map((card, idx) => (
           <Col xs={24} sm={12} lg={6} key={idx}>
-            <div className="bg-[#1a170f] border border-white/5 p-6 rounded-lg transition-transform hover:-translate-y-1 duration-300">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <card.icon className="w-6 h-6 text-primary" style={{ color: card.color }} />
+            <Link to={card.link}>
+              <div className="bg-[#1a170f] border border-white/5 p-6 rounded-lg transition-transform hover:-translate-y-1 duration-300 cursor-pointer group">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 bg-white/5 rounded-lg group-hover:bg-primary/20 transition-colors">
+                    <card.icon className="w-6 h-6 text-primary" style={{ color: card.color }} />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Text className="text-slate-400 uppercase tracking-widest text-[10px] font-bold">{card.title}</Text>
+                  <div className="flex items-baseline gap-2">
+                    <div className="text-white text-3xl font-black">{card.value}</div>
+                    {card.suffix && <span className="text-primary text-sm">{card.suffix}</span>}
+                  </div>
                 </div>
               </div>
-              <div className="space-y-1">
-                <Text className="text-slate-400 uppercase tracking-widest text-[10px] font-bold">{card.title}</Text>
-                <div className="flex items-baseline gap-2">
-                  <div className="text-white text-3xl font-black">{card.value}</div>
-                  {card.suffix && <span className="text-primary text-sm">{card.suffix}</span>}
-                </div>
-              </div>
-            </div>
+            </Link>
           </Col>
         ))}
       </Row>
@@ -81,12 +86,21 @@ export const AdminDashboard = () => {
           <div className="bg-[#1a170f] border border-white/5 p-8 rounded-lg min-h-[400px]">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-white text-xl font-bold uppercase tracking-wider">Recent Inquiries</h3>
-              <button className="text-primary text-xs font-bold uppercase tracking-widest hover:underline">View All</button>
+              <button 
+                onClick={() => navigate('/admin/leads')}
+                className="text-primary text-xs font-bold uppercase tracking-widest hover:underline"
+              >
+                View All
+              </button>
             </div>
             
             <div className="space-y-4">
               {stats.recentLeads.map((lead) => (
-                <div key={lead.id} className="group flex items-center justify-between p-4 bg-white/5 border border-transparent hover:border-primary/30 transition-all">
+                <div 
+                  key={lead.id} 
+                  onClick={() => navigate('/admin/leads')}
+                  className="group flex items-center justify-between p-4 bg-white/5 border border-transparent hover:border-primary/30 transition-all cursor-pointer"
+                >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-primary/20 flex items-center justify-center rounded-full text-primary font-bold">
                       {lead.name[0]}
@@ -117,15 +131,19 @@ export const AdminDashboard = () => {
             <h3 className="text-white text-xl font-bold uppercase tracking-wider mb-8">Activity Feed</h3>
             <div className="space-y-8">
               {[
-                { type: 'property', text: 'New Apartment listed in Noida', time: '2h ago' },
-                { type: 'lead', text: 'New inquiry received for Luxury Villa', time: '4h ago' },
-                { type: 'agent', text: 'Agent Sarah updated profile', time: '1d ago' },
+                { type: 'property', text: 'New Apartment listed in Noida', time: '2h ago', link: '/admin/properties' },
+                { type: 'lead', text: 'New inquiry received for Luxury Villa', time: '4h ago', link: '/admin/leads' },
+                { type: 'agent', text: 'Agent Sarah updated profile', time: '1d ago', link: '/admin/agents' },
               ].map((activity, idx) => (
-                <div key={idx} className="flex gap-4 relative">
+                <div 
+                  key={idx} 
+                  onClick={() => navigate(activity.link)}
+                  className="flex gap-4 relative cursor-pointer group"
+                >
                   {idx !== 2 && <div className="absolute left-2 top-8 bottom-[-24px] w-[1px] bg-white/5"></div>}
-                  <div className={`w-4 h-4 rounded-full mt-1 shrink-0 ${activity.type === 'property' ? 'bg-primary' : activity.type === 'lead' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
+                  <div className={`w-4 h-4 rounded-full mt-1 shrink-0 group-hover:scale-125 transition-transform ${activity.type === 'property' ? 'bg-primary' : activity.type === 'lead' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
                   <div className="space-y-1">
-                    <p className="text-slate-300 text-sm leading-tight">{activity.text}</p>
+                    <p className="text-slate-300 text-sm leading-tight group-hover:text-white transition-colors">{activity.text}</p>
                     <p className="text-slate-600 text-[10px] uppercase font-bold tracking-widest">{activity.time}</p>
                   </div>
                 </div>
