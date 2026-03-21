@@ -86,31 +86,43 @@ export const AdminUsers = () => {
     if (!newAdminEmail) return;
     setAddingAdmin(true);
     
-    // Check if user exists in profiles
-    const { data: existingUser } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', newAdminEmail)
-      .single();
+    try {
+      // 1. Add to Whitelist (admin_invites)
+      const { error: inviteError } = await supabase
+        .from('admin_invites')
+        .upsert({ email: newAdminEmail });
 
-    if (existingUser) {
-      // User exists, just approve them
-      const { error } = await supabase
+      if (inviteError) throw inviteError;
+
+      // 2. Check if user already exists in profiles
+      const { data: existingUser } = await supabase
         .from('profiles')
-        .update({ is_approved: true, is_admin: true })
-        .eq('email', newAdminEmail);
+        .select('id')
+        .eq('email', newAdminEmail)
+        .single();
 
-      if (error) message.error(`Error: ${error.message}`);
-      else {
-        message.success(`${newAdminEmail} is now an approved Admin!`);
-        setIsModalOpen(false);
-        setNewAdminEmail('');
-        fetchUsers();
+      if (existingUser) {
+        // User exists, approve them immediately
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ is_approved: true })
+          .eq('email', newAdminEmail);
+
+        if (profileError) throw profileError;
+        message.success(`${newAdminEmail} has been granted Admin access!`);
+      } else {
+        message.success(`${newAdminEmail} has been added to the whitelist. They will be automatically approved when they sign up!`);
       }
-    } else {
-      message.info(`User ${newAdminEmail} hasn't signed up yet. They must sign up first before you can grant them access.`);
+
+      setIsModalOpen(false);
+      setNewAdminEmail('');
+      fetchUsers();
+    } catch (error: any) {
+      console.error('Add Admin Error:', error);
+      message.error(`Failed to add admin: ${error.message}`);
+    } finally {
+      setAddingAdmin(false);
     }
-    setAddingAdmin(false);
   };
 
   const columns = [
