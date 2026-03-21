@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 
 const SUPER_ADMINS = [
   'arpansadhu13@gmail.com',
+  'shrinsinframarketing@gmail.com',
   'admin@shrinsinfra.com' // Keeping placeholder just in case
 ];
 
