@@ -343,8 +343,8 @@ export const PropertyDetailPage = () => {
           infinite={true}
         >
           {property.property_images?.map((img: any, i: number) => (
-            <div key={i} className="h-screen w-screen flex items-center justify-center outline-none bg-black/90">
-              <img src={img.image_url} className="max-w-full max-h-screen object-contain select-none shadow-2xl" alt="Gallery View" />
+            <div key={i} className="h-screen w-screen grid place-items-center outline-none bg-black">
+              <img src={img.image_url} className="max-w-full max-h-screen object-contain select-none" alt="Gallery View" />
             </div>
           ))}
         </Carousel>
@@ -418,9 +418,8 @@ export const PropertyDetailPage = () => {
         }
         
         .gallery-carousel .slick-slide > div {
-          display: flex !important;
-          justify-content: center !important;
-          align-items: center !important;
+          display: grid !important;
+          place-items: center !important;
           height: 100vh !important;
           width: 100vw !important;
           outline: none !important;
@@ -432,17 +431,17 @@ export const PropertyDetailPage = () => {
           z-index: 100;
           font-size: 32px !important;
           padding: 20px;
-          background: rgba(0,0,0,0.3);
-          height: 80px;
+          background: transparent !important;
+          height: 100vh;
           display: flex !important;
-          align-items: center;
-          justify-content: center;
-          width: 60px;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 80px;
           transition: all 0.3s;
         }
         .gallery-carousel .slick-prev:hover,
         .gallery-carousel .slick-next:hover {
-          background: var(--ant-primary-color);
+          background: rgba(255,255,255,0.05) !important;
         }
         .gallery-carousel .slick-prev { left: 0px; border-radius: 0 50px 50px 0; }
         .gallery-carousel .slick-next { right: 0px; border-radius: 50px 0 0 50px; }
