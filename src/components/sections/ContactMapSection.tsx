@@ -1,10 +1,17 @@
 import { Quote } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const ContactMapSection = () => {
   return (
     <section className="flex flex-col lg:flex-row h-auto lg:h-[600px] w-full overflow-hidden">
       {/* Left Side: Map */}
-      <div className="w-full lg:w-1/2 h-[400px] lg:h-full">
+      <motion.div 
+        initial={{ opacity: 0, x: -80 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.8, type: "spring" }}
+        className="w-full lg:w-1/2 h-[400px] lg:h-full"
+      >
         <iframe 
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112117.981512497!2d77.30605963906251!3d28.57913349999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5a43173357b%3A0x37ffce30d3f1c34![Noida%2C%20Uttar%20Pradesh]!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
           width="100%" 
@@ -15,10 +22,16 @@ export const ContactMapSection = () => {
           referrerPolicy="no-referrer-when-downgrade"
           className="grayscale invert hover:invert-0 transition-all duration-700"
         ></iframe>
-      </div>
+      </motion.div>
 
       {/* Right Side: Trusted Quote */}
-      <div className="w-full lg:w-1/2 relative flex items-center justify-center p-8 md:p-16 lg:p-24 bg-[#1a170f] text-left">
+      <motion.div 
+        initial={{ opacity: 0, x: 80 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.8, type: "spring" }}
+        className="w-full lg:w-1/2 relative flex items-center justify-center p-8 md:p-16 lg:p-24 bg-[#1a170f] text-left"
+      >
         {/* Architectural Background Overlay */}
         <div className="absolute inset-0 z-0 opacity-10">
           <img 
@@ -42,7 +55,7 @@ export const ContactMapSection = () => {
              <Quote className="w-16 h-16 md:w-24 md:h-24 text-primary opacity-30 rotate-180" strokeWidth={3} />
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Youtube, ArrowRight, Loader2, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
+import { motion } from 'framer-motion';
 
 export const ContactInfo = () => {
   const [loading, setLoading] = useState(false);
@@ -51,7 +52,13 @@ export const ContactInfo = () => {
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Left Side: Contact Details */}
-          <div className="space-y-10 md:space-y-12 text-left">
+          <motion.div 
+            initial={{ opacity: 0, x: -80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.8, type: "spring" }}
+            className="space-y-10 md:space-y-12 text-left"
+          >
             <div className="space-y-4">
               <span className="text-primary text-xl md:text-3xl font-light uppercase tracking-tight">Contact Us</span>
               <h2 className="text-white text-4xl md:text-6xl font-black uppercase leading-tight tracking-tighter">Get In Touch With Professionals.</h2>
@@ -113,16 +120,30 @@ export const ContactInfo = () => {
               <h4 className="text-white font-black uppercase tracking-[0.2em] text-[10px] mb-6">Follow Our Socials</h4>
               <div className="flex flex-wrap gap-3 md:gap-4">
                 {[Facebook, Twitter, Linkedin, Youtube].map((Icon, idx) => (
-                  <a key={idx} href="#" className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:text-black transition-all">
+                  <motion.a 
+                    key={idx} 
+                    href="#"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: idx * 0.1 + 0.5 }}
+                    className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:text-black transition-all"
+                  >
                     <Icon className="w-4 h-4 md:w-5 md:h-5" />
-                  </a>
+                  </motion.a>
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side: Form */}
-          <div className="bg-white/5 p-8 md:p-12 border border-white/10 relative overflow-hidden rounded-sm text-left">
+          <motion.div 
+            initial={{ opacity: 0, x: 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.8, type: "spring" }}
+            className="bg-white/5 p-8 md:p-12 border border-white/10 relative overflow-hidden rounded-sm text-left"
+          >
             {submitted ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-12 animate-in fade-in zoom-in duration-500">
                 <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center">
@@ -200,7 +221,7 @@ export const ContactInfo = () => {
                 </form>
               </>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
