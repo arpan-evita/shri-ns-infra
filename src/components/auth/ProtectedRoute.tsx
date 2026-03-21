@@ -17,73 +17,98 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session?.user?.email) {
-        const userEmail = session.user.email.toLowerCase();
-        const isMasterAdmin = AUTHORIZED_ADMINS.includes(userEmail);
+      try {
+        console.log("Checking session...");
+        const { data: { session } } = await supabase.auth.getSession();
         
-        // 1. Check if they are a hardcoded master admin
-        if (isMasterAdmin) {
-          setAuthenticated(true);
-          setAuthorized(true);
-          setLoading(false);
-          return;
-        }
+        if (session?.user?.email) {
+          const userEmail = session.user.email.toLowerCase();
+          const isMasterAdmin = AUTHORIZED_ADMINS.includes(userEmail);
+          
+          console.log(`User ${userEmail} authenticated. Master admin: ${isMasterAdmin}`);
 
-        // 2. Otherwise check the profiles table for approval
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('is_approved')
-          .eq('id', session.user.id)
-          .single();
+          // 1. Check if they are a hardcoded master admin
+          if (isMasterAdmin) {
+            setAuthenticated(true);
+            setAuthorized(true);
+            setLoading(false);
+            return;
+          }
 
-        if (profileError || !profile?.is_approved) {
-          // If authenticated but not approved, sign them out
-          await supabase.auth.signOut();
-          setAuthenticated(false);
-          setAuthorized(false);
-          alert(profileError ? "Error verifying account." : "Access Denied: Your account is pending admin approval.");
-        } else {
-          setAuthenticated(true);
-          setAuthorized(true);
-        }
-      } else {
-        setAuthenticated(false);
-        setAuthorized(false);
-      }
-      
-      setLoading(false);
-    };
-
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user?.email) {
-        const userEmail = session.user.email.toLowerCase();
-        if (AUTHORIZED_ADMINS.includes(userEmail)) {
-          setAuthenticated(true);
-          setAuthorized(true);
-        } else {
-          // Check approval for non-master admins
-          const { data: profile } = await supabase
+          // 2. Otherwise check the profiles table for approval
+          console.log("Checking profiles table for approval...");
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('is_approved')
             .eq('id', session.user.id)
             .single();
 
-          if (profile?.is_approved) {
-            setAuthenticated(true);
-            setAuthorized(true);
-          } else {
+          if (profileError) {
+            console.error("Profile check error:", profileError);
+            // If the table doesn't exist, this is likely why it's failing
+            alert("Security Check: " + (profileError.code === 'PGRST116' ? "Profile not found." : "Database error or missing profiles table. Please run the migration."));
             await supabase.auth.signOut();
             setAuthenticated(false);
             setAuthorized(false);
+          } else if (!profile?.is_approved) {
+            console.warn("User not approved.");
+            alert("Access Denied: Your account is pending admin approval.");
+            await supabase.auth.signOut();
+            setAuthenticated(false);
+            setAuthorized(false);
+          } else {
+            console.log("User approved.");
+            setAuthenticated(true);
+            setAuthorized(true);
+          }
+        } else {
+          console.log("No active session.");
+          setAuthenticated(false);
+          setAuthorized(false);
+        }
+      } catch (err) {
+        console.error("Auth check failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log("Auth state changed:", _event);
+      if (session?.user?.email) {
+        const userEmail = session.user.email.toLowerCase();
+        if (AUTHORIZED_ADMINS.includes(userEmail)) {
+          setAuthenticated(true);
+          setAuthorized(true);
+          setLoading(false);
+        } else {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('is_approved')
+              .eq('id', session.user.id)
+              .single();
+
+            if (profile?.is_approved) {
+              setAuthenticated(true);
+              setAuthorized(true);
+            } else {
+              await supabase.auth.signOut();
+              setAuthenticated(false);
+              setAuthorized(false);
+            }
+          } catch (err) {
+            console.error("Auth change check failed:", err);
+          } finally {
+            setLoading(false);
           }
         }
       } else {
         setAuthenticated(false);
         setAuthorized(false);
+        setLoading(false);
       }
     });
 
