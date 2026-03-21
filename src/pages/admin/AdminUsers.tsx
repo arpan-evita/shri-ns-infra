@@ -29,13 +29,22 @@ export const AdminUsers = () => {
   }, []);
 
   const toggleApproval = async (id: string, currentStatus: boolean) => {
-    const { error } = await supabase
+    console.log(`Toggling approval for ${id} from ${currentStatus} to ${!currentStatus}`);
+    
+    const { data, error, count } = await supabase
       .from('profiles')
       .update({ is_approved: !currentStatus })
-      .eq('id', id);
+      .eq('id', id)
+      .select();
+
+    console.log("Update response:", { data, error, count });
 
     if (error) {
-      message.error('Failed to update status');
+      console.error("Supabase Update Error:", error);
+      message.error(`Failed to update status: ${error.message}`);
+    } else if (!data || data.length === 0) {
+      console.warn("No rows updated! RLS might be blocking it.");
+      message.warning('The request succeeded but the database did not allow the change (check permissions).');
     } else {
       message.success(`User ${!currentStatus ? 'approved' : 'restricted'} successfully`);
       fetchUsers();
