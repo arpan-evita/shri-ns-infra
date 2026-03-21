@@ -558,10 +558,23 @@ export const PropertyForm = () => {
           <Form.Item 
             name="map_embed_url" 
             label="Google Maps Embed URL" 
-            tooltip="Go to Google Maps → Search location → Share → Embed a map → Copy only the src URL from the iframe code"
-            extra="Go to Google Maps -> Share -> Embed a map -> Copy ONLY the 'src' URL inside the <iframe>"
+            tooltip="Go to Google Maps → Search location → Share → Embed a map → Copy the HTML code or just the src URL"
+            extra="Pro Tip: You can directly paste the full <iframe>...</iframe> code here, and we'll extract the URL for you!"
           >
-            <Input size="large" placeholder="https://www.google.com/maps/embed?pb=!1m18..." className="rounded-lg" />
+            <Input 
+              size="large" 
+              placeholder="Paste <iframe> code OR embed URL here" 
+              className="rounded-lg" 
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val.includes('<iframe')) {
+                  const match = val.match(/src="([^"]+)"/);
+                  if (match && match[1]) {
+                    form.setFieldsValue({ map_embed_url: match[1] });
+                  }
+                }
+              }}
+            />
           </Form.Item>
 
           <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Nearby Landmarks (Connectivity)</Divider>
