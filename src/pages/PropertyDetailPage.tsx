@@ -435,7 +435,7 @@ export const PropertyDetailPage = () => {
         className="premium-lightbox-modal"
         styles={{ 
           body: { background: 'transparent', padding: 0 },
-          mask: { backdropFilter: 'blur(10px)', background: 'rgba(0,0,0,0.4)' }
+          mask: { backdropFilter: 'blur(15px)', background: 'rgba(0,0,0,0.1)' }
         }}
       >
         <Carousel 
@@ -488,13 +488,14 @@ export const PropertyDetailPage = () => {
           top: 30px !important;
           right: 30px !important;
           z-index: 1000;
-          background: rgba(0,0,0,0.5);
+          background: rgba(0,0,0,0.2) !important;
           border-radius: 50%;
           width: 44px;
           height: 44px;
           display: flex;
           align-items: center;
           justify-content: center;
+          backdrop-filter: blur(4px) !important;
         }
 
         .premium-modal-sharp .ant-modal-content {
@@ -510,8 +511,11 @@ export const PropertyDetailPage = () => {
 
         .gallery-carousel,
         .gallery-carousel .slick-list,
-        .gallery-carousel .slick-track {
+        .gallery-carousel .slick-track,
+        .gallery-carousel .slick-slide,
+        .gallery-carousel .slick-slide > div {
           height: 100vh !important;
+          background: transparent !important;
         }
         
         .gallery-carousel .slick-track {
@@ -523,7 +527,6 @@ export const PropertyDetailPage = () => {
         .gallery-carousel .slick-slide > div {
           display: grid !important;
           place-items: center !important;
-          height: 100vh !important;
           width: 100vw !important;
           outline: none !important;
         }
