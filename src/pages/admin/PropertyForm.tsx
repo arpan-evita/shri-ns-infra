@@ -372,7 +372,8 @@ export const PropertyForm = () => {
           <Row gutter={[24, 24]}>
             <Col xs={24} md={6}>
               <Form.Item name="bhk_type" label="BHK Configuration">
-                <Select size="large" className="rounded-lg">
+                <Select size="large" className="rounded-lg" placeholder="Select BHK">
+                  <Option value="">Select BHK</Option>
                   <Option value="1 BHK">1 BHK</Option>
                   <Option value="2 BHK">2 BHK</Option>
                   <Option value="3 BHK">3 BHK</Option>
@@ -420,7 +421,8 @@ export const PropertyForm = () => {
           <Row gutter={[24, 24]}>
             <Col xs={24} md={6}>
               <Form.Item name="facing" label="Facing (Vaastu)">
-                <Select size="large" className="rounded-lg">
+                <Select size="large" className="rounded-lg" placeholder="Select Facing">
+                  <Option value="">Select Facing</Option>
                   <Option value="East">East</Option>
                   <Option value="West">West</Option>
                   <Option value="North">North</Option>
@@ -434,7 +436,8 @@ export const PropertyForm = () => {
             </Col>
             <Col xs={24} md={6}>
               <Form.Item name="furnishing_status" label="Furnishing">
-                <Select size="large" className="rounded-lg">
+                <Select size="large" className="rounded-lg" placeholder="Select Furnishing">
+                  <Option value="">Select Furnishing</Option>
                   <Option value="Unfurnished">Unfurnished</Option>
                   <Option value="Semi-furnished">Semi-furnished</Option>
                   <Option value="Fully Furnished">Fully Furnished</Option>
@@ -443,7 +446,8 @@ export const PropertyForm = () => {
             </Col>
             <Col xs={24} md={6}>
               <Form.Item name="age_of_property" label="Property Age">
-                <Select size="large" className="rounded-lg">
+                <Select size="large" className="rounded-lg" placeholder="Select Age">
+                  <Option value="">Select Age</Option>
                   <Option value="New Construction">New Construction</Option>
                   <Option value="0–1 years">0–1 years</Option>
                   <Option value="1–5 years">1–5 years</Option>
@@ -454,7 +458,8 @@ export const PropertyForm = () => {
             </Col>
             <Col xs={24} md={6}>
               <Form.Item name="parking" label="Parking Type">
-                <Select size="large" className="rounded-lg">
+                <Select size="large" className="rounded-lg" placeholder="Select Parking">
+                  <Option value="">Select Parking</Option>
                   <Option value="Covered Parking">Covered Parking</Option>
                   <Option value="Open Parking">Open Parking</Option>
                   <Option value="Basement Parking">Basement Parking</Option>

@@ -65,7 +65,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         <div className="grid grid-cols-3 gap-1 bg-white/[0.03] p-1 rounded-none">
           <div className="bg-[#151515] p-3 text-center rounded-none space-y-1">
             <Home className="w-4 h-4 text-primary mx-auto opacity-70" />
-            <div className="text-[10px] text-white font-black uppercase tracking-tighter">{property.bhk_type || `${property.bedrooms} BHK`}</div>
+            <div className="text-[10px] text-white font-black uppercase tracking-tighter">
+              {property.bhk_type || (property.bedrooms ? `${property.bedrooms} BHK` : '')}
+            </div>
           </div>
           <div className="bg-[#151515] p-3 text-center rounded-none space-y-1">
             <Maximize className="w-4 h-4 text-primary mx-auto opacity-70" />
