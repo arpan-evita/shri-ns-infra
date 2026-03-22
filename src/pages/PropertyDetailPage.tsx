@@ -433,7 +433,10 @@ export const PropertyDetailPage = () => {
         width="100%"
         centered
         className="premium-lightbox-modal"
-        styles={{ body: { background: 'transparent', padding: 0 } }}
+        styles={{ 
+          body: { background: 'transparent', padding: 0 },
+          mask: { backdropFilter: 'blur(10px)', background: 'rgba(0,0,0,0.4)' }
+        }}
       >
         <Carousel 
           arrows={true} 
@@ -443,8 +446,8 @@ export const PropertyDetailPage = () => {
           infinite={true}
         >
           {property.property_images?.map((img: any, i: number) => (
-            <div key={i} className="h-screen w-screen grid place-items-center outline-none bg-black">
-              <img src={img.image_url} className="max-w-full max-h-screen object-contain select-none" alt="Gallery View" />
+            <div key={i} className="h-screen w-screen grid place-items-center outline-none bg-transparent">
+              <img src={img.image_url} className="max-w-[90%] max-h-[90vh] object-contain select-none shadow-2xl" alt="Gallery View" />
             </div>
           ))}
         </Carousel>
