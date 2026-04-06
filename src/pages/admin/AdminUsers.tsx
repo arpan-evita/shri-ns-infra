@@ -7,7 +7,7 @@ const { Text } = Typography;
 const { confirm } = Modal;
 
 // Super Admins who cannot be modified or deleted
-const SUPER_ADMINS = ['arpansadhu13@gmail.com', 'shrinsinframarketing@gmail.com'];
+const SUPER_ADMINS = ['arpansadhu13@gmail.com', 'shrinsinframarketing@gmail.com', 'info@shrinsinfra.com'];
 
 export const AdminUsers = () => {
   const [users, setUsers] = useState<any[]>([]);
