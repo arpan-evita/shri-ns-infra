@@ -23,6 +23,7 @@ interface PropertyCardProps {
     developer_name?: string | null;
     property_type?: string | null;
     highlights?: string | null;
+    whatsapp_number?: string | null;
     property_variants?: any[];
   };
 }

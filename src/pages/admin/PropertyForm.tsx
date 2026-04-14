@@ -8,7 +8,6 @@ import {
   Switch, 
   Button, 
   message, 
-  Card, 
   Row, 
   Col, 
   Typography,
@@ -17,7 +16,6 @@ import {
   DatePicker,
   Upload,
   Checkbox,
-  Divider,
   ConfigProvider,
   theme
 } from 'antd';
@@ -26,24 +24,13 @@ import {
   SaveOutlined,
   PlusOutlined,
   LoadingOutlined,
-  InfoCircleOutlined,
-  EnvironmentOutlined,
-  DeleteOutlined,
-  CarOutlined,
-  UploadOutlined,
-  FormatPainterOutlined,
-  DollarOutlined,
-  EyeOutlined,
-  GlobalOutlined,
-  ShareAltOutlined,
-  VideoCameraOutlined
+  DeleteOutlined
 } from '@ant-design/icons';
 import { supabase } from '@/lib/supabase';
-import MapSelector from '@/components/admin/MapSelector';
 import dayjs from 'dayjs';
 import { useAdmin } from '@/components/admin/AdminLayout';
 
-const { Title } = Typography;
+
 const { Option } = Select;
 const { TextArea } = Input;
 // Custom Icons or Components
