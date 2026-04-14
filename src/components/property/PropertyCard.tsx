@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Maximize, Home, Clock, Phone, MessageCircle, ChevronRight, Star } from 'lucide-react';
+import { MapPin, Maximize, Home, Phone, ChevronRight, Star } from 'lucide-react';
 
 interface PropertyCardProps {
   property: {
@@ -76,7 +76,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                 <div className="text-2xl font-black flex items-baseline gap-1">
                   <span className="text-sm">₹</span>
                   {minPrice ? minPrice.toLocaleString('en-IN') : 'Price on Request'}
-                  {maxPrice && maxPrice > minPrice && (
+                  {maxPrice && minPrice !== null && maxPrice > minPrice && (
                     <span className="text-slate-400 text-sm font-bold ml-1"> - {maxPrice.toLocaleString('en-IN')}</span>
                   )}
                 </div>
