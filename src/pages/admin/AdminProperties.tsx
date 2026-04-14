@@ -15,7 +15,7 @@ export const AdminProperties = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('properties')
-      .select('*, agents(name)')
+      .select('*, agents(name), property_variants(price)')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -54,6 +54,7 @@ export const AdminProperties = () => {
       key: 'title',
       render: (text: string) => <Text className="font-bold text-slate-800">{text}</Text>
     },
+    { title: 'Developer', dataIndex: 'developer_name', key: 'developer_name', render: (text: string) => text || '-' },
     { title: 'Type', dataIndex: 'property_type', key: 'property_type' },
     { 
       title: 'Purpose', 
@@ -76,10 +77,25 @@ export const AdminProperties = () => {
       )
     },
     { 
-      title: 'Price', 
+      title: 'Price Range', 
       dataIndex: 'price', 
       key: 'price', 
-      render: (price: number) => <Text className="font-mono text-primary font-bold">₹{price?.toLocaleString()}</Text> 
+      render: (price: number, record: any) => {
+        const variants = record.property_variants || [];
+        if (variants.length > 0) {
+          const prices = variants.map((v: any) => v.price).filter((p: number) => p > 0);
+          if (prices.length > 0) {
+            const min = Math.min(...prices);
+            const max = Math.max(...prices);
+            return (
+              <Text className="font-mono text-primary font-bold">
+                ₹{min === max ? min.toLocaleString() : `${min.toLocaleString()} - ${max.toLocaleString()}`}
+              </Text>
+            );
+          }
+        }
+        return <Text className="font-mono text-primary font-bold">₹{price?.toLocaleString() || 'N/A'}</Text>;
+      }
     },
     { title: 'Agent', dataIndex: 'agents', key: 'agent', render: (agent: any) => agent?.name || 'N/A' },
     {

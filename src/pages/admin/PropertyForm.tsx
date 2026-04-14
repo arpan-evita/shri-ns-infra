@@ -90,7 +90,8 @@ export const PropertyForm = () => {
             property_images(*),
             property_floor_plans(*),
             property_amenity_relation(amenity_id),
-            nearby_places(*)
+            nearby_places(*),
+            property_variants(*)
           `)
           .eq('id', id)
           .single();
@@ -210,6 +211,18 @@ export const PropertyForm = () => {
       propertyId = data.id;
     }
 
+    // Handle Variants
+    if (values.property_variants) {
+      if (id) await supabase.from('property_variants').delete().eq('property_id', id);
+      const variantData = values.property_variants.map((variant: any) => ({
+        ...variant,
+        property_id: propertyId
+      }));
+      if (variantData.length > 0) {
+        await supabase.from('property_variants').insert(variantData);
+      }
+    }
+
     // 1. Handle Main Featured Image
     if (imageUrl) {
       // Clear old featured image
@@ -320,14 +333,24 @@ export const PropertyForm = () => {
           </Row>
 
           <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
+              <Form.Item name="developer_name" label="Developer Name">
+                <Input size="large" placeholder="E.g. Godrej Properties" className="rounded-lg" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={[24, 24]}>
             <Col xs={24} md={8}>
               <Form.Item name="property_type" label="Property Type" rules={[{ required: true }]}>
                 <Select size="large" className="rounded-lg">
-                  <Option value="Apartment">Apartment</Option>
-                  <Option value="Villa">Villa</Option>
-                  <Option value="Penthouse">Penthouse</Option>
+                  <Option value="Residential Flats">Residential Flats</Option>
+                  <Option value="Villas">Villas</Option>
                   <Option value="Plots">Plots</Option>
-                  <Option value="Commercial">Commercial</Option>
+                  <Option value="Commercial Shops">Commercial Shops</Option>
+                  <Option value="Office Spaces">Office Spaces</Option>
+                  <Option value="Studio Apartments">Studio Apartments</Option>
+                  <Option value="Mixed Inventory">Mixed Inventory</Option>
                 </Select>
               </Form.Item>
             </Col>

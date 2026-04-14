@@ -18,8 +18,10 @@ export const PropertiesPage = () => {
         .from('properties')
         .select(`
           *,
+          developer_name,
           listing_status,
-          property_images(image_url, is_featured)
+          property_images(image_url, is_featured),
+          property_variants(*)
         `);
 
       const location = searchParams.get('location');

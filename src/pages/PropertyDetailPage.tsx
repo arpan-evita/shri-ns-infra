@@ -56,7 +56,8 @@ export const PropertyDetailPage = () => {
           property_images(*),
           property_floor_plans(*),
           property_amenity_relation(amenities(name, icon)),
-          nearby_places(*)
+          nearby_places(*),
+          property_variants(*)
         `)
         .eq('slug', slug)
         .single();
@@ -211,9 +212,9 @@ export const PropertyDetailPage = () => {
                    <Shield className="w-6 h-6 md:w-8 md:h-8" />
                 </div>
                 <div className="space-y-1 text-left">
-                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Project Name</div>
+                  <div className="text-white font-black text-[10px] md:text-base uppercase tracking-tighter">Developer</div>
                   <div className="text-primary font-bold text-[8px] md:text-xs uppercase tracking-widest leading-none">
-                    {property.project_name || property.title}
+                    {property.developer_name || 'Shri NS Infra'}
                   </div>
                 </div>
              </div>
@@ -287,6 +288,57 @@ export const PropertyDetailPage = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Inventory / Variants Section */}
+              {property.property_variants && property.property_variants.length > 0 && (
+                <div className="space-y-10 pt-12">
+                   <div className="space-y-2">
+                      <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter m-0">Investment Inventory</h3>
+                      <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Available unit configurations and pricing</p>
+                      <div className="h-1 w-20 bg-primary" />
+                   </div>
+                   
+                   <div className="overflow-x-auto border border-white/10">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="bg-white/[0.03] border-b border-white/10">
+                            <th className="p-6 text-[10px] font-black text-primary uppercase tracking-widest">Type / Unit</th>
+                            <th className="p-6 text-[10px] font-black text-primary uppercase tracking-widest">Size</th>
+                            <th className="p-6 text-[10px] font-black text-primary uppercase tracking-widest">Price</th>
+                            <th className="p-6 text-[10px] font-black text-primary uppercase tracking-widest text-right">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                          {property.property_variants.map((v: any, i: number) => (
+                            <tr key={i} className="hover:bg-white/[0.02] transition-colors group">
+                              <td className="p-6">
+                                <div className="text-white font-black uppercase text-sm tracking-tight">{v.configuration}</div>
+                                <div className="text-slate-500 text-[9px] font-bold uppercase tracking-widest">{v.label || '-'}</div>
+                              </td>
+                              <td className="p-6">
+                                <div className="text-white font-bold">{v.size} <span className="text-[10px] text-slate-500">{v.size_unit}</span></div>
+                                {v.specifications?.area_type && (
+                                  <div className="text-[9px] text-primary font-black uppercase tracking-widest">{v.specifications.area_type}</div>
+                                )}
+                              </td>
+                              <td className="p-6">
+                                <div className="text-primary font-black text-lg">
+                                  ₹{v.price ? Number(v.price).toLocaleString('en-IN') : 'TBA'}
+                                  {v.price_unit && <span className="text-[10px] ml-1">{v.price_unit}</span>}
+                                </div>
+                              </td>
+                              <td className="p-6 text-right">
+                                <span className={`px-4 py-1.5 text-[9px] font-black uppercase tracking-widest ${v.status === 'Sold Out' ? 'bg-red-500/20 text-red-500' : 'bg-emerald-500/20 text-emerald-500'}`}>
+                                  {v.status || 'Available'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                   </div>
+                </div>
+              )}
 
               {property.highlights && (
                 <div className="space-y-6 pt-12">
