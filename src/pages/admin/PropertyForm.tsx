@@ -582,10 +582,6 @@ export const PropertyForm = () => {
       )
     }
   ];
-       </Space>
-      )
-    }
-  ];
 
   return (
     <ConfigProvider

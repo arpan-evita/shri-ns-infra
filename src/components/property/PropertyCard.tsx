@@ -176,4 +176,3 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     </div>
   );
 };
-};

@@ -161,6 +161,7 @@ export const PropertyDetailPage = () => {
                 </h1>
               </div>
               
+              <div className="bg-primary px-8 py-6 md:px-12 md:py-8 shadow-[0_20px_50px_rgba(234,179,8,0.3)] animate-slide-up border-b-4 border-black/20">
                  <div className="text-black font-black text-xs uppercase tracking-[0.3em] mb-2 opacity-70">
                    {property.property_type === 'Plot' ? 'Value per Sq.Yd' : 'Investment Value'}
                  </div>
