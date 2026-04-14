@@ -22,7 +22,9 @@ export const PropertiesPage = () => {
           listing_status,
           property_images(image_url, is_featured),
           property_variants(*)
-        `);
+        `)
+        .order('is_featured', { ascending: false })
+        .order('updated_at', { ascending: false });
 
       const location = searchParams.get('location');
       const type = searchParams.get('type');

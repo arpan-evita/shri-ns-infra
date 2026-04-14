@@ -57,7 +57,8 @@ export const PropertyDetailPage = () => {
           property_floor_plans(*),
           property_amenity_relation(amenities(name, icon)),
           nearby_places(*),
-          property_variants(*)
+          property_variants(*),
+          property_specifications(*)
         `)
         .eq('slug', slug)
         .single();
@@ -160,11 +161,13 @@ export const PropertyDetailPage = () => {
                 </h1>
               </div>
               
-              <div className="bg-primary px-8 py-6 md:px-12 md:py-8 shadow-[0_20px_50px_rgba(234,179,8,0.3)] animate-slide-up border-b-4 border-black/20">
-                 <div className="text-black font-black text-xs uppercase tracking-[0.3em] mb-2 opacity-70">Investment Value</div>
+                 <div className="text-black font-black text-xs uppercase tracking-[0.3em] mb-2 opacity-70">
+                   {property.property_type === 'Plot' ? 'Value per Sq.Yd' : 'Investment Value'}
+                 </div>
                  <div className="text-black font-black text-3xl md:text-5xl uppercase tracking-tighter flex items-baseline gap-1">
                    <span className="text-xl md:text-2xl mr-1">₹</span>
-                   {property.price ? Number(property.price).toLocaleString('en-IN') : 'Price on Request'}
+                   {property.price_per_sq_yd ? Number(property.price_per_sq_yd).toLocaleString('en-IN') : (property.price ? Number(property.price).toLocaleString('en-IN') : 'Request')}
+                   {property.max_price && <span className="text-black/40 text-sm md:text-xl font-bold ml-2"> - {Number(property.max_price).toLocaleString('en-IN')}</span>}
                  </div>
               </div>
             </div>
@@ -265,18 +268,17 @@ export const PropertyDetailPage = () => {
                     <div className="h-1 w-12 bg-primary/50" />
                  </div>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
-                  {[
-                    { label: "Project Name", value: property.project_name, icon: Shield },
+                   {[
+                    { label: "Internal ID", value: property.property_uid, icon: Shield },
                     { label: "Status", value: property.listing_status, icon: CheckCircle2 },
-                    { label: "Configuration", value: property.bhk_type, icon: Home },
+                    { label: "Project Name", value: property.project_name, icon: Home },
+                    { label: "Developer", value: property.developer_name, icon: Shield },
+                    { label: "Land Area", value: property.total_land_area, icon: Layers },
+                    { label: "Total Towers", value: property.total_towers, icon: Construction },
+                    { label: "Total Units", value: property.total_units, icon: Construction },
+                    { label: "Launch Date", value: property.launch_date, icon: Calendar },
                     { label: "Handover Date", value: property.possession_date, icon: Calendar },
-                    { label: "Facing", value: property.facing, icon: Compass },
-                    { label: "Balconies", value: property.balconies, icon: Wind },
-                    { label: "Floor No", value: property.floor_no ? `${property.floor_no} of ${property.total_floors || 'N/A'}` : null, icon: Layers },
-                    { label: "Parking", value: property.parking, icon: Car },
-                    { label: "RERA ID", value: property.rera_id, icon: Lock },
-                    { label: "Property Age", value: property.age_of_property, icon: Construction },
-                    { label: "Maintenance", value: property.maintenance_charges ? `₹${Number(property.maintenance_charges).toLocaleString()} / Monthly` : null, icon: DollarSign }
+                    { label: "Facing", value: property.facing || property.plot_facing, icon: Compass },
                   ].filter(item => item.value).map((item, i) => (
                     <div key={i} className="flex items-center justify-between py-4 border-b border-white/5 group">
                       <div className="flex items-center gap-3">
@@ -288,6 +290,24 @@ export const PropertyDetailPage = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Specifications Module (Tab 8) */}
+              {property.property_specifications && property.property_specifications.length > 0 && (
+                <div className="space-y-8 pt-12">
+                   <div className="space-y-2">
+                      <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter m-0">Detailed Specifications</h3>
+                      <div className="h-1 w-12 bg-primary/50" />
+                   </div>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
+                      {property.property_specifications.map((spec: any, i: number) => (
+                        <div key={i} className="flex items-center justify-between py-4 border-b border-white/5 group">
+                          <span className="text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-widest">{spec.label}</span>
+                          <span className="text-white text-[10px] md:text-xs font-black uppercase tracking-widest text-right">{spec.value}</span>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+              )}
 
               {/* Inventory / Variants Section */}
               {property.property_variants && property.property_variants.length > 0 && (
@@ -416,8 +436,8 @@ export const PropertyDetailPage = () => {
                  </div>
                  
                  <div className="w-full pt-6 border-t border-white/10 flex justify-center gap-6">
-                    <a href="tel:+918090965996" className="text-white hover:text-primary transition-colors"><Phone className="w-6 h-6" /></a>
-                    <a href="https://wa.me/918090965996" target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary transition-colors">
+                    <a href={`tel:${property.whatsapp_number || '+918090965996'}`} className="text-white hover:text-primary transition-colors"><Phone className="w-6 h-6" /></a>
+                    <a href={`https://wa.me/${(property.whatsapp_number || '918090965996').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary transition-colors">
                        <WhatsAppIcon className="w-6 h-6" />
                     </a>
                     <a href="mailto:info@shrinsinfra.com" className="text-white hover:text-primary transition-colors"><Mail className="w-6 h-6" /></a>

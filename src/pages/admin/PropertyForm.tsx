@@ -100,13 +100,15 @@ export const PropertyForm = () => {
           message.error('Failed to load property');
         } else {
           // Convert date for dayjs
-          if (property.possession_date) {
-            property.possession_date = dayjs(property.possession_date);
-          }
+          if (property.launch_date) property.launch_date = dayjs(property.launch_date);
+          if (property.possession_date) property.possession_date = dayjs(property.possession_date);
           
+          // Fetch Specifications
+          const { data: specData } = await supabase.from('property_specifications').select('*').eq('property_id', id);
+
           form.setFieldsValue({
             ...property,
-            purpose: property.status // Keep purpose mapping since DB status is buy/rent
+            property_specifications: specData || []
           });
           
           // Set featured image
@@ -120,11 +122,7 @@ export const PropertyForm = () => {
           const gallery = property.property_images?.filter((img: any) => !img.is_featured) || [];
           setGalleryImages(gallery.map((img: any) => ({ image_url: img.image_url })));
           
-          // Set OG Image
           if (property.og_image) setOgImage(property.og_image);
-          
-          // Set Featured Image (imageUrl state)
-          if (property.brochure_url) setImageUrl(property.brochure_url);
         }
         setLoading(false);
       }
@@ -168,29 +166,26 @@ export const PropertyForm = () => {
     setLoading(true);
     const slug = values.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     
-    // Format date for DB
-    if (values.possession_date) {
-      values.possession_date = values.possession_date.format('YYYY-MM-DD');
-    }
-
     const { 
       property_images, 
       property_floor_plans, 
       property_amenity_relation, 
       nearby_places,
-      purpose, // Extracted to be mapped to 'status'
+      property_variants,
+      property_specifications,
       ...propertyData 
     } = values;
 
     const finalPropertyData = {
       ...propertyData,
       slug,
-      status: values.purpose, // Map form 'purpose' to DB 'status' ('buy'/'rent')
-      listing_status: values.listing_status, // Map form 'listing_status' to DB 'listing_status'
       og_image: ogImage,
-      brochure_url: imageUrl, // Reusing brochure_url as the featured image DB column
+      brochure_url: values.brochure_url || imageUrl,
       updated_at: new Date().toISOString()
     };
+
+    if (values.possession_date) finalPropertyData.possession_date = values.possession_date.format('YYYY-MM-DD');
+    if (values.launch_date) finalPropertyData.launch_date = values.launch_date.format('YYYY-MM-DD');
 
     let propertyId = id;
 
@@ -212,77 +207,56 @@ export const PropertyForm = () => {
     }
 
     // Handle Variants
-    if (values.property_variants) {
+    if (property_variants) {
       if (id) await supabase.from('property_variants').delete().eq('property_id', id);
-      const variantData = values.property_variants.map((variant: any) => ({
+      const variantData = property_variants.map((variant: any) => ({
         ...variant,
         property_id: propertyId
       }));
-      if (variantData.length > 0) {
-        await supabase.from('property_variants').insert(variantData);
-      }
+      if (variantData.length > 0) await supabase.from('property_variants').insert(variantData);
     }
 
-    // 1. Handle Main Featured Image
+    // Handle Specifications Module (Tab 8)
+    if (property_specifications) {
+      if (id) await supabase.from('property_specifications').delete().eq('property_id', id);
+      const specData = property_specifications.filter((s: any) => s.label && s.value).map((spec: any) => ({
+        ...spec,
+        property_id: propertyId
+      }));
+      if (specData.length > 0) await supabase.from('property_specifications').insert(specData);
+    }
+
+    // Handle Media & Relations (Images, Amenities, etc.)
     if (imageUrl) {
-      // Clear old featured image
-      await supabase.from('property_images')
-        .delete()
-        .eq('property_id', propertyId)
-        .eq('is_featured', true);
-
-      await supabase.from('property_images').insert({
-        property_id: propertyId,
-        image_url: imageUrl,
-        is_featured: true
-      });
+      await supabase.from('property_images').delete().eq('property_id', propertyId).eq('is_featured', true);
+      await supabase.from('property_images').insert({ property_id: propertyId, image_url: imageUrl, is_featured: true });
     }
 
-    // 2. Handle Floor Plans
-    if (property_floor_plans && property_floor_plans.length > 0) {
-      // Clear old plans if editing
+    if (property_floor_plans) {
       if (id) await supabase.from('property_floor_plans').delete().eq('property_id', id);
       const floorPlanData = property_floor_plans.filter((p: any) => p.image_url).map((plan: any) => ({
         property_id: propertyId,
         title: plan.title,
         image_url: plan.image_url
       }));
-      if (floorPlanData.length > 0) {
-        await supabase.from('property_floor_plans').insert(floorPlanData);
-      }
+      if (floorPlanData.length > 0) await supabase.from('property_floor_plans').insert(floorPlanData);
     }
 
-    // 3. Handle Amenities
     if (selectedAmenities.length > 0) {
       if (id) await supabase.from('property_amenity_relation').delete().eq('property_id', id);
-      const amenityData = selectedAmenities.map(amenityId => ({
-        property_id: propertyId,
-        amenity_id: amenityId
-      }));
+      const amenityData = selectedAmenities.map(amenityId => ({ property_id: propertyId, amenity_id: amenityId }));
       await supabase.from('property_amenity_relation').insert(amenityData);
     }
 
-    // 4. Handle Nearby Places
-    if (values.nearby_places) {
+    if (nearby_places) {
       if (id) await supabase.from('nearby_places').delete().eq('property_id', id);
-      const landmarkData = values.nearby_places.map((landmark: any) => ({
-        ...landmark,
-        property_id: propertyId
-      }));
+      const landmarkData = nearby_places.map((landmark: any) => ({ ...landmark, property_id: propertyId }));
       await supabase.from('nearby_places').insert(landmarkData);
     }
     
-    // 5. Handle Gallery Images
-    // Clear old non-featured images if editing
-    if (id) {
-       await supabase.from('property_images').delete().eq('property_id', propertyId).eq('is_featured', false);
-    }
+    if (id) await supabase.from('property_images').delete().eq('property_id', propertyId).eq('is_featured', false);
     if (galleryImages.length > 0) {
-      const galleryData = galleryImages.map(img => ({
-        property_id: propertyId,
-        image_url: img.image_url,
-        is_featured: false
-      }));
+      const galleryData = galleryImages.map(img => ({ property_id: propertyId, image_url: img.image_url, is_featured: false }));
       await supabase.from('property_images').insert(galleryData);
     }
     
@@ -303,571 +277,312 @@ export const PropertyForm = () => {
   const items = [
     {
       key: '1',
-      label: (
-        <span className="flex items-center gap-2">
-          <InfoCircleOutlined /> BASIC INFO
-        </span>
-      ),
+      label: '1. BASIC INFO',
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={[24, 24]}>
+          <Row gutter={24}>
+            <Col xs={24} md={6}>
+              <Form.Item name="property_uid" label="Property ID (Internal)" tooltip="Unique tracking reference">
+                <Input placeholder="SNS-001" />
+              </Form.Item>
+            </Col>
             <Col xs={24} md={12}>
               <Form.Item name="title" label="Listing Title" rules={[{ required: true }]}>
-                <Input size="large" placeholder="E.g. Luxury 4BHK Apartment in Noida" className="rounded-lg" />
+                <Input placeholder="SKA Divine Greater Noida" />
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>
-              <Form.Item name="listing_status" label="Listing Status" rules={[{ required: true }]}>
-                <Select size="large" className="rounded-lg">
-                  <Option value="Draft">Draft</Option>
+              <Form.Item name="listing_status" label="Publish Status">
+                <Select>
                   <Option value="Published">Published</Option>
-                  <Option value="Archived">Archived</Option>
+                  <Option value="Draft">Draft</Option>
+                  <Option value="Hidden">Hidden</Option>
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="project_name" label="Project / Society Name">
-                <Input size="large" placeholder="E.g. Godrej Woods" className="rounded-lg" />
+          </Row>
+          <Row gutter={24}>
+            <Col xs={24} md={8}>
+              <Form.Item name="project_name" label="Project Name">
+                <Input placeholder="SKA Divine" />
               </Form.Item>
             </Col>
-          </Row>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={8}>
               <Form.Item name="developer_name" label="Developer Name">
-                <Input size="large" placeholder="E.g. Godrej Properties" className="rounded-lg" />
+                <Input placeholder="SKA Group" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item name="is_featured" label="Featured Property" valuePropName="checked">
+                <Switch />
               </Form.Item>
             </Col>
           </Row>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={8}>
+          <Row gutter={24}>
+            <Col xs={24} md={12}>
               <Form.Item name="property_type" label="Property Type" rules={[{ required: true }]}>
-                <Select size="large" className="rounded-lg">
-                  <Option value="Residential Flats">Residential Flats</Option>
-                  <Option value="Villas">Villas</Option>
-                  <Option value="Plots">Plots</Option>
-                  <Option value="Commercial Shops">Commercial Shops</Option>
-                  <Option value="Office Spaces">Office Spaces</Option>
-                  <Option value="Studio Apartments">Studio Apartments</Option>
-                  <Option value="Mixed Inventory">Mixed Inventory</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="purpose" label="Purpose" rules={[{ required: true }]}>
-                <Select size="large" className="rounded-lg">
-                  <Option value="buy">For Sale</Option>
-                  <Option value="rent">For Rent</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="agent_id" label="Assigned Agent">
-                <Select size="large" placeholder="Select Agent" className="rounded-lg">
-                  {agents.map(agent => (
-                    <Option key={agent.id} value={agent.id}>{agent.name}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item name="description" label="Detailed Description">
-            <TextArea rows={6} placeholder="Write a compelling story about the property..." className="rounded-lg" />
-          </Form.Item>
-
-          <Form.Item name="highlights" label="Key Highlights (One per line)">
-            <TextArea rows={4} placeholder="E.g. Near Metro&#10;24/7 Security&#10;Modern Fittings" className="rounded-lg" />
-          </Form.Item>
-        </Space>
-      ),
-    },
-    {
-      key: '2',
-      label: (
-        <span className="flex items-center gap-2">
-          <FormatPainterOutlined /> SPECIFICATIONS
-        </span>
-      ),
-      children: (
-        <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={6}>
-              <Form.Item name="bhk_type" label="BHK Configuration">
-                <Select size="large" className="rounded-lg" placeholder="Select BHK">
-                  <Option value="">Select BHK</Option>
-                  <Option value="1 BHK">1 BHK</Option>
-                  <Option value="2 BHK">2 BHK</Option>
-                  <Option value="3 BHK">3 BHK</Option>
-                  <Option value="4 BHK">4 BHK</Option>
-                  <Option value="5 BHK">5 BHK</Option>
+                <Select onChange={() => form.setFieldsValue({ sub_type: undefined })}>
+                  <Option value="Residential">Residential</Option>
+                  <Option value="Commercial">Commercial</Option>
+                  <Option value="Plot">Plot</Option>
+                  <Option value="Villa">Villa</Option>
                   <Option value="Studio">Studio</Option>
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="bedrooms" label="Total Bedrooms">
-                <InputNumber min={0} className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="bathrooms" label="Total Bathrooms">
-                <InputNumber min={0} className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="balconies" label="Balcony Count">
-                <InputNumber min={0} className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={8}>
-              <Form.Item name="carpet_area" label="Carpet Area">
-                <InputNumber className="w-full" size="large" addonAfter="Sq.Ft" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="builtup_area" label="Built-up Area">
-                <InputNumber className="w-full" size="large" addonAfter="Sq.Ft" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="super_builtup_area" label="Super Built-up Area">
-                <InputNumber className="w-full" size="large" addonAfter="Sq.Ft" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={6}>
-              <Form.Item name="facing" label="Facing (Vaastu)">
-                <Select size="large" className="rounded-lg" placeholder="Select Facing">
-                  <Option value="">Select Facing</Option>
-                  <Option value="East">East</Option>
-                  <Option value="West">West</Option>
-                  <Option value="North">North</Option>
-                  <Option value="South">South</Option>
-                  <Option value="North-East">North-East</Option>
-                  <Option value="North-West">North-West</Option>
-                  <Option value="South-East">South-East</Option>
-                  <Option value="South-West">South-West</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="furnishing_status" label="Furnishing">
-                <Select size="large" className="rounded-lg" placeholder="Select Furnishing">
-                  <Option value="">Select Furnishing</Option>
-                  <Option value="Unfurnished">Unfurnished</Option>
-                  <Option value="Semi-furnished">Semi-furnished</Option>
-                  <Option value="Fully Furnished">Fully Furnished</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="age_of_property" label="Property Age">
-                <Select size="large" className="rounded-lg" placeholder="Select Age">
-                  <Option value="">Select Age</Option>
-                  <Option value="New Construction">New Construction</Option>
-                  <Option value="0–1 years">0–1 years</Option>
-                  <Option value="1–5 years">1–5 years</Option>
-                  <Option value="5–10 years">5–10 years</Option>
-                  <Option value="10+ years">10+ years</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="parking" label="Parking Type">
-                <Select size="large" className="rounded-lg" placeholder="Select Parking">
-                  <Option value="">Select Parking</Option>
-                  <Option value="Covered Parking">Covered Parking</Option>
-                  <Option value="Open Parking">Open Parking</Option>
-                  <Option value="Basement Parking">Basement Parking</Option>
-                  <Option value="No Parking">No Parking</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={[24, 24]}>
             <Col xs={24} md={12}>
-              <Form.Item name="floor_no" label="Floor Number">
-                <InputNumber className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item name="total_floors" label="Total Floors">
-                <InputNumber className="w-full" size="large" />
+              <Form.Item noStyle shouldUpdate={(prev, curr) => prev.property_type !== curr.property_type}>
+                {({ getFieldValue }) => (
+                  <Form.Item name="sub_type" label="Property Sub Type">
+                    <Select placeholder="Select Sub Type">
+                      {getFieldValue('property_type') === 'Residential' && (
+                        <>
+                          <Option value="Apartment">Apartment</Option>
+                          <Option value="Penthouse">Penthouse</Option>
+                          <Option value="Builder Floor">Builder Floor</Option>
+                        </>
+                      )}
+                      {getFieldValue('property_type') === 'Commercial' && (
+                        <>
+                          <Option value="Retail Shop">Retail Shop</Option>
+                          <Option value="Office Space">Office Space</Option>
+                          <Option value="SCO">SCO</Option>
+                        </>
+                      )}
+                      {getFieldValue('property_type') === 'Plot' && (
+                        <>
+                          <Option value="Residential Plot">Residential Plot</Option>
+                          <Option value="Commercial Plot">Commercial Plot</Option>
+                        </>
+                      )}
+                    </Select>
+                  </Form.Item>
+                )}
               </Form.Item>
             </Col>
           </Row>
+          <Form.Item name="description" label="Long Description">
+             <TextArea rows={6} />
+          </Form.Item>
         </Space>
-      ),
+      )
+    },
+    {
+      key: '2',
+      label: '2. LOCATION',
+      children: (
+        <Space direction="vertical" size="large" className="w-full">
+          <Row gutter={24}>
+            <Col span={8}><Form.Item name="country" label="Country"><Input /></Form.Item></Col>
+            <Col span={8}><Form.Item name="state" label="State"><Input /></Form.Item></Col>
+            <Col span={8}><Form.Item name="city" label="City" rules={[{required:true}]}><Input /></Form.Item></Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={12}><Form.Item name="micro_market" label="Micro Market"><Input /></Form.Item></Col>
+            <Col span={12}><Form.Item name="location" label="Sector / Locality" rules={[{required:true}]}><Input /></Form.Item></Col>
+          </Row>
+          <Form.Item name="full_address" label="Full Address"><TextArea rows={3} /></Form.Item>
+          <Row gutter={24}>
+            <Col span={12}><Form.Item name="latitude" label="Latitude"><InputNumber className="w-full" /></Form.Item></Col>
+            <Col span={12}><Form.Item name="longitude" label="Longitude"><InputNumber className="w-full" /></Form.Item></Col>
+          </Row>
+          <Form.Item name="map_embed_url" label="Google Map URL / Embed Code"><Input /></Form.Item>
+        </Space>
+      )
     },
     {
       key: '3',
-      label: (
-        <span className="flex items-center gap-2">
-          <EnvironmentOutlined /> LOCATION & CONNECTIVITY
-        </span>
-      ),
+      label: '3. PRICING',
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={6}>
-              <Form.Item name="city" label="City" rules={[{ required: true }]}>
-                <Input size="large" placeholder="E.g. Noida" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="location" label="Area / Sector" rules={[{ required: true }]}>
-                <Input size="large" placeholder="E.g. Sector 150" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item name="pincode" label="Pincode">
-                <InputNumber className="w-full" size="large" placeholder="201301" />
-              </Form.Item>
-            </Col>
+          <Row gutter={24}>
+            <Col span={12}><Form.Item name="price" label="Starting Price (₹)"><InputNumber className="w-full" /></Form.Item></Col>
+            <Col span={12}><Form.Item name="max_price" label="Maximum Price (₹)"><InputNumber className="w-full" /></Form.Item></Col>
           </Row>
-
-          <Form.Item name="full_address" label="Full Address">
-            <TextArea rows={3} placeholder="House No, Street, Landmark details..." className="rounded-lg" />
-          </Form.Item>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={8}>
-              <Form.Item name="possession_status" label="Possession Status">
-                <Select size="large" className="rounded-lg">
-                  <Option value="Ready to Move">Ready to Move</Option>
-                  <Option value="Under Construction">Under Construction</Option>
-                  <Option value="New Launch">New Launch</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="possession_date" label="Possession Date (Expected)">
-                <DatePicker size="large" className="w-full rounded-lg" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={4}>
-              <Form.Item name="latitude" label="Latitude">
-                <InputNumber className="w-full" size="large" precision={6} />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={4}>
-              <Form.Item name="longitude" label="Longitude">
-                <InputNumber className="w-full" size="large" precision={6} />
-              </Form.Item>
-            </Col>
+          <Row gutter={24}>
+            <Col span={8}><Form.Item name="price_per_sqft" label="Price per Sq.Ft"><InputNumber className="w-full" /></Form.Item></Col>
+            <Col span={8}><Form.Item name="price_per_sq_yd" label="Price per Sq.Yd"><InputNumber className="w-full" /></Form.Item></Col>
+            <Col span={8}><Form.Item name="maintenance_charges" label="Maintenance Charges"><InputNumber className="w-full" /></Form.Item></Col>
           </Row>
-
-          <div className="space-y-4">
-             <Title level={5} className="text-white mb-0 text-xs uppercase tracking-widest font-black">Interactive Map Placement</Title>
-             <Form.Item noStyle shouldUpdate={(prev, curr) => prev.latitude !== curr.latitude || prev.longitude !== curr.longitude}>
-                {({ getFieldsValue, setFieldsValue }) => {
-                   const { latitude, longitude } = getFieldsValue(['latitude', 'longitude']);
-                   return (
-                     <MapSelector 
-                        value={{ lat: latitude || 28.6139, lng: longitude || 77.209 }}
-                        onChange={(val) => {
-                           setFieldsValue({ latitude: val.lat, longitude: val.lng });
-                        }}
-                     />
-                   );
-                }}
-             </Form.Item>
-          </div>
-
-          <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Google Maps Embed</Divider>
-          <Form.Item 
-            name="map_embed_url" 
-            label="Google Maps Embed URL" 
-            tooltip="Go to Google Maps → Search location → Share → Embed a map → Copy the HTML code or just the src URL"
-            extra="Pro Tip: You can directly paste the full <iframe>...</iframe> code here, and we'll extract the URL for you!"
-          >
-            <Input 
-              size="large" 
-              placeholder="Paste <iframe> code OR embed URL here" 
-              className="rounded-lg" 
-              onChange={(e) => {
-                const val = e.target.value;
-                if (val.includes('<iframe')) {
-                  const match = val.match(/src="([^"]+)"/);
-                  if (match && match[1]) {
-                    form.setFieldsValue({ map_embed_url: match[1] });
-                  }
-                }
-              }}
-            />
-          </Form.Item>
-
-          <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Nearby Landmarks (Connectivity)</Divider>
-          <Form.List name="nearby_places">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Row key={key} gutter={[16, 16]} align="bottom" className="mb-6 bg-white/5 p-6 rounded-2xl relative border border-white/5">
-                    <Col xs={24} md={6}>
-                      <Form.Item {...restField} name={[name, 'type']} label="Type" rules={[{ required: true }]}>
-                        <Select placeholder="Select type" className="w-full">
-                          <Option value="Metro">Metro</Option>
-                          <Option value="School">School</Option>
-                          <Option value="Hospital">Hospital</Option>
-                          <Option value="Mall">Mall</Option>
-                          <Option value="Airport">Airport</Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} md={10}>
-                      <Form.Item {...restField} name={[name, 'name']} label="Landmark Name" rules={[{ required: true }]}>
-                        <Input placeholder="E.g. Noida Sector 18 Metro" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={18} md={6}>
-                      <Form.Item {...restField} name={[name, 'distance']} label="Distance (KM)" rules={[{ required: true }]}>
-                        <InputNumber className="w-full" step={0.1} />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={6} md={2}>
-                      <Button 
-                        danger 
-                        icon={<DeleteOutlined />} 
-                        onClick={() => remove(name)} 
-                        className="h-14 w-full flex items-center justify-center rounded-xl bg-red-500/10 border-none hover:bg-red-500 hover:text-white transition-all mb-[0px]"
-                      />
-                    </Col>
-                  </Row>
-                ))}
-                <Button 
-                  type="dashed" 
-                  onClick={() => add()} 
-                  block 
-                  icon={<PlusOutlined />} 
-                  className="h-16 border-white/10 text-slate-400 hover:text-primary hover:border-primary bg-white/5 rounded-2xl"
-                >
-                  Add Nearby Landmark
-                </Button>
-              </>
-            )}
-          </Form.List>
+          <Row gutter={24}>
+            <Col span={12}><Form.Item name="booking_amount" label="Booking Amount"><InputNumber className="w-full" /></Form.Item></Col>
+            <Col span={12}><Form.Item name="eoi_amount" label="EOI Amount"><InputNumber className="w-full" /></Form.Item></Col>
+          </Row>
+          <Form.Item name="plc_charges" label="PLC Charges"><Input placeholder="Preferred Location Charges details..." /></Form.Item>
         </Space>
-      ),
+      )
     },
     {
       key: '4',
-      label: (
-        <span className="flex items-center gap-2">
-          <CarOutlined /> AMENITIES & FEATURES
-        </span>
-      ),
+      label: '4. PROJECT DETAILS',
       children: (
-        <Card className="bg-[#1a1a1a] border-white/10">
-          <Title level={5} className="text-white mb-6 uppercase tracking-widest text-xs">Select Available Amenities</Title>
-          <Checkbox.Group 
-            value={selectedAmenities}
-            onChange={(checkedValues) => setSelectedAmenities(checkedValues as string[])}
-            className="w-full"
-          >
-            <Row gutter={[16, 24]}>
-              {amenities.map(amenity => (
-                <Col xs={12} sm={8} md={6} lg={4} key={amenity.id}>
-                  <Checkbox value={amenity.id} className="text-slate-300 font-bold uppercase tracking-tighter text-[11px]">
-                    {amenity.name}
-                  </Checkbox>
-                </Col>
-              ))}
-            </Row>
-          </Checkbox.Group>
-        </Card>
-      ),
+        <Space direction="vertical" size="large" className="w-full">
+          <Row gutter={24}>
+            <Col span={12}><Form.Item name="possession_date" label="Possession Date"><DatePicker className="w-full" /></Form.Item></Col>
+            <Col span={12}><Form.Item name="possession_status" label="Possession Status"><Select>
+              <Option value="Ready to Move">Ready to Move</Option>
+              <Option value="Under Construction">Under Construction</Option>
+              <Option value="New Launch">New Launch</Option>
+            </Select></Form.Item></Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={12}><Form.Item name="launch_date" label="Launch Date"><DatePicker className="w-full" /></Form.Item></Col>
+            <Col span={12}><Form.Item name="rera_id" label="RERA Number"><Input /></Form.Item></Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={6}><Form.Item name="total_land_area" label="Total Land Area"><Input /></Form.Item></Col>
+            <Col span={6}><Form.Item name="total_towers" label="Total Towers"><InputNumber className="w-full" /></Form.Item></Col>
+            <Col span={6}><Form.Item name="total_units" label="Total Units"><InputNumber className="w-full" /></Form.Item></Col>
+            <Col span={6}><Form.Item name="total_floors" label="Total Floors"><InputNumber className="w-full" /></Form.Item></Col>
+          </Row>
+        </Space>
+      )
     },
     {
       key: '5',
-      label: (
-        <span className="flex items-center gap-2">
-          <EyeOutlined /> MEDIA & TOURS
-        </span>
-      ),
+      label: '5. DYNAMIC FIELDS',
       children: (
-        <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={12}>
-              <Form.Item label="Featured Cover Photo">
-                <Upload
-                  name="featured"
-                  listType="picture-card"
-                  showUploadList={false}
-                  customRequest={(opt) => handleFileUpload(opt, 'property-images', setImageUrl)}
-                >
-                  {imageUrl ? <img src={imageUrl} alt="featured" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : uploadButton}
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Property Gallery (Multiple)">
-                 <Upload
-                    listType="picture-card"
-                    fileList={galleryImages.map((img, i) => ({ uid: i.toString(), name: 'image', status: 'done', url: img.image_url }))}
-                    onRemove={(file) => setGalleryImages(prev => prev.filter(img => img.image_url !== file.url))}
-                    customRequest={(opt) => handleFileUpload(opt, 'property-images', (url) => setGalleryImages(prev => [...prev, { image_url: url }]))}
-                 >
-                    {uploadButton}
-                 </Upload>
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={12}>
-              <Form.Item name="video_url" label="Video Tour URL">
-                <Input size="large" prefix={<VideoCameraOutlined />} placeholder="YouTube or Vimeo Link" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item name="virtual_tour_360" label="360° Virtual Tour URL">
-                <Input size="large" prefix={<GlobalOutlined />} placeholder="Kuula or Matterport Link" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Divider orientation="left" className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Property Floor Plans</Divider>
-          <Form.List name="property_floor_plans">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Row key={key} gutter={16} align="bottom" className="mb-4">
-                    <Col span={10}>
-                      <Form.Item {...restField} name={[name, 'title']} label="Plan Title">
-                        <Input placeholder="E.g. Unit Type A" />
-                      </Form.Item>
-                    </Col>
-                    <Col span={10}>
-                      <Form.Item {...restField} name={[name, 'image_url']} label="Floor Plan Image">
-                        <Upload
-                           showUploadList={false}
-                           customRequest={(opt) => handleFileUpload(opt, 'property-images', (url) => {
-                              const plans = form.getFieldValue('property_floor_plans');
-                              plans[name].image_url = url;
-                              form.setFieldsValue({ property_floor_plans: plans });
-                           })}
-                        >
-                           <Button icon={<UploadOutlined />} className="w-full">
-                              {form.getFieldValue(['property_floor_plans', name, 'image_url']) ? 'Update Image' : 'Upload Plan'}
-                           </Button>
-                        </Upload>
-                      </Form.Item>
-                    </Col>
-                    <Col span={4}>
-                      <Button onClick={() => remove(name)} danger icon={<DeleteOutlined />} block />
-                    </Col>
+        <Form.Item noStyle shouldUpdate={(prev, curr) => prev.property_type !== curr.property_type}>
+          {({ getFieldValue }) => {
+            const type = getFieldValue('property_type');
+            return (
+              <Space direction="vertical" className="w-full">
+                {type === 'Residential' && (
+                  <Row gutter={24}>
+                    <Col span={6}><Form.Item name="bhk_type" label="BHK Type"><Input /></Form.Item></Col>
+                    <Col span={6}><Form.Item name="bathrooms" label="Bathrooms"><InputNumber className="w-full" /></Form.Item></Col>
+                    <Col span={6}><Form.Item name="balconies" label="Balcony Count"><InputNumber className="w-full" /></Form.Item></Col>
+                    <Col span={6}><Form.Item name="facing" label="Facing"><Input /></Form.Item></Col>
                   </Row>
-                ))}
-                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>Add Floor Plan</Button>
-              </>
-            )}
-          </Form.List>
-        </Space>
+                )}
+                {type === 'Plot' && (
+                  <Row gutter={24}>
+                    <Col span={8}><Form.Item name="plot_facing" label="Plot Facing"><Input /></Form.Item></Col>
+                    <Col span={8}><Form.Item name="registry_status" label="Registry Status"><Input /></Form.Item></Col>
+                    <Col span={8}><Form.Item name="road_width" label="Road Width"><Input /></Form.Item></Col>
+                  </Row>
+                )}
+                <Row gutter={24}>
+                  <Col span={8}><Form.Item name="area" label="Super Area"><InputNumber className="w-full" /></Form.Item></Col>
+                  <Col span={8}><Form.Item name="carpet_area" label="Carpet Area"><InputNumber className="w-full" /></Form.Item></Col>
+                  <Col span={8}><Form.Item name="furnishing_status" label="Furnishing"><Input /></Form.Item></Col>
+                </Row>
+              </Space>
+            );
+          }}
+        </Form.Item>
       )
     },
     {
       key: '6',
-      label: (
-        <span className="flex items-center gap-2">
-          <DollarOutlined /> LEGAL & FINANCIAL
-        </span>
-      ),
+      label: '6. INVENTORY',
       children: (
-        <Space direction="vertical" size="large" className="w-full">
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={8}>
-              <Form.Item name="price" label="Total Price (₹)">
-                <InputNumber className="w-full" size="large" formatter={v => `₹ ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="price_per_sqft" label="Price per Sq.Ft (₹)">
-                <InputNumber className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="booking_amount" label="Booking Amount (₹)">
-                <InputNumber className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={8}>
-              <Form.Item name="stamp_duty" label="Stamp Duty (₹)">
-                <InputNumber className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="registration_charges" label="Registration Charges (₹)">
-                <InputNumber className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item name="maintenance_charges" label="Monthly Maintenance (₹)">
-                <InputNumber className="w-full" size="large" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={6}>
-              <Form.Item name="price_negotiable" label="Price Negotiable" valuePropName="checked">
-                <Switch />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item name="loan_available" label="Loan Available" valuePropName="checked">
-                <Switch />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item name="rera_id" label="RERA Registration ID">
-                <Input size="large" placeholder="E.g. UPRERAPRJ12345" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Space>
+        <Form.List name="property_variants">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="bg-white/5 p-6 rounded-2xl mb-6 border border-white/5">
+                  <Row gutter={[16, 16]}>
+                    <Col span={6}><Form.Item {...restField} name={[name, 'configuration']} label="Unit Type"><Input placeholder="3BHK" /></Form.Item></Col>
+                    <Col span={6}><Form.Item {...restField} name={[name, 'size']} label="Size"><InputNumber className="w-full" /></Form.Item></Col>
+                    <Col span={6}><Form.Item {...restField} name={[name, 'price']} label="Price (₹)"><InputNumber className="w-full" /></Form.Item></Col>
+                    <Col span={6}><Form.Item {...restField} name={[name, 'inventory_count']} label="Count"><InputNumber className="w-full" /></Form.Item></Col>
+                  </Row>
+                  <Row gutter={[16, 16]}>
+                    <Col span={18}><Form.Item {...restField} name={[name, 'notes']} label="Special Notes"><Input /></Form.Item></Col>
+                    <Col span={6} className="flex items-end"><Button danger block onClick={() => remove(name)} icon={<DeleteOutlined />}>Remove</Button></Col>
+                  </Row>
+                </div>
+              ))}
+              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>Add Variant</Button>
+            </>
+          )}
+        </Form.List>
       )
     },
     {
       key: '7',
-      label: (
-        <span className="flex items-center gap-2">
-          <ShareAltOutlined /> SEO SETTINGS
-        </span>
-      ),
+      label: '7. AMENITIES',
+      children: (
+        <Checkbox.Group value={selectedAmenities} onChange={(checkedValues) => setSelectedAmenities(checkedValues as string[])} className="w-full">
+          <Row gutter={[16, 24]}>
+            {amenities.map(amenity => (
+              <Col span={6} key={amenity.id}><Checkbox value={amenity.id}>{amenity.name}</Checkbox></Col>
+            ))}
+          </Row>
+        </Checkbox.Group>
+      )
+    },
+    {
+      key: '8',
+      label: '8. SPECIFICATIONS',
+      children: (
+        <Form.List name="property_specifications">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <Row key={key} gutter={16} align="bottom" className="mb-4">
+                  <Col span={10}><Form.Item {...restField} name={[name, 'label']} label="Label"><Input placeholder="Flooring" /></Form.Item></Col>
+                  <Col span={10}><Form.Item {...restField} name={[name, 'value']} label="Value"><Input placeholder="Italian Marble" /></Form.Item></Col>
+                  <Col span={4}><Button onClick={() => remove(name)} danger icon={<DeleteOutlined />} block /></Col>
+                </Row>
+              ))}
+              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>Add Specification</Button>
+            </>
+          )}
+        </Form.List>
+      )
+    },
+    {
+      key: '9',
+      label: '9. MEDIA',
       children: (
         <Space direction="vertical" size="large" className="w-full">
-          <Form.Item name="meta_title" label="Meta Title">
-            <Input size="large" placeholder="Luxury 4BHK Apartment for Sale in Sector 150" />
-          </Form.Item>
-          <Form.Item name="meta_description" label="Meta Description">
-            <TextArea rows={4} placeholder="Find your dream home with 5-star amenities..." />
-          </Form.Item>
-          <Form.Item name="focus_keyword" label="Focus Keyword">
-            <Input size="large" placeholder="e.g. 4BHK Noida, Luxury Villa" />
-          </Form.Item>
-          <Form.Item label="Open Graph (Social) Image">
-             <Upload
-                name="og"
-                listType="picture-card"
-                showUploadList={false}
-                customRequest={(opt) => handleFileUpload(opt, 'property-images', setOgImage)}
-             >
-                {ogImage ? <img src={ogImage} alt="og" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : uploadButton}
-             </Upload>
-             <div className="text-slate-500 text-[10px] uppercase font-bold mt-2 italic">Standard 1200x630px recommended for social sharing previews</div>
-          </Form.Item>
+           <Row gutter={24}>
+             <Col span={12}><Form.Item label="Featured Image"><Upload listType="picture-card" showUploadList={false} customRequest={(o) => handleFileUpload(o, 'property-images', setImageUrl)}>{imageUrl ? <img src={imageUrl} alt="f" style={{width:'100%'}}/> : uploadButton}</Upload></Form.Item></Col>
+             <Col span={12}><Form.Item label="Gallery"><Upload listType="picture-card" fileList={galleryImages.map((img, i) => ({ uid: i.toString(), name: 'image', status: 'done', url: img.image_url }))} customRequest={(o) => handleFileUpload(o, 'property-images', (url) => setGalleryImages(p => [...p, {image_url:url}]))}>{uploadButton}</Upload></Form.Item></Col>
+           </Row>
+           <Row gutter={24}>
+             <Col span={12}><Form.Item name="video_url" label="Site Video URL"><Input /></Form.Item></Col>
+             <Col span={12}><Form.Item name="virtual_tour_360" label="360 Tour URL"><Input /></Form.Item></Col>
+           </Row>
+           <Form.Item name="brochure_url" label="Brochure PDF URL"><Input placeholder="Paste PDF public URL" /></Form.Item>
         </Space>
+      )
+    },
+    {
+      key: '10',
+      label: '10. SEO',
+      children: (
+        <Space direction="vertical" size="large" className="w-full">
+           <Form.Item name="meta_title" label="Meta Title"><Input /></Form.Item>
+           <Form.Item name="meta_description" label="Meta Description"><TextArea rows={3} /></Form.Item>
+           <Form.Item name="meta_keywords" label="Meta Keywords"><Input placeholder="Luxury, Villa, Noida" /></Form.Item>
+           <Row gutter={24}>
+             <Col span={12}><Form.Item name="canonical_url" label="Canonical URL"><Input /></Form.Item></Col>
+             <Col span={12}><Form.Item name="schema_markup" label="Schema Markup (JSON)"><TextArea rows={4} /></Form.Item></Col>
+           </Row>
+        </Space>
+      )
+    },
+    {
+      key: '11',
+      label: '1 Lead Settings',
+      children: (
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item name="agent_id" label="Assigned Sales Agent">
+              <Select placeholder="Select Agent">{agents.map(a => <Option key={a.id} value={a.id}>{a.name}</Option>)}</Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}><Form.Item name="whatsapp_number" label="WhatsApp Override"><Input placeholder="+918090..." /></Form.Item></Col>
+          <Col span={12}><Form.Item name="cta_label_override" label="CTA Label Override"><Input placeholder="Get Special Pricing" /></Form.Item></Col>
+          <Col span={12}><Form.Item name="lead_source_tag" label="Lead Source Tag"><Input placeholder="Campaign_Noida_2024" /></Form.Item></Col>
+        </Row>
+      )
+    }
+  ];
+       </Space>
       )
     }
   ];

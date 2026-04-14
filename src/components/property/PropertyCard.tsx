@@ -6,6 +6,8 @@ interface PropertyCardProps {
     id: string;
     title: string;
     slug: string;
+    property_uid?: string | null;
+    is_featured?: boolean | null;
     price: number | null;
     price_per_sqft?: number | null;
     location: string | null;
@@ -46,7 +48,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   };
 
   return (
-    <div className="group bg-[#0c0c0c] border border-white/5 rounded-none overflow-hidden hover:border-primary/40 transition-all duration-500 shadow-2xl flex flex-col h-full relative">
+    <div className={`group bg-[#111111] border ${property.is_featured ? 'border-primary/40 shadow-[0_0_30px_rgba(201,164,29,0.15)] scale-[1.01]' : 'border-white/5 shadow-2xl'} rounded-none overflow-hidden hover:border-primary transition-all duration-500 flex flex-col h-full relative`}>
       {/* 1. Visual Section */}
       <Link to={`/properties/${property.slug}`} className="block relative h-72 overflow-hidden shrink-0">
         <img 
@@ -66,11 +68,24 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               {property.possession_status}
             </div>
           )}
+          {property.is_featured && (
+            <div className="bg-black text-primary border border-primary/40 text-[9px] font-black px-3 py-1.5 uppercase tracking-[0.2em] rounded-none shadow-xl flex items-center gap-2">
+               <Star className="w-3 h-3 fill-primary" />
+               FEATURED
+            </div>
+          )}
         </div>
+        
+        {/* UID Badge (Right) */}
+        {property.property_uid && (
+          <div className="absolute top-4 right-4 z-10 bg-black/60 backdrop-blur-md text-white/60 text-[8px] font-black px-2 py-1 uppercase tracking-widest border border-white/10">
+             REF: {property.property_uid}
+          </div>
+        )}
 
         {/* Price Overlay */}
         <div className="absolute bottom-4 left-4 right-4 z-10">
-           <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-4 rounded-none flex justify-between items-center transition-all duration-500 group-hover:bg-primary/10 group-hover:border-primary/20">
+           <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-4 rounded-none flex justify-between items-center transition-all duration-500 group-hover:bg-primary/20 group-hover:border-primary/40">
               <div className="text-white">
                 <div className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Starting From</div>
                 <div className="text-2xl font-black flex items-baseline gap-1">
@@ -125,7 +140,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-white/[0.03] p-2 flex items-center gap-3 border border-white/5">
                 <Home className="w-4 h-4 text-primary/50" />
-                <span className="text-[10px] text-white font-black uppercase">{property.bhk_type || property.bedrooms + ' BHK'}</span>
+                <span className="text-[10px] text-white font-black uppercase">{property.bhk_type || (property.bedrooms ? property.bedrooms + ' BHK' : 'N/A')}</span>
               </div>
               <div className="bg-white/[0.03] p-2 flex items-center gap-3 border border-white/5">
                 <Maximize className="w-4 h-4 text-primary/50" />
@@ -147,10 +162,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
         {/* 3. CTA Actions */}
         <div className="pt-6 border-t border-white/5 grid grid-cols-3 gap-2">
-           <a href="tel:+918090965996" className="bg-[#151515] hover:bg-white/5 text-white p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
+           <a href={`tel:${property.whatsapp_number || '+918090965996'}`} className="bg-[#151515] hover:bg-white/5 text-white p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
              <Phone className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
            </a>
-           <a href="https://wa.me/918090965996" target="_blank" rel="noopener noreferrer" className="bg-[#151515] hover:bg-[#25D366]/10 text-white hover:text-[#25D366] p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
+           <a href={`https://wa.me/${(property.whatsapp_number || '918090965996').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="bg-[#151515] hover:bg-[#25D366]/10 text-white hover:text-[#25D366] p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
              <WhatsAppIcon className="group-hover/btn:scale-110 transition-transform" />
            </a>
            <Link to={`/properties/${property.slug}`} className="col-span-1 bg-primary hover:bg-white text-black font-black text-[10px] uppercase tracking-widest flex items-center justify-center transition-all shadow-lg hover:shadow-primary/20">
@@ -160,4 +175,5 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       </div>
     </div>
   );
+};
 };
