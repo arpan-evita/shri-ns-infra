@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { ChevronRight, ChevronLeft, Check, Loader2 } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { ChevronRight, ChevronLeft, Check, Loader2, UploadCloud, Link2 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface FormData {
@@ -7,7 +7,9 @@ interface FormData {
   projectName: string; developerName: string; propertyType: string;
   listingStatus: string; reraNumber: string; projectTagline: string;
   // Step 2
-  featuredImage: string; galleryImages: string[]; brochureUrl: string; videoUrl: string;
+  featuredImage: string; featuredImageFile?: File | null;
+  galleryImages: string[]; galleryFiles?: (File | null)[];
+  brochureUrl: string; brochureFile?: File | null; videoUrl: string;
   // Step 3
   address: string; city: string; state: string; pincode: string;
   googleMapsUrl: string; nearbyLandmarks: string;
@@ -35,8 +37,8 @@ interface FormData {
 
 const INITIAL: FormData = {
   projectName: '', developerName: '', propertyType: '', listingStatus: '',
-  reraNumber: '', projectTagline: '', featuredImage: '',
-  galleryImages: ['', ''], brochureUrl: '', videoUrl: '',
+  reraNumber: '', projectTagline: '', featuredImage: '', featuredImageFile: null,
+  galleryImages: ['', ''], galleryFiles: [null, null], brochureUrl: '', brochureFile: null, videoUrl: '',
   address: '', city: '', state: '', pincode: '', googleMapsUrl: '', nearbyLandmarks: '',
   shortDesc: '', fullDesc: '', usp: '',
   totalUnits: '', availableUnits: '', minPrice: '', maxPrice: '', pricePerSqft: '',
@@ -97,6 +99,83 @@ function SectionDivider({ label }: { label: string }) {
   );
 }
 
+// ─── Dual URL/Upload field ──────────────────────────────────────────────────
+function ImageUploadField({
+  label, urlValue, onUrlChange, onFileChange, previewSrc, accept = 'image/*', placeholder
+}: {
+  label: string; urlValue: string;
+  onUrlChange: (v: string) => void;
+  onFileChange: (f: File, preview: string) => void;
+  previewSrc?: string;
+  accept?: string;
+  placeholder?: string;
+}) {
+  const [mode, setMode] = useState<'url' | 'upload'>(urlValue ? 'url' : 'url');
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target?.result as string;
+      onFileChange(file, dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <label className={labelCls}>{label}</label>
+        <div className="flex gap-1">
+          {(['url', 'upload'] as const).map(m => (
+            <button key={m} type="button" onClick={() => setMode(m)}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wider transition-all border
+                ${mode === m ? 'bg-[#c4a661]/15 border-[#c4a661]/50 text-[#c4a661]' : 'border-white/10 text-white/30 hover:text-white/60'}`}>
+              {m === 'url' ? <Link2 className="w-3 h-3" /> : <UploadCloud className="w-3 h-3" />}
+              {m === 'url' ? 'URL' : 'Upload'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {mode === 'url' ? (
+        <input className={inputCls} type="url" value={urlValue} onChange={e => onUrlChange(e.target.value)}
+          placeholder={placeholder || 'https://example.com/image.jpg'} />
+      ) : (
+        <div
+          onClick={() => fileRef.current?.click()}
+          className="flex flex-col items-center justify-center gap-2 border border-dashed border-[#c4a661]/30 hover:border-[#c4a661]/60 bg-white/[0.02] hover:bg-[#c4a661]/5 rounded px-4 py-6 cursor-pointer transition-all group">
+          <UploadCloud className="w-6 h-6 text-[#c4a661]/50 group-hover:text-[#c4a661] transition-colors" />
+          <span className="text-xs text-white/40 group-hover:text-white/70 transition-colors">
+            {accept === 'application/pdf,image/*' ? 'Click to upload PDF or image' : 'Click to upload image'}
+          </span>
+          <span className="text-[10px] text-white/20">JPG, PNG, WEBP up to 5MB</span>
+          <input ref={fileRef} type="file" accept={accept} className="hidden" onChange={handleFile} />
+        </div>
+      )}
+
+      {previewSrc && (
+        <div className="relative mt-1 rounded overflow-hidden border border-[#c4a661]/20">
+          {previewSrc.startsWith('data:application/pdf') || accept?.includes('pdf') ? (
+            <div className="flex items-center gap-3 p-3 bg-white/[0.03]">
+              <span className="text-2xl">📄</span>
+              <span className="text-xs text-white/60 truncate">PDF file attached</span>
+            </div>
+          ) : (
+            <img src={previewSrc} alt="Preview" className="max-h-44 w-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          )}
+          <button type="button" onClick={() => { onUrlChange(''); onFileChange(null as any, ''); }}
+            className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/70 text-white/70 hover:text-white flex items-center justify-center text-xs transition-all">
+            ✕
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Component ────────────────────────────────────────────────────────
 export const SubmitProjectPage = () => {
   const [step, setStep] = useState(1);
@@ -147,6 +226,12 @@ export const SubmitProjectPage = () => {
 
   const updateGallery = (i: number, val: string) => {
     const g = [...form.galleryImages]; g[i] = val; set('galleryImages', g);
+  };
+  const updateGalleryFile = (i: number, file: File, preview: string) => {
+    // Store preview as the gallery image URL for submission tracking
+    const g = [...form.galleryImages];
+    g[i] = preview || `[File: ${file?.name ?? ''}]`;
+    set('galleryImages', g);
   };
   const addGallery = () => {
     if (form.galleryImages.length >= 10) { toast('Maximum 10 gallery images', 'info'); return; }
@@ -364,25 +449,63 @@ export const SubmitProjectPage = () => {
           {/* STEP 2 */}
           {step === 2 && (
             <>
-              <StepHeader title="Media & Branding" desc="Provide URLs for images, video and brochure" />
-              <div className="grid gap-5">
-                <Field label="Featured Image URL (min 1200×800px recommended)">
-                  <input className={inputCls} type="url" value={form.featuredImage} onChange={e => set('featuredImage', e.target.value)} placeholder="https://example.com/featured.jpg" />
-                  {form.featuredImage && <img src={form.featuredImage} alt="Preview" className="mt-2 max-h-48 w-full object-cover rounded border border-[#c4a661]/20" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
-                </Field>
+              <StepHeader title="Media & Branding" desc="Upload images or provide URLs for your project" />
+              <div className="grid gap-6">
+
+                {/* Featured Image */}
+                <ImageUploadField
+                  label="Featured Image (min 1200×800px recommended)"
+                  urlValue={form.featuredImage}
+                  onUrlChange={v => set('featuredImage', v)}
+                  onFileChange={(file, preview) => {
+                    set('featuredImage', preview || (file ? `[File: ${file.name}]` : ''));
+                  }}
+                  previewSrc={form.featuredImage}
+                  placeholder="https://example.com/featured.jpg"
+                />
+
+                {/* Gallery */}
                 <SectionDivider label="Gallery Images (up to 10)" />
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col gap-3">
                   {form.galleryImages.map((url, i) => (
-                    <div key={i} className="flex gap-2 items-center">
-                      <input className={inputCls} type="url" value={url} onChange={e => updateGallery(i, e.target.value)} placeholder={`Gallery image URL ${i + 1}`} />
-                      <button onClick={() => removeGallery(i)} className="shrink-0 w-10 h-10 rounded border border-red-500/25 text-red-400 hover:bg-red-500/10 hover:border-red-500/60 transition-all flex items-center justify-center">✕</button>
+                    <div key={i} className="flex gap-2 items-start">
+                      <div className="flex-1">
+                        <ImageUploadField
+                          label={`Image ${i + 1}`}
+                          urlValue={url.startsWith('data:') ? '' : (url.startsWith('[File:') ? '' : url)}
+                          onUrlChange={v => updateGallery(i, v)}
+                          onFileChange={(file, preview) => updateGalleryFile(i, file, preview)}
+                          previewSrc={url || ''}
+                          placeholder={`Gallery image URL ${i + 1}`}
+                        />
+                      </div>
+                      <button onClick={() => removeGallery(i)}
+                        className="shrink-0 mt-7 w-9 h-9 rounded border border-red-500/25 text-red-400 hover:bg-red-500/10 hover:border-red-500/60 transition-all flex items-center justify-center text-xs">
+                        ✕
+                      </button>
                     </div>
                   ))}
-                  <button onClick={addGallery} className="inline-flex items-center gap-2 text-[#c4a661] border border-dashed border-[#c4a661]/40 hover:border-[#c4a661] hover:bg-[#c4a661]/5 px-4 py-2 rounded text-[11px] uppercase tracking-[0.12em] font-semibold transition-all mt-1">+ Add Image URL</button>
+                  <button onClick={addGallery}
+                    className="inline-flex items-center gap-2 text-[#c4a661] border border-dashed border-[#c4a661]/40 hover:border-[#c4a661] hover:bg-[#c4a661]/5 px-4 py-2 rounded text-[11px] uppercase tracking-[0.12em] font-semibold transition-all">
+                    + Add Another Image
+                  </button>
                 </div>
+
+                {/* Brochure + Video */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <Field label="Brochure / PDF URL (Optional)"><input className={inputCls} type="url" value={form.brochureUrl} onChange={e => set('brochureUrl', e.target.value)} placeholder="https://example.com/brochure.pdf" /></Field>
-                  <Field label="Project Video URL (Optional)"><input className={inputCls} type="url" value={form.videoUrl} onChange={e => set('videoUrl', e.target.value)} placeholder="https://youtube.com/..." /></Field>
+                  <ImageUploadField
+                    label="Brochure / PDF (Optional)"
+                    urlValue={form.brochureUrl}
+                    onUrlChange={v => set('brochureUrl', v)}
+                    onFileChange={(file, preview) => set('brochureUrl', preview || `[File: ${file?.name}]`)}
+                    previewSrc={form.brochureUrl}
+                    accept="application/pdf,image/*"
+                    placeholder="https://example.com/brochure.pdf"
+                  />
+                  <Field label="Project Video URL (Optional)">
+                    <input className={inputCls} type="url" value={form.videoUrl}
+                      onChange={e => set('videoUrl', e.target.value)} placeholder="https://youtube.com/..." />
+                  </Field>
                 </div>
               </div>
               <Nav />
