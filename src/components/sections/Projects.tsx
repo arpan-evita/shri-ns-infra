@@ -172,7 +172,9 @@ export const Projects = () => {
         </motion.div>
         
         {loading ? (
-           <div className="text-center py-24 text-slate-500 font-black uppercase tracking-[0.5em] animate-pulse">Loading Premium Properties...</div>
+           <div className="min-h-[600px] flex items-center justify-center text-slate-500 font-black uppercase tracking-[0.5em] animate-pulse">
+             <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
             {properties.map((property, index) => (

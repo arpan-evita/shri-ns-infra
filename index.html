@@ -19,14 +19,19 @@
     <link rel="preload" href="/logo.png" as="image" />
 
     <!--
-      font-display=optional: browser uses font ONLY if available within a strict
-      time window — zero FOUT, zero CLS, no layout shift at all.
-      Fonts appear on repeat visits (cached). System fonts shown first-visit.
+      Non-blocking font load: media=print means browser fetches it without blocking render.
+      onload switches to media=all so fonts apply once available.
+      display=optional: zero font-swap CLS — fallback used if font not ready, no re-render.
     -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Sintony:wght@400;700&display=optional"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Sintony:wght@400;700&display=optional" rel="stylesheet" />
+    </noscript>
 
     <!-- Critical inline CSS: body background + font fallback stack that visually
          matches Poppins/Sintony to prevent layout shift on font swap -->

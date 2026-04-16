@@ -7,8 +7,10 @@ import { ScrollProgress } from './components/layout/ScrollProgress';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
-// Public pages - lazy loaded
-const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
+// HomePage is eager — renders immediately, no Suspense flash = zero CLS on initial load
+import { HomePage } from './pages/HomePage';
+
+// Secondary public pages — lazy loaded (user navigates to these after initial load)
 const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })));
 const PropertiesPage = lazy(() => import('./pages/PropertiesPage').then(m => ({ default: m.PropertiesPage })));
 const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })));
