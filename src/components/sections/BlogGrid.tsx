@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
-import { Spin, Empty } from 'antd';
 import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
 
@@ -32,15 +31,16 @@ export const BlogGrid = () => {
   if (loading) {
     return (
       <div className="py-24 flex items-center justify-center bg-background-dark">
-        <Spin size="large" />
+        <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (posts.length === 0) {
     return (
-      <div className="py-24 flex items-center justify-center bg-background-dark">
-        <Empty description={<span className="text-slate-500">No articles published yet.</span>} />
+      <div className="py-24 flex flex-col items-center justify-center bg-background-dark gap-3">
+        <span className="text-4xl">📄</span>
+        <span className="text-slate-500 font-medium">No articles published yet.</span>
       </div>
     );
   }
@@ -63,9 +63,13 @@ export const BlogGrid = () => {
               >
               <div className="relative overflow-hidden h-56 md:h-64">
                 <img 
-                  src={post.image_url || "https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=2067&auto=format&fit=crop"} 
+                  src={post.image_url || "https://images.unsplash.com/photo-1448630360428-65456885c650?q=75&w=600&auto=format&fit=crop&fm=webp"} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   alt={post.title}
+                  loading="lazy"
+                  decoding="async"
+                  width={600}
+                  height={256}
                 />
                 <div className="absolute top-0 left-0 bg-primary px-4 py-2 text-black text-[10px] md:text-xs font-bold uppercase tracking-widest translate-y-4 -translate-x-2">
                   {post.category || 'Real Estate'}

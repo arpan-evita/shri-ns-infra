@@ -2,7 +2,7 @@ import { Facebook, Twitter, Linkedin, MapPin, Globe, ArrowRight, Star, Loader2 }
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
-import { message } from 'antd';
+import { toast } from '@/lib/toast';
 
 export const ContactSection = () => {
   const [loading, setLoading] = useState(false);
@@ -40,11 +40,11 @@ export const ContactSection = () => {
         subject: `New General Enquiry: ${formData.name}`
       });
 
-      message.success('Thank you! Your request has been sent successfully.');
+      toast.success('Thank you! Your request has been sent successfully.');
       setFormData({ name: '', email: '', phone: '', message: '' });
     } catch (error: any) {
       console.error('Lead submission error:', error);
-      message.error('Oops! Something went wrong. Please try again or call us directly.');
+      toast.error('Oops! Something went wrong. Please try again or call us directly.');
     } finally {
       setLoading(false);
     }
@@ -145,15 +145,23 @@ export const ContactSection = () => {
           <div className="sticky top-32 space-y-8">
             <div className="relative rounded-sm overflow-hidden shadow-2xl">
               <img 
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=75&w=800&auto=format&fit=crop&fm=webp" 
                 className="w-full h-[600px] object-cover"
                 alt="Luxury Villa"
+                loading="lazy"
+                decoding="async"
+                width={800}
+                height={600}
               />
               <div className="absolute top-8 right-8 w-32 h-48 rounded-sm overflow-hidden border-4 border-white/20 shadow-2xl rotate-6">
                 <img 
-                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
+                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=75&w=200&auto=format&fit=crop&fm=webp" 
                   className="w-full h-full object-cover"
                   alt="Building"
+                  loading="lazy"
+                  decoding="async"
+                  width={200}
+                  height={300}
                 />
               </div>
               
@@ -166,9 +174,13 @@ export const ContactSection = () => {
                 </p>
                 <div className="flex items-center gap-4">
                   <img 
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" 
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=75&w=100&auto=format&fit=crop&fm=webp" 
                     className="w-12 h-12 rounded-full object-cover"
                     alt="Vikram Malhotra"
+                    loading="lazy"
+                    decoding="async"
+                    width={48}
+                    height={48}
                   />
                   <div>
                     <h5 className="text-white font-bold">Vikram Malhotra</h5>

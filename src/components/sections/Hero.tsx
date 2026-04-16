@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Play, Facebook, Twitter, Linkedin, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
-import { message } from 'antd';
+import { toast } from '@/lib/toast';
 
 export const Hero = () => {
   const [loading, setLoading] = useState(false);
@@ -38,11 +38,11 @@ export const Hero = () => {
         subject: `New Hero Inquiry: ${formData.name}`
       });
 
-      message.success('Thank you! We will call you back shortly.');
+      toast.success('Thank you! We will call you back shortly.');
       setFormData({ name: '', email: '', phone: '' });
     } catch (error: any) {
       console.error('Hero lead error:', error);
-      message.error('Oops! Something went wrong. Please try again.');
+      toast.error('Oops! Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
