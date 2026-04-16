@@ -51,10 +51,11 @@ export const Hero = () => {
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex items-center">
       <div className="absolute inset-0 z-0">
-        <video 
-          autoPlay 
-          muted 
-          loop 
+        {/* Video background — all screen sizes */}
+        <video
+          autoPlay
+          muted
+          loop
           playsInline
           preload="none"
           className="h-full w-full object-cover"

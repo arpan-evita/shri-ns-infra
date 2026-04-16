@@ -17,15 +17,24 @@ export default defineConfig({
     minify: 'esbuild',
     cssMinify: true,
     reportCompressedSize: false,
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 1500,
+    // Drop console.log in production (reduces bundle size + improves TBT)
+    esbuildOptions: {
+      drop: ['console', 'debugger'],
+      legalComments: 'none',
+    },
     rollupOptions: {
       output: {
+        // Compact chunk naming — shorter filenames = faster HTML parsing
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
         manualChunks: {
           // React core - loads first, cached long-term
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           // Framer motion - heavy animation library
           'vendor-framer': ['framer-motion'],
-          // Ant Design - very heavy UI library
+          // Ant Design - very heavy UI library (only admin + property detail page)
           'vendor-antd': ['antd', '@ant-design/icons'],
           // Supabase client
           'vendor-supabase': ['@supabase/supabase-js'],

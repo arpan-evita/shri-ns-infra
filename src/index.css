@@ -37,3 +37,60 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #c4a661;
 }
+
+/* ─────────────────────────────────────────────
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   Disable expensive GPU effects on small screens
+   to reduce LCP, TBT and main-thread blocking.
+   ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+
+  /* 1. Disable backdrop-blur — most expensive GPU effect on mobile.
+        Replaced with a solid semi-transparent background. */
+  .backdrop-blur-sm,
+  .backdrop-blur,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: rgba(10, 9, 6, 0.85) !important;
+  }
+
+  /* 2. Disable will-change — prevents unnecessary GPU compositing layers */
+  * {
+    will-change: auto !important;
+  }
+
+  /* 3. Reduce transition durations — animations still play but run faster */
+  *,
+  *::before,
+  *::after {
+    transition-duration: 150ms !important;
+    animation-duration: 150ms !important;
+  }
+
+  /* 4. Keep scroll progress bar and intentional spin animations at normal speed */
+  .animate-spin {
+    animation-duration: 1s !important;
+  }
+
+  /* 5. Disable hover scale transforms on touch devices (never triggered but still parsed) */
+  [class*="hover:scale-"],
+  [class*="group-hover:scale-"],
+  [class*="hover:-translate"],
+  [class*="group-hover:translate"] {
+    transform: none !important;
+  }
+}
+
+/* Respect OS-level "reduce motion" preference globally */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
