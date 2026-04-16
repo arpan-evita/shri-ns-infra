@@ -63,7 +63,7 @@ const AMENITY_LIST = [
 ];
 
 const STEP_LABELS = ['Basic','Media','Location','Description','Pricing','Amenities','Timeline','Legal','Contact','Review'];
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwPRH7oMqIkjLmy-n9I33MTXHPS2OwpUvV-v_hK1vCkfVdz2S9IKtqNd2diC6wLUWy4Hg/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwBm9kpqiAQrC-VHtyPOYlqfd01DCqzgFVCmKC6fSjVUYpN15fwDs_pZeFizrqPs9e6lQ/exec';
 const DRAFT_KEY = 'snsi_project_draft';
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
