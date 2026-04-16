@@ -53,9 +53,13 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       {/* 1. Visual Section */}
       <Link to={`/properties/${property.slug}`} className="block relative h-72 overflow-hidden shrink-0">
         <img 
-          src={property.featured_image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop'} 
+          src={property.featured_image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=75&w=600&auto=format&fit=crop&fm=webp'} 
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
           alt={property.title}
+          loading="lazy"
+          decoding="async"
+          width={600}
+          height={288}
         />
         
         {/* Floating Badges */}

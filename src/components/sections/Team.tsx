@@ -1,6 +1,6 @@
 import { Facebook, Twitter, Linkedin } from 'lucide-react';
-import founderImg from '../../assets/founder.png';
-import pawanImg from '../../assets/pawan.png';
+import founderImg from '../../assets/founder.webp';
+import pawanImg from '../../assets/pawan.webp';
 import { motion } from 'framer-motion';
 
 export const Team = () => {
@@ -44,6 +44,10 @@ export const Team = () => {
                   src={member.image} 
                   className="w-full h-[350px] md:h-[450px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 font-bold"
                   alt={member.name}
+                  loading="lazy"
+                  width={600}
+                  height={450}
+                  decoding="async"
                 />
                 <div className="absolute bottom-4 left-4 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <a href="#" className="text-white hover:text-primary"><Facebook className="w-4 h-4" /></a>

@@ -51,9 +51,13 @@ export const PropertyDetailsCTA = () => {
   return (
     <section className="relative min-h-[600px] w-full flex items-center overflow-hidden">
       <img 
-        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
+        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=75&w=1200&auto=format&fit=crop&fm=webp" 
         className="absolute inset-0 w-full h-full object-cover"
         alt="Modern Architecture"
+        loading="lazy"
+        decoding="async"
+        width={1200}
+        height={600}
       />
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
       <div className="relative z-10 mx-auto max-w-7xl w-full px-6 flex flex-col lg:flex-row items-center gap-16">

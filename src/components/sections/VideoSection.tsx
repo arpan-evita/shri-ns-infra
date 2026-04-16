@@ -5,9 +5,13 @@ export const VideoSection = () => {
   return (
     <section className="relative h-[600px] w-full overflow-hidden flex items-center justify-center">
       <img 
-        src="https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=2067&auto=format&fit=crop" 
+        src="https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=1200&auto=format&fit=crop&fm=webp" 
         className="absolute inset-0 w-full h-full object-cover"
         alt="Modern Building"
+        loading="lazy"
+        decoding="async"
+        width={1200}
+        height={600}
       />
       <div className="absolute inset-0 bg-black/40"></div>
       <motion.button 

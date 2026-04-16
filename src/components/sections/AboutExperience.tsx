@@ -1,5 +1,5 @@
 import { Target, Compass } from 'lucide-react';
-import founderImg from '../../assets/founder.png';
+import founderImg from '../../assets/founder.webp';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -21,10 +21,14 @@ export const AboutExperience = () => {
                 src={founderImg} 
                 className="w-full aspect-[4/5] object-cover"
                 alt="Ajay Sharma"
+                loading="lazy"
+                decoding="async"
+                width={600}
+                height={750}
               />
               {/* Floating Avatar for Detail */}
               <div className="absolute -top-6 -right-6 w-20 h-20 md:w-32 md:h-32 bg-primary p-1 md:p-1.5 rounded-full hidden lg:block animate-bounce-slow">
-                 <img src={founderImg} className="w-full h-full object-cover rounded-full border-4 border-black" alt="Ajay Sharma detail" />
+                 <img src={founderImg} className="w-full h-full object-cover rounded-full border-4 border-black" alt="Ajay Sharma detail" loading="lazy" decoding="async" width={128} height={128} />
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 bg-black/90 p-6 md:p-8 m-4 md:m-6 border border-white/5">
@@ -94,7 +98,7 @@ export const AboutExperience = () => {
             <div className="flex flex-wrap items-center gap-6 md:gap-8 pt-6 md:pt-8 border-t border-white/10">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-[#1a1c23] shrink-0">
-                  <img src={founderImg} alt="Ajay Sharma" className="w-full h-full object-cover" />
+                  <img src={founderImg} alt="Ajay Sharma" className="w-full h-full object-cover" loading="lazy" decoding="async" width={48} height={48} />
                 </div>
                 <div>
                   <h4 className="text-white font-bold tracking-tight text-sm md:text-base">Ajay Sharma</h4>

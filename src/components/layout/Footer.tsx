@@ -3,7 +3,6 @@ import { Phone, Mail, MapPin, Facebook, Twitter, Youtube, ChevronRight, Loader2,
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
-import logoImg from '../../assets/logo.png';
 
 export const Footer = () => {
   const [loading, setLoading] = useState(false);
@@ -56,7 +55,7 @@ export const Footer = () => {
         <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-12 md:gap-16 mb-16 md:mb-20">
           <div className="col-span-2 lg:col-span-3 space-y-6 md:space-y-8">
             <div className="flex items-center gap-2">
-              <img src={logoImg} alt="Shri NS Infra" className="h-10 md:h-12 w-auto" />
+              <img src="/logo.png" alt="Shri NS Infra" className="h-10 md:h-12 w-auto" loading="lazy" decoding="async" width={120} height={48} />
             </div>
             <p className="text-slate-400 leading-relaxed text-sm md:text-base">
               We are a premium real estate advisory working with reputed NCR developers to offer only verified, RERA-approved projects.

@@ -29,7 +29,7 @@ import {
   Carousel
 } from 'antd';
 import { sendLeadEmail } from "@/lib/emailService";
-import founderImg from '../assets/founder.png';
+import founderImg from '../assets/founder.webp';
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className={className}>

@@ -9,7 +9,7 @@ interface PageBannerProps {
 
 export const PageBanner = ({ 
   title, 
-  image = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
+  image = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=75&w=1200&auto=format&fit=crop&fm=webp" 
 }: PageBannerProps) => {
   return (
     <section className="relative h-[250px] md:h-[400px] w-full flex items-center justify-center overflow-hidden pt-12 md:pt-20">
@@ -18,6 +18,10 @@ export const PageBanner = ({
           src={image} 
           className="h-full w-full object-cover"
           alt={`${title} Banner Background`}
+          loading="lazy"
+          decoding="async"
+          width={1200}
+          height={400}
         />
         <div className="absolute inset-0 bg-black/70"></div>
       </div>

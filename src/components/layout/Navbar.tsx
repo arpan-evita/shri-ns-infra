@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import logoImg from '../../assets/logo.png';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +38,7 @@ export const Navbar = () => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link to="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
-          <img src={logoImg} alt="Shri NS Infra" className="h-12 w-auto" />
+          <img src="/logo.png" alt="Shri NS Infra" className="h-12 w-auto" width={120} height={48} fetchPriority="high" />
         </Link>
 
         {/* Desktop Nav */}
@@ -92,7 +91,7 @@ export const Navbar = () => {
 
         <div className="flex flex-col gap-6 w-full mt-4">
           <Link to="/" className="mb-8" onClick={() => setIsOpen(false)}>
-             <img src={logoImg} alt="Shri NS Infra" className="h-10 w-auto" />
+             <img src="/logo.png" alt="Shri NS Infra" className="h-10 w-auto" width={100} height={40} loading="lazy" />
           </Link>
           
           {navLinks.map((link) => (

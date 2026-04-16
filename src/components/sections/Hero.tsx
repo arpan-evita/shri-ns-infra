@@ -56,6 +56,7 @@ export const Hero = () => {
           muted 
           loop 
           playsInline
+          preload="none"
           className="h-full w-full object-cover"
         >
           <source src="/banner-video.mp4" type="video/mp4" />

@@ -9,20 +9,17 @@ export const Testimonials = () => {
 
   useEffect(() => {
     const fetchTestimonials = async () => {
-      console.log('Fetching testimonials from Supabase...');
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Testimonials Fetch Error:', error);
+        // silently fallback
       } else {
-        console.log('Testimonials fetched:', data?.length || 0, 'rows');
         if (data && data.length > 0) {
           setTestimonials(data);
         } else {
-          console.warn('No testimonials found in database, using fallback data.');
           setTestimonials([{
             name: "Rohit Malhotra",
             content: "What I liked most about Shri NS Infra is their market knowledge and transparency. They suggested genuine options that matched my requirements instead of pushing random projects. Complete peace of mind.",
@@ -54,9 +51,13 @@ export const Testimonials = () => {
     <section className="bg-background-dark py-16 md:py-24 px-6 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10">
         <img 
-          src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop" 
+          src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=75&w=800&auto=format&fit=crop&fm=webp" 
           className="w-full h-full object-cover"
           alt="Office background"
+          loading="lazy"
+          decoding="async"
+          width={800}
+          height={600}
         />
       </div>
       <div className="mx-auto max-w-7xl relative z-10 flex flex-col lg:flex-row gap-10 md:gap-16 items-center text-left">

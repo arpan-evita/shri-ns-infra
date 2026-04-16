@@ -1,4 +1,4 @@
-import founderImg from '../../assets/founder.png';
+import founderImg from '../../assets/founder.webp';
 import { motion } from 'framer-motion';
 
 export const About = () => {
@@ -13,15 +13,23 @@ export const About = () => {
           className="w-full lg:w-1/2 relative"
         >
           <img 
-            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=75&w=800&auto=format&fit=crop&fm=webp" 
             className="w-full rounded-sm"
             alt="Real Estate Keys"
+            loading="lazy"
+            decoding="async"
+            width={800}
+            height={600}
           />
           <div className="mt-8 flex items-center gap-4">
             <img 
               src={founderImg}
               className="w-16 h-16 rounded-full object-cover border-2 border-primary"
               alt="Ajay Sharma"
+              loading="lazy"
+              decoding="async"
+              width={64}
+              height={64}
             />
             <div>
               <h4 className="text-white font-bold text-xl">Ajay Sharma</h4>
