@@ -413,25 +413,32 @@ export const SubmitProjectPage = () => {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 pb-20 pt-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-10 pb-7 border-b border-[#c4a661]/15 flex-wrap gap-3">
+      {/* ── FULL-WIDTH STICKY HEADER ── */}
+      <header className="sticky top-0 z-30 w-full bg-[#0a0906]/95 backdrop-blur-md border-b border-[#c4a661]/15">
+        <div className="w-full px-6 md:px-10 h-16 flex items-center justify-between gap-4">
+          {/* Left: Logo + draft indicator */}
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Shri NS Infra" className="h-10 w-auto" />
+            <a href="/">
+              <img src="/logo.png" alt="Shri NS Infra" className="h-9 w-auto" />
+            </a>
             {draftSaved && (
               <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] text-[#c4a661]/70 border border-[#c4a661]/20 bg-[#c4a661]/5 px-3 py-1 rounded-full">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#c4a661] animate-pulse" /> Draft saved
               </span>
             )}
           </div>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#c4a661] border border-[#c4a661]/40 px-4 py-1.5 rounded font-semibold">
+
+          {/* Right: Portal badge */}
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[#c4a661] border border-[#c4a661]/40 px-4 py-1.5 rounded font-semibold whitespace-nowrap">
             Project Submission Portal
           </span>
         </div>
+      </header>
 
+      <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 pb-20 pt-10">
         {/* Title block */}
         <div className="text-center mb-10">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-[#c4a661] font-semibold mb-3">Developer & Builder Partner Program</p>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-[#c4a661] font-semibold mb-3">Developer &amp; Builder Partner Program</p>
           <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-3">
             Submit Your <span className="text-[#c4a661]">Project</span>
           </h1>
