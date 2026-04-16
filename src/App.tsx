@@ -45,7 +45,7 @@ const PageLoader = () => (
 
 function AppContent() {
   const location = useLocation();
-  const isAdminPath = location.pathname.startsWith('/admin') || location.pathname === '/auth';
+  const isAdminPath = location.pathname.startsWith('/admin') || location.pathname === '/auth' || location.pathname === '/submit-project';
 
   return (
     <div className="min-h-screen flex flex-col">
