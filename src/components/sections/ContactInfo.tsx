@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Youtube, ArrowRight, Loader2, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
@@ -75,8 +75,7 @@ export const ContactInfo = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">Call Us</h4>
-                    <p className="text-slate-400 text-sm font-bold">+91 9999999999</p>
-                    <p className="text-slate-400 text-xs font-medium">0120 456789</p>
+                    <p className="text-slate-400 text-sm font-bold">+91 93121 21411</p>
                   </div>
                 </div>
 
@@ -86,8 +85,7 @@ export const ContactInfo = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">Email Us</h4>
-                    <p className="text-slate-400 text-sm font-bold">info@shrinsinfra.com</p>
-                    <p className="text-slate-400 text-xs font-medium">sales@shrinsinfra.com</p>
+                    <p className="text-slate-400 text-sm font-bold">shrinsinfra@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -99,7 +97,7 @@ export const ContactInfo = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-black uppercase tracking-widest text-[10px] md:text-xs mb-2">Office Address</h4>
-                    <p className="text-slate-400 text-sm font-bold">Sector 12, Noida<br /><span className="text-xs font-medium text-slate-500 uppercase">Uttar Pradesh 201301</span></p>
+                    <p className="text-slate-400 text-sm font-bold">Second Floor, Wave City<br /><span className="text-xs font-medium text-slate-500">KingWood Enclave, Wave City<br />Ghaziabad, UP 201015</span></p>
                   </div>
                 </div>
 
@@ -227,3 +225,4 @@ export const ContactInfo = () => {
     </section>
   );
 };
+

@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Linkedin, MapPin, Globe, ArrowRight, Star, Loader2 } from 'lucide-react';
+﻿import { Facebook, Twitter, Linkedin, MapPin, Globe, ArrowRight, Star, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
@@ -125,7 +125,7 @@ export const ContactSection = () => {
                 <MapPin className="w-4 h-4" /> Office Address
               </h4>
               <p className="text-slate-400 text-sm">
-                4th Floor, Skyline Towers<br />Business District, Sector 12<br />Noida, UP 201301
+                Second Floor, Wave City<br />KingWood Enclave, Wave City<br />Ghaziabad, UP 201015
               </p>
             </div>
             <div className="space-y-4">
@@ -195,3 +195,4 @@ export const ContactSection = () => {
     </section>
   );
 };
+

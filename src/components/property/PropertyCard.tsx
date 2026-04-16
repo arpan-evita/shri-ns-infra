@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import { MapPin, Maximize, Home, Phone, ChevronRight, Star } from 'lucide-react';
 
 interface PropertyCardProps {
@@ -94,7 +94,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               <div className="text-white">
                 <div className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Starting From</div>
                 <div className="text-2xl font-black flex items-baseline gap-1">
-                  <span className="text-sm">₹</span>
+                  <span className="text-sm">â‚¹</span>
                   {minPrice ? minPrice.toLocaleString('en-IN') : 'Price on Request'}
                   {maxPrice && minPrice !== null && maxPrice > minPrice && (
                     <span className="text-slate-400 text-sm font-bold ml-1"> - {maxPrice.toLocaleString('en-IN')}</span>
@@ -167,10 +167,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
         {/* 3. CTA Actions */}
         <div className="pt-6 border-t border-white/5 grid grid-cols-3 gap-2">
-           <a href={`tel:${property.whatsapp_number || '+918090965996'}`} className="bg-[#151515] hover:bg-white/5 text-white p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
+           <a href={`tel:${property.whatsapp_number || '+91919312121411'}`} className="bg-[#151515] hover:bg-white/5 text-white p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
              <Phone className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
            </a>
-           <a href={`https://wa.me/${(property.whatsapp_number || '918090965996').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="bg-[#151515] hover:bg-[#25D366]/10 text-white hover:text-[#25D366] p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
+           <a href={`https://wa.me/${(property.whatsapp_number || '91919312121411').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="bg-[#151515] hover:bg-[#25D366]/10 text-white hover:text-[#25D366] p-3 flex items-center justify-center transition-all border border-white/5 group/btn">
              <WhatsAppIcon className="group-hover/btn:scale-110 transition-transform" />
            </a>
            <Link to={`/properties/${property.slug}`} className="col-span-1 bg-primary hover:bg-white text-black font-black text-[10px] uppercase tracking-widest flex items-center justify-center transition-all shadow-lg hover:shadow-primary/20">
@@ -181,3 +181,4 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     </div>
   );
 };
+
