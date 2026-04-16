@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronRight, ChevronLeft, Check, Loader2, UploadCloud, Link2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface FormData {
@@ -245,13 +246,22 @@ export const SubmitProjectPage = () => {
   const handleSubmit = async () => {
     if (!terms) { toast('Please accept the terms before submitting', 'error'); return; }
     setLoading(true);
-    const payload = {
+
+    const ref = 'SNSI-' + Date.now().toString(36).toUpperCase();
+
+    // Strip large base64 blobs for storage
+    const safeFeatured = form.featuredImage?.startsWith('data:') ? '[Uploaded file]' : form.featuredImage;
+    const safeBrochure = form.brochureUrl?.startsWith('data:') ? '[Uploaded file]' : form.brochureUrl;
+    const safeGallery = form.galleryImages.filter(Boolean)
+      .map(u => u.startsWith('data:') ? '[Uploaded file]' : u).join(' | ');
+
+    const payload: Record<string, string> = {
+      'Reference ID': ref,
       'Project Name': form.projectName, 'Developer Name': form.developerName,
       'Property Type': form.propertyType, 'Listing Status': form.listingStatus,
       'RERA Number': form.reraNumber, 'Project Tagline': form.projectTagline,
-      'Featured Image URL': form.featuredImage,
-      'Gallery Images': form.galleryImages.filter(Boolean).join(' | '),
-      'Brochure URL': form.brochureUrl, 'Video URL': form.videoUrl,
+      'Featured Image URL': safeFeatured, 'Gallery Images': safeGallery,
+      'Brochure URL': safeBrochure, 'Video URL': form.videoUrl,
       'Address': form.address, 'City': form.city, 'State': form.state,
       'Pincode': form.pincode, 'Google Maps Link': form.googleMapsUrl,
       'Nearby Landmarks': form.nearbyLandmarks,
@@ -273,10 +283,29 @@ export const SubmitProjectPage = () => {
       'Site Office Address': form.siteOfficeAddress, 'Site Visit Timings': form.siteVisitTiming,
       'Additional Notes': form.additionalNotes,
     };
-    try {
-      await fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    } catch (_) { /* no-cors swallows errors */ }
-    const ref = 'SNSI-' + Date.now().toString(36).toUpperCase();
+
+    // 1. Save to Supabase (non-blocking)
+    void (async () => {
+      try {
+        await supabase.from('project_submissions').insert({
+          reference_id: ref, status: 'pending',
+          project_name: form.projectName, developer_name: form.developerName,
+          property_type: form.propertyType, listing_status: form.listingStatus,
+          city: form.city, state: form.state,
+          contact_name: form.contactName, contact_phone: form.contactPhone,
+          contact_email: form.contactEmail, form_data: payload,
+        });
+      } catch (_) { /* non-blocking */ }
+    })();
+
+
+    // 2. Send to Google Sheets (no-cors, fire-and-forget)
+    fetch(SHEETS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(() => {});
+
     setRefNum(ref);
     localStorage.removeItem(DRAFT_KEY);
     setLoading(false);

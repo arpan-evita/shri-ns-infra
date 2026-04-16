@@ -33,6 +33,7 @@ const BlogForm = lazy(() => import('./pages/admin/BlogForm').then(m => ({ defaul
 const AdminTestimonials = lazy(() => import('./pages/admin/AdminTestimonials').then(m => ({ default: m.AdminTestimonials })));
 const TestimonialForm = lazy(() => import('./pages/admin/TestimonialForm').then(m => ({ default: m.TestimonialForm })));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers').then(m => ({ default: m.AdminUsers })));
+const AdminSubmissions = lazy(() => import('./pages/admin/AdminSubmissions').then(m => ({ default: m.AdminSubmissions })));
 
 // Minimal page loader - no heavy spinner libraries
 const PageLoader = () => (
@@ -117,6 +118,13 @@ function AppContent() {
               <ProtectedRoute>
                 <AdminLayout>
                   <AdminFeatures />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/submissions" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminSubmissions />
                 </AdminLayout>
               </ProtectedRoute>
             } />

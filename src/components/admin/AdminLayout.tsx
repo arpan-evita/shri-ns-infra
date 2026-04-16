@@ -8,7 +8,8 @@ import {
   LogOut,
   ChevronRight,
   ChevronLeft,
-  BookOpen
+  BookOpen,
+  FileSpreadsheet
 } from 'lucide-react';
 import { useState, createContext, useContext } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -63,14 +64,15 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
-    { icon: Home, label: 'Properties', path: '/admin/properties' },
-    { icon: BookOpen, label: 'Blogs', path: '/admin/blogs' },
-    { icon: Users, label: 'Agents', path: '/admin/agents' },
-    { icon: Users, label: 'Admins', path: '/admin/users' },
-    { icon: MessageSquare, label: 'Leads', path: '/admin/leads' },
-    { icon: Users, label: 'Testimonials', path: '/admin/testimonials' },
-    { icon: Settings, label: 'Features', path: '/admin/features' },
+    { icon: LayoutDashboard, label: 'Dashboard',   path: '/admin' },
+    { icon: Home,            label: 'Properties',   path: '/admin/properties' },
+    { icon: BookOpen,        label: 'Blogs',        path: '/admin/blogs' },
+    { icon: FileSpreadsheet, label: 'Submissions',  path: '/admin/submissions' },
+    { icon: Users,           label: 'Agents',       path: '/admin/agents' },
+    { icon: Users,           label: 'Admins',       path: '/admin/users' },
+    { icon: MessageSquare,   label: 'Leads',        path: '/admin/leads' },
+    { icon: Users,           label: 'Testimonials', path: '/admin/testimonials' },
+    { icon: Settings,        label: 'Features',     path: '/admin/features' },
   ];
 
   return (
