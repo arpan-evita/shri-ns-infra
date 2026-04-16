@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Phone, Mail, MapPin, Facebook, Twitter, Youtube, ChevronRight, Loader2, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -89,7 +89,8 @@ export const Footer = () => {
                 { name: 'About Us', path: '/about' },
                 { name: 'Properties', path: '/properties' },
                 { name: 'Contact', path: '/contact' },
-                { name: 'Blog', path: '/blog' }
+                { name: 'Blog', path: '/blog' },
+                { name: 'List Your Project', path: '/submit-project' },
               ].map((item) => (
                 <li key={item.name}>
                   <Link to={item.path} className="text-slate-400 hover:text-[#c4a661] flex items-center gap-1 md:gap-2 transition-colors text-sm md:text-base">

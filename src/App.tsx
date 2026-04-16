@@ -18,6 +18,7 @@ const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then(m => ({ defa
 const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
 const PropertyDetailPage = lazy(() => import('./pages/PropertyDetailPage').then(m => ({ default: m.PropertyDetailPage })));
 const AuthPage = lazy(() => import('./pages/AuthPage').then(m => ({ default: m.AuthPage })));
+const SubmitProjectPage = lazy(() => import('./pages/SubmitProjectPage').then(m => ({ default: m.SubmitProjectPage })));
 
 // Admin pages - lazy loaded (heaviest chunk, users avoid loading if not admin)
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout').then(m => ({ default: m.AdminLayout })));
@@ -58,6 +59,7 @@ function AppContent() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/submit-project" element={<SubmitProjectPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/properties/:slug" element={<PropertyDetailPage />} />
 
