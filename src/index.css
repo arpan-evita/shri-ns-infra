@@ -94,3 +94,9 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Fix native dropdown option visibility on dark backgrounds */
+select option {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
