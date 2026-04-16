@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ChevronRight, Loader2, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { sendLeadEmail } from '@/lib/emailService';
@@ -125,7 +125,7 @@ export const PropertyDetailsCTA = () => {
                   disabled={loading}
                   className="w-full bg-primary text-black font-black py-5 hover:bg-white transition-all uppercase tracking-widest text-xs flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> ESTABLISHING...</> : 'Send Information'}
+                  {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Sending...</> : 'Send Inquiry'}
                 </button>
               </form>
             </>
@@ -135,3 +135,4 @@ export const PropertyDetailsCTA = () => {
     </section>
   );
 };
+

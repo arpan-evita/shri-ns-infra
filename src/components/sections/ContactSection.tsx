@@ -58,7 +58,7 @@ export const ContactSection = () => {
             <span className="text-primary text-xs font-bold uppercase tracking-widest">REACH OUT</span>
             <h2 className="text-white text-5xl font-black">Request a Call Back</h2>
             <p className="text-slate-400 max-w-md">
-              Partner with Shri NS Infra to bring your architectural vision to life. Our specialists are ready to discuss your next premium development.
+              Share your details and our team will get back to you shortly with verified listings, pricing, and site visit assistance.
             </p>
           </div>
           
@@ -195,4 +195,5 @@ export const ContactSection = () => {
     </section>
   );
 };
+
 

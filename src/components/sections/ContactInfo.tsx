@@ -149,32 +149,32 @@ export const ContactInfo = () => {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-white text-3xl font-black uppercase tracking-tighter">Thank You!</h3>
-                  <p className="text-slate-400 text-sm md:text-base font-medium">Your narrative has been received. Our expert will reach out shortly.</p>
+                  <p className="text-slate-400 text-sm md:text-base font-medium">Your message has been received. Our expert will reach out shortly.</p>
                 </div>
                 <button 
                   onClick={() => setSubmitted(false)}
                   className="text-primary font-black uppercase tracking-widest text-[10px] hover:underline"
                 >
-                  Establish another narrative
+                  Send another message
                 </button>
               </div>
             ) : (
               <>
-                <h3 className="text-white text-3xl md:text-4xl font-black mb-10 uppercase tracking-tighter leading-none">Establish Contact.</h3>
+                <h3 className="text-white text-3xl md:text-4xl font-black mb-10 uppercase tracking-tighter leading-none">Send Us A Message</h3>
                 <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                   <div className="space-y-1">
-                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Full Identity</label>
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Full Name</label>
                     <input 
                       required
                       type="text" 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="e.g. John Doe" 
+                      placeholder="Your full name" 
                       className="w-full bg-transparent border-b border-white/20 py-3 text-white text-sm focus:outline-none focus:border-primary transition-colors font-medium placeholder:text-white/10" 
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Digital Hub (Email)</label>
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Email Address</label>
                     <input 
                       required
                       type="email" 
@@ -185,7 +185,7 @@ export const ContactInfo = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Tele-Connection</label>
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Phone Number</label>
                     <input 
                       required
                       type="text" 
@@ -196,13 +196,13 @@ export const ContactInfo = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Narrative (Message)</label>
+                    <label className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Message</label>
                     <textarea 
                       required
                       rows={3} 
                       value={formData.message}
                       onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      placeholder="Describe your requirements..." 
+                      placeholder="Tell us about your property requirements..." 
                       className="w-full bg-transparent border-b border-white/20 py-3 text-white text-sm focus:outline-none focus:border-primary transition-colors resize-none font-medium placeholder:text-white/10"
                     ></textarea>
                   </div>
@@ -213,7 +213,7 @@ export const ContactInfo = () => {
                     {loading ? (
                       <><Loader2 className="w-5 h-5 animate-spin" /> ESTABLISHING...</>
                     ) : (
-                      <>ESTABLISH CONTACT <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
+                      <>SEND MESSAGE <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
                     )}
                   </button>
                 </form>
@@ -225,4 +225,5 @@ export const ContactInfo = () => {
     </section>
   );
 };
+
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Phone, Mail, MapPin, Facebook, Twitter, Youtube, ChevronRight, Loader2, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -171,3 +171,4 @@ export const Footer = () => {
     </footer>
   );
 };
+
