@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MapPin, Maximize, Home, Phone, ChevronRight, Star } from 'lucide-react';
 
 interface PropertyCardProps {
@@ -132,35 +132,23 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </div>
         </div>
 
-        {/* Dynamic Highlights / Configurations */}
-        <div className="space-y-4 flex-grow">
+        {/* Compact stats: BHK / Configurations + Area */}
+        <div className="space-y-2 flex-grow">
           {configurations ? (
-             <div className="bg-white/[0.03] border border-white/5 p-3 rounded-none">
-                <div className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mb-1">Available Units</div>
-                <div className="text-[10px] text-white font-black uppercase tracking-tight line-clamp-1">
-                  {configurations}
-                </div>
-             </div>
+            <div className="bg-white/[0.03] border border-white/5 px-3 py-2 rounded-none">
+              <div className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mb-1">Available Units</div>
+              <div className="text-[10px] text-white font-black uppercase tracking-tight line-clamp-1">{configurations}</div>
+            </div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              <div className="bg-white/[0.03] p-2 flex items-center gap-3 border border-white/5">
-                <Home className="w-4 h-4 text-primary/50" />
+              <div className="bg-white/[0.03] p-2 flex items-center gap-2 border border-white/5">
+                <Home className="w-3.5 h-3.5 text-primary/60 shrink-0" />
                 <span className="text-[10px] text-white font-black uppercase">{property.bhk_type || (property.bedrooms ? property.bedrooms + ' BHK' : 'N/A')}</span>
               </div>
-              <div className="bg-white/[0.03] p-2 flex items-center gap-3 border border-white/5">
-                <Maximize className="w-4 h-4 text-primary/50" />
-                <span className="text-[10px] text-white font-black uppercase">{property.area} SQFT</span>
+              <div className="bg-white/[0.03] p-2 flex items-center gap-2 border border-white/5">
+                <Maximize className="w-3.5 h-3.5 text-primary/60 shrink-0" />
+                <span className="text-[10px] text-white font-black uppercase">{property.area ? property.area + ' sqft' : 'N/A'}</span>
               </div>
-            </div>
-          )}
-
-          {property.highlights && (
-            <div className="flex flex-wrap gap-2">
-               {property.highlights.split('\n').slice(0, 3).map((h, i) => (
-                 <span key={i} className="text-[8px] font-black uppercase tracking-widest px-2 py-1 bg-primary/5 text-primary border border-primary/10">
-                   {h.trim()}
-                 </span>
-               ))}
             </div>
           )}
         </div>
